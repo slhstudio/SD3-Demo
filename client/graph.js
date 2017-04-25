@@ -1,3 +1,4 @@
+
 var socket = io.connect();  
 
 function apiCall() {
@@ -68,3 +69,4 @@ socket.on('send data', (data) => {
 
 
 })
+

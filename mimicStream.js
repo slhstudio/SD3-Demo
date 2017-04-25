@@ -6,14 +6,17 @@ function createStream () {
         return Math.floor(Math.random()*99);;
     }
 
-    let array = [];
-
-    setInterval(() => {
+    function pushToArray () {
         array.push({
             number: ranNum(),
             createdAt: new Date()
         })
-    }, 1000)
+    }
+    let array = [];
+
+    pushToArray();
+
+    setInterval(pushToArray, 1000);
 
     return array;
 }
