@@ -26,6 +26,11 @@ var socket = io.connect();
 socket.on('send data', (data) => {
   console.log('DATA FROM SOCKET', data);
 
+  if(data.length >= 50) {
+    console.log('more than 50')
+    data = data.slice(data.length-51);
+  }
+
   var xScale = d3.scaleLinear()
     .domain([0, 50])
     .range([0, width]);
@@ -45,6 +50,8 @@ socket.on('send data', (data) => {
     .x(d => xScale(d.createdAt))
     .y(d => yScale(d.value))
     .curve(d3.curveCatmullRom.alpha(0.5));
+
+    d3.selectAll("path.line").remove();
 
   svg
     .selectAll('.line')

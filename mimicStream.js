@@ -3,7 +3,7 @@
 
 function createStream () {
     function ranNum() {
-        return Math.floor(Math.random()*9);;
+        return Math.floor(Math.random()*10);;
     }
     let count = 0;
     function pushToArray () {
