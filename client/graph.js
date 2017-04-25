@@ -2,10 +2,10 @@ var socket = io.connect();
 
 function apiCall() {
   return [
-    {value: 56, time: 7},
-    {value: 76, time: 8},
-    {value: 96, time: 9},
-    {value: 26, time: 10},
+    {number: 5, createdAt: 1},
+    {number: 7, createdAt: 2},
+    {number: 9, createdAt: 3},
+    {number: 2, createdAt: 4},
   ]
 }
 
@@ -18,68 +18,53 @@ socket.emit('ApiData', apiCall() )
 socket.on('send data', (data) => {
   console.log('DATA FROM SOCKET', data);
   
-  //parse data
-  let times = data.map(obj => obj.time)
-  let values = data.map(obj => obj.value)
-  console.log('VALUES', values);
-  console.log('TIMES', times);
 
   //add d3 graph here
 
+  var margin = { top: 10, right: 20, bottom: 30, left: 30 };
+  var width = 900 - margin.left - margin.right;
+  var height = 565 - margin.top - margin.bottom;
 
-  // d3.selectAll("path.line").remove();
-  // svg.append("path")
-  //   .datum(data)
-  //   .attr("class", "line")
-  //   .attr("d", line);
+  var svg = d3.select('.chart')
+    .append('svg')
+      .attr('width', width + margin.left + margin.right)
+      .attr('height', height + margin.top + margin.bottom)
+    .append('g')
+      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-  // var margin = {top: 20, right: 20, bottom: 30, left: 50},
-  //   width = 960 - margin.left - margin.right,
-  //   height = 500 - margin.top - margin.bottom;
 
-  // var x = d3.scale.linear()
-  //   .range([0, width]);
+  var xScale = d3.scaleLinear()
+    .domain([0, 10])
+    .range([0, width]);
+  svg
+    .append('g')
+      .attr('transform', `translate(0, ${height})`)
+    .call(d3.axisBottom(xScale).ticks(10));
 
-  // var y = d3.scale.linear()
-  //   .range([height, 0]);
+  var yScale = d3.scaleLinear()
+    .domain([0,10])
+    .range([height, 0]);
+  svg
+    .append('g')
+    .call(d3.axisLeft(yScale).ticks(10));
 
-  // var xAxis = d3.svg.axis()
-  //   .scale(x)
-  //   .orient("bottom");
+  var line = d3.line()
+    .x(d => xScale(d.createdAt))
+    .y(d => yScale(d.number))
+    .curve(d3.curveCatmullRom.alpha(0.5));
 
-  // var yAxis = d3.svg.axis()
-  //   .scale(y)
-  //   .orient("left");
+  svg
+    .selectAll('.line')
+    .data(data)
+    .enter()
+    .append('path')
+    .attr('class', 'line')
+    .attr('d', d => line(data))
+    .style('stroke', '#FF9900')
+    .style('stroke-width', 2)
+    .style('fill', 'none');
 
-  // var line = d3.svg.line()
-  //   .x(function (d) { return x(d.time); })
-  //   .y(function (d) { return y(d.value); });
 
-  // var svg = d3.select("body").append("svg")
-  //   .attr("width", width + margin.left + margin.right)
-  //   .attr("height", height + margin.top + margin.bottom)
-  //   .append("g")
-  //   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-  // y.domain([0, 100]);
-  // x.domain([0, 20]);
-
-  // svg.append("g")
-  //   .attr("class", "x axis")
-  //   .attr("transform", "translate(0," + height + ")")
-  //   .call(xAxis)
-  //   .append("text")
-  //   .attr("x", width - margin.right)
-  //   .text("Period");
-
-  // svg.append("g")
-  //   .attr("class", "y axis")
-  //   .call(yAxis)
-  //   .append("text")
-  //   .attr("transform", "rotate(-90)")
-  //   .attr("y", 6)
-  //   .attr("dy", ".71em")
-  //   .style("text-anchor", "end")
-  //   .text("Count");
 
 })
