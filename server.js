@@ -39,14 +39,14 @@ io.sockets.on('connection', (socket) => {
 
   io.sockets.emit('send data', apiCall())
 
-  function apiCall() {
+    function apiCall() {
     return [
-      { value: 56, createdAt: 7 },
-      { value: 76, createdAt: 8 },
-      { value: 96, createdAt: 9 },
-      { value: 26, createdAt: 10 },
+      {number: 5, createdAt: 1},
+      {number: 7, createdAt: 2},
+      {number: 9, createdAt: 3},
+      {number: 2, createdAt: 4},
     ]
-  }
+    }
 
   // setInterval(() => { io.sockets.emit('send data', newStream) }, 1000);
 

@@ -1,23 +1,13 @@
 
 var socket = io.connect();  
 
-function apiCall() {
-  return [
-    {number: 5, createdAt: 1},
-    {number: 7, createdAt: 2},
-    {number: 9, createdAt: 3},
-    {number: 2, createdAt: 4},
-  ]
-}
 
 
 //////////GET API DATA HERE////////////////
-socket.emit('ApiData', apiCall() )
+// socket.emit('ApiData', apiCall() )
 
 
 /////////////USE API DATA TO BUILD D3 GRAPH//////////////////////////////////
-socket.on('send data', (data) => {
-  console.log('DATA FROM SOCKET', data);
   
 
   //add d3 graph here
@@ -33,6 +23,8 @@ socket.on('send data', (data) => {
     .append('g')
       .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
+socket.on('send data', (data) => {
+  console.log('DATA FROM SOCKET', data);
 
   var xScale = d3.scaleLinear()
     .domain([0, 10])
