@@ -23,9 +23,6 @@ socket.on('send data', (data) => {
   var width = 900 - margin.left - margin.right;
   var height = 565 - margin.top - margin.bottom;
 
-// d3.json(data, (err, data) => {
-
-
 
     console.log('data: ', data);
 
@@ -68,7 +65,6 @@ socket.on('send data', (data) => {
       .style('stroke', '#FF9900')
       .style('stroke-width', 2)
 
-// })
 
 //__________________________________________Responsify__________________________________________
   function responsivefy(svg) {

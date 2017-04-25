@@ -3,13 +3,13 @@
 
 function createStream () {
     function ranNum() {
-        return Math.floor(Math.random()*99);;
+        return Math.floor(Math.random()*9);;
     }
-
+    let count = 0;
     function pushToArray () {
         array.push({
-            number: ranNum(),
-            createdAt: new Date()
+            value: ranNum(),
+            createdAt: count += 1
         })
     }
     let array = [];
@@ -20,7 +20,5 @@ function createStream () {
 
     return array;
 }
-
-let stream = createStream();
 
 exports.createStream = createStream;

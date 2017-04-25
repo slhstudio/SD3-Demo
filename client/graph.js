@@ -27,7 +27,7 @@ socket.on('send data', (data) => {
   console.log('DATA FROM SOCKET', data);
 
   var xScale = d3.scaleLinear()
-    .domain([0, 10])
+    .domain([0, 50])
     .range([0, width]);
   svg
     .append('g')
@@ -43,7 +43,7 @@ socket.on('send data', (data) => {
 
   var line = d3.line()
     .x(d => xScale(d.createdAt))
-    .y(d => yScale(d.number))
+    .y(d => yScale(d.value))
     .curve(d3.curveCatmullRom.alpha(0.5));
 
   svg
@@ -56,8 +56,6 @@ socket.on('send data', (data) => {
     .style('stroke', '#FF9900')
     .style('stroke-width', 2)
     .style('fill', 'none');
-
-
 
 
 })
