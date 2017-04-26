@@ -2,10 +2,10 @@ var socket = io.connect();
 
 function apiCall() {
   return [
-    {number: 5, createdAt: 1},
-    {number: 7, createdAt: 2},
-    {number: 9, createdAt: 3},
-    {number: 2, createdAt: 4},
+    {value: 5, createdAt: 1},
+    {value: 7, createdAt: 2},
+    {value: 9, createdAt: 3},
+    {value: 2, createdAt: 4},
   ]
 }
 
@@ -50,7 +50,7 @@ socket.on('send data', (data) => {
 
   var line = d3.line()
     .x(d => xScale(d.createdAt))
-    .y(d => yScale(d.number))
+    .y(d => yScale(d.value))
     .curve(d3.curveCatmullRom.alpha(0.5));
 
   svg
