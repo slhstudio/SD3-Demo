@@ -55,23 +55,40 @@ io.sockets.on('connection', (socket) => {
 
 ////////////GRAPH FUNCTIONS////////////////////////////////////////
 
-let config = {
-  x: 10,
-  y: 15
+// let config = {
+//   x: 10,
+//   y: 15
+// }
+
+// function RT (config) {
+//   this.config = config;
+// }
+
+// RT.prototype.line = function(config) {
+//   console.log('new line graph', config.x)
+// }
+
+//var realTime = new RT(config)
+
+var RT = function(config) {
+  //return new RT.line(config)
 }
 
-function RT (config) {
+RT.line = function (config) {
   this.config = config;
+  console.log('this is our line')
+  //send configurations to socket in graph.js
 }
 
-RT.prototype.line = function(config) {
-  console.log('new line graph', config.x)
+RT.scatter = function (config) {
+  this.config = config;
+  console.log('this is our scatter')
+  //send configurations to socket in graph.js
 }
 
-var realTime = new RT(config)
+module.exports = RT;
 
-
-exports.realTime = realTime;
+//exports.realTime = realTime;
 
 
 
