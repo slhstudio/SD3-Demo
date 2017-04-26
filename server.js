@@ -3,8 +3,9 @@ const app = express();
 let server = require('http').createServer(app);
 let io = require('socket.io').listen(server);
 const path = require('path');
-const fs = require('fs'); 
-
+const fs = require('fs');
+const mimicStream = require('./mimicStream.js');
+const mimicStream2 = require('./mimicStream2.js');
 //---------------SEND CLIENT FILES-----------------------
 app.use(express.static(path.join(__dirname, 'client')));
 
@@ -22,19 +23,57 @@ io.sockets.on('connection', (socket) => {
   console.log('CONNECTED: %s SOCKETS CONNECTED', connections.length)
 
   socket.on('disconnect', (data) => {
-  connections.splice(connections.indexOf(socket), 1);
-  console.log('CONNECTED: %s SOCKETS CONNECTED', connections.length);
+    connections.splice(connections.indexOf(socket), 1);
+    console.log('CONNECTED: %s SOCKETS CONNECTED', connections.length);
   });
 
   //------------GET DATA FROM API AND SEND IT TO CLIENT --------------------
-  socket.on('ApiData', (data) => {
-    io.sockets.emit('send data', data);
-  })
+  // socket.on('ApiData', (data) => {
+  //   io.sockets.emit('send data', data);
+  // })
 
   // let data = 'testing from kyle'
-  // io.sockets.emit('send data', data);
+
+  // console.log('function ', mimicStream.createStream());
+  let newStream = mimicStream.createStream();
+  // console.log(newStream);
+  setInterval(() => io.sockets.emit('send data', newStream), 1000);
+  // io.sockets.emit('send data', apiCall());
+  // io.sockets.emit('send data', newStream);
+    function apiCall() {
+    return [
+      {value: 5, createdAt: 1},
+      {value: 7, createdAt: 2},
+      {value: 9, createdAt: 3},
+      {value: 2, createdAt: 4},
+    ]
+    }
+
+  // setInterval(() => { io.sockets.emit('send data', newStream) }, 1000);
 
 })
+
+////////////GRAPH FUNCTIONS////////////////////////////////////////
+
+let config = {
+  x: 10,
+  y: 15
+}
+
+function RT (config) {
+  this.config = config;
+}
+
+RT.prototype.line = function(config) {
+  console.log('new line graph', config.x)
+}
+
+var realTime = new RT(config)
+
+
+exports.realTime = realTime;
+
+
 
 
 
@@ -42,7 +81,7 @@ io.sockets.on('connection', (socket) => {
 
 
 //------------------SERVER ---------------------------------------
-server.listen(process.env.port || 3000, ()=> console.log('SERVER RUNNING ON 3000'));
+server.listen(process.env.port || 3000, () => console.log('SERVER RUNNING ON 3000'));
 
 
 
