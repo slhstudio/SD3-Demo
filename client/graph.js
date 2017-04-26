@@ -1,23 +1,13 @@
 
 var socket = io.connect();  
 
-function apiCall() {
-  return [
-    {number: 5, createdAt: 1},
-    {number: 7, createdAt: 2},
-    {number: 9, createdAt: 3},
-    {number: 2, createdAt: 4},
-  ]
-}
 
 
 //////////GET API DATA HERE////////////////
-socket.emit('ApiData', apiCall() )
+// socket.emit('ApiData', apiCall() )
 
 
 /////////////USE API DATA TO BUILD D3 GRAPH//////////////////////////////////
-socket.on('send data', (data) => {
-  console.log('DATA FROM SOCKET', data);
   
 
   //add d3 graph here
@@ -33,9 +23,16 @@ socket.on('send data', (data) => {
     .append('g')
       .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
+socket.on('send data', (data) => {
+  console.log('DATA FROM SOCKET', data);
+
+  if(data.length >= 50) {
+    console.log('more than 50')
+    data = data.slice(data.length-51);
+  }
 
   var xScale = d3.scaleLinear()
-    .domain([0, 10])
+    .domain([0, 50])
     .range([0, width]);
   svg
     .append('g')
@@ -51,8 +48,10 @@ socket.on('send data', (data) => {
 
   var line = d3.line()
     .x(d => xScale(d.createdAt))
-    .y(d => yScale(d.number))
+    .y(d => yScale(d.value))
     .curve(d3.curveCatmullRom.alpha(0.5));
+
+    d3.selectAll("path.line").remove();
 
   svg
     .selectAll('.line')
@@ -64,8 +63,6 @@ socket.on('send data', (data) => {
     .style('stroke', '#FF9900')
     .style('stroke-width', 2)
     .style('fill', 'none');
-
-
 
 
 })

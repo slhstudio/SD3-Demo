@@ -5,7 +5,7 @@ let io = require('socket.io').listen(server);
 const path = require('path');
 const fs = require('fs');
 const mimicStream = require('./mimicStream.js');
-
+const mimicStream2 = require('./mimicStream2.js');
 //---------------SEND CLIENT FILES-----------------------
 app.use(express.static(path.join(__dirname, 'client')));
 
@@ -36,17 +36,18 @@ io.sockets.on('connection', (socket) => {
 
   // console.log('function ', mimicStream.createStream());
   let newStream = mimicStream.createStream();
-
-  io.sockets.emit('send data', apiCall())
-
-  function apiCall() {
+  // console.log(newStream);
+  setInterval(() => io.sockets.emit('send data', newStream), 1000);
+  // io.sockets.emit('send data', apiCall());
+  // io.sockets.emit('send data', newStream);
+    function apiCall() {
     return [
-      { value: 56, createdAt: 7 },
-      { value: 76, createdAt: 8 },
-      { value: 96, createdAt: 9 },
-      { value: 26, createdAt: 10 },
+      {value: 5, createdAt: 1},
+      {value: 7, createdAt: 2},
+      {value: 9, createdAt: 3},
+      {value: 2, createdAt: 4},
     ]
-  }
+    }
 
   // setInterval(() => { io.sockets.emit('send data', newStream) }, 1000);
 
