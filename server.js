@@ -6,6 +6,7 @@ const path = require('path');
 const fs = require('fs');
 const mimicStream = require('./mimicStream.js');
 const mimicStream2 = require('./mimicStream2.js');
+
 //---------------SEND CLIENT FILES-----------------------
 app.use(express.static(path.join(__dirname, 'client')));
 
@@ -28,9 +29,12 @@ io.sockets.on('connection', (socket) => {
   });
 
   //------------GET DATA FROM API AND SEND IT TO CLIENT --------------------
+
+  //----------this socket connection is only if want to get data from graph.js-----
   // socket.on('ApiData', (data) => {
   //   io.sockets.emit('send data', data);
   // })
+
 
   // let data = 'testing from kyle'
 
@@ -49,19 +53,11 @@ io.sockets.on('connection', (socket) => {
     ]
     }
 
-  // setInterval(() => { io.sockets.emit('send data', newStream) }, 1000);
+ 
 
 })
 
 
 
-
-
-
 //------------------SERVER ---------------------------------------
 server.listen(process.env.port || 3000, () => console.log('SERVER RUNNING ON 3000'));
-
-
-
-
-

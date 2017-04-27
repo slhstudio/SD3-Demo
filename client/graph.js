@@ -59,4 +59,3 @@ socket.on('send data', (data) => {
     .style('stroke-width', 2)
     .style('fill', 'none');
 })
-
