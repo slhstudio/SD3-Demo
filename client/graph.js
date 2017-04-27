@@ -1,3 +1,4 @@
+
 var socket = io.connect();
 
 socket.on('send userData', (data) => {
@@ -85,3 +86,4 @@ socket.on('sendUserData', (data) => {
       counter++;
       console.log('INSIDE INTERVAL', counter)
     }, 1000)
+
