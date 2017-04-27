@@ -37,7 +37,7 @@ io.sockets.on('connection', (socket) => {
   // console.log('function ', mimicStream.createStream());
   let newStream = mimicStream.createStream();
   // console.log(newStream);
-  setInterval(() => io.sockets.emit('send data', newStream), 1000);
+  setInterval(() => io.sockets.emit('send data', newStream), 500);
   // io.sockets.emit('send data', apiCall());
   // io.sockets.emit('send data', newStream);
     function apiCall() {

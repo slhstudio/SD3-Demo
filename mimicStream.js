@@ -16,7 +16,7 @@ function createStream () {
 
     pushToArray();
 
-    setInterval(pushToArray, 1000);
+    setInterval(pushToArray, 500);
 
     return array;
 }
