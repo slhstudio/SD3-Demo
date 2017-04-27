@@ -26,18 +26,28 @@ var socket = io.connect();
 socket.on('send data', (data) => {
   console.log('DATA FROM SOCKET', data);
 
-  if(data.length >= 50) {
-    console.log('more than 50')
-    data = data.slice(data.length-51);
+  if(data.length >= 20) {
+    console.log('more than 20')
+    data = data.slice(data.length-21);
   }
 
+  // var xScale = d3.scaleLinear()
+  //   .domain([0, 50])
+  //   .range([0, width]);
+
+
   var xScale = d3.scaleLinear()
-    .domain([0, 50])
+    .domain([
+        data.length <= 20 ? 0 : d3.min(data, d => d.createdAt),
+        Math.max(20, d3.max(data, d => d.createdAt))
+    ])
     .range([0, width]);
+
+
   svg
     .append('g')
       .attr('transform', `translate(0, ${height})`)
-    .call(d3.axisBottom(xScale).ticks(10));
+    .call(d3.axisBottom(xScale));
 
   var yScale = d3.scaleLinear()
     .domain([0,10])
