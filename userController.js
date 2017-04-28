@@ -13,7 +13,7 @@ rtm.on("enter-connected", function() {
 var subscription = rtm.subscribe(channel, RTM.SubscriptionMode.SIMPLE);
 subscription.on('rtm/subscription/data', function (pdu) {
   pdu.body.messages.forEach(function (msg) {
-    //console.log('THIS IS THE MSG FROM SATORI', msg);
+    // console.log('THIS IS THE MSG FROM SATORI', msg);
     var graph = new RT(msg);
     graph.line(msg);
   });

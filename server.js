@@ -40,19 +40,19 @@ io.sockets.on('connection', (socket) => {
   // let data = 'testing from kyle'
 
   // console.log('function ', mimicStream.createStream());
-  let newStream = mimicStream.createStream();
-  // console.log(newStream);
-  setInterval(() => io.sockets.emit('send data', newStream), 500);
-  // io.sockets.emit('send data', apiCall());
-  // io.sockets.emit('send data', newStream);
-    function apiCall() {
-    return [
-      {value: 5, createdAt: 1},
-      {value: 7, createdAt: 2},
-      {value: 9, createdAt: 3},
-      {value: 2, createdAt: 4},
-    ]
-    }
+  // let newStream = mimicStream.createStream();
+  // // console.log(newStream);
+  // setInterval(() => io.sockets.emit('send data', newStream), 500);
+  // // io.sockets.emit('send data', apiCall());
+  // // io.sockets.emit('send data', newStream);
+  //   function apiCall() {
+  //   return [
+  //     {value: 5, createdAt: 1},
+  //     {value: 7, createdAt: 2},
+  //     {value: 9, createdAt: 3},
+  //     {value: 2, createdAt: 4},
+  //   ]
+  //   }
 
   // setInterval(() => { io.sockets.emit('send data', newStream) }, 1000);
 
@@ -111,13 +111,6 @@ class RT {
 }
 
 module.exports = RT;
-
-
-
-
-
-
-
 
 
 //------------------SERVER ---------------------------------------
