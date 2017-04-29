@@ -1,0 +1,89 @@
+* {
+  margin: 0px; 
+  padding: 0px; 
+}
+
+body {
+  background-color: white;
+  font-family: 'Source Sans Pro', sans-serif;
+  text-align: center;
+}
+
+.header {
+  background-color: rgb(41.2%, 41.2%, 41.2%); 
+  height: 325px; 
+  line-height: 325px;
+  box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+}
+
+.header a h1 {
+  color: white;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 40px; 
+}
+
+.header img {
+  max-height: 250px;
+  vertical-align: middle;
+}
+
+.header a {
+  text-decoration: none;
+}
+
+.info-box {
+  margin-top: 60px;
+}
+
+.info-box h3 {
+  color: grey;
+  vertical-align: middle;
+  font-weight: 200;
+}
+
+.download-button-container {
+  text-align: center;
+  margin-top: 15px;
+  margin-bottom: 30px;
+}
+
+.download-button-container button {
+  background-color:#6AB038;
+  padding: 15px 30px;
+  font-size: 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  border: none;
+  font-weight: 300;
+}
+
+.download-button-container button a {
+  text-decoration: none;
+  color: white;
+}
+
+.download-button-container button:hover {
+  background: #54892f;
+}
+
+.chart-container {
+  margin-top: -50px;
+  margin-bottom: 50px;
+}
+
+.pitch-container {
+  text-align: center;
+}
+
+.pitch-container h3 {
+  text-align: center;
+  margin: 30px 0 20px 0;
+  font-size: 35px;
+}
+
+.pitch-container p {
+  text-align: center;
+  font-weight: 200;
+  margin: 0 25% 40px 25%;
+}
