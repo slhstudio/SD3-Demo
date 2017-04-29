@@ -93,16 +93,15 @@ io.sockets.on('connection', (socket) => {
 
 
 class RT {
-  constructor(config, url) {
+  constructor(myData, config, url) {
     this.config = config;
     this.url = url;
   }
 
-  line(config, url) {
+  line(myData, config, url) {
     //console.log('this is our line graph', config.x, url);
-
-   //console.log(config)
-    io.sockets.emit('sendUserData', config );
+  
+   io.sockets.emit('sendStreamData', myData);
     
 
   }
@@ -112,7 +111,10 @@ class RT {
 
 module.exports = RT;
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 4de3b4f292c2624eec2bcf101d70ce10c6b9a9fc
 //------------------SERVER ---------------------------------------
 server.listen(process.env.port || 3000, () => console.log('SERVER RUNNING ON 3000'));
 

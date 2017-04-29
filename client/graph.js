@@ -2,14 +2,14 @@
 
 var socket = io.connect();
 
-socket.on('send userData', (data) => {
-  //console.log('DATA FROM USER', data);
-})
+// socket.on('send userData', (data) => {
+//   //console.log('DATA FROM USER', data);
+// })
 
 //////////if want to call API here would need line below////////////////
 // socket.emit('ApiData', apiCall() )
 
-let que = [];
+let queue = [];
 let allData = [];
 let counter = 0;
 
@@ -28,10 +28,15 @@ var svg = d3.select('.chart')
 
   
 
+<<<<<<< HEAD
 socket.on('sendUserData', (data) => {
   console.log('this is the data ______ ', data);
+=======
+socket.on('sendStreamData', (data) => {
+
+>>>>>>> 4de3b4f292c2624eec2bcf101d70ce10c6b9a9fc
   if (data.num_docks_available && data.num_bikes_available && allData.length < 60) {
-    que.push(data);
+    queue.push(data);
   }
   
   if (data.length >= 20) {
@@ -49,6 +54,8 @@ socket.on('sendUserData', (data) => {
   svg
     .append('g')
     .attr('transform', `translate(0, ${height})`)
+
+  svg.select('g')
     .call(d3.axisBottom(xScale).ticks(10));
 
   var yScale = d3.scaleLinear()
@@ -83,7 +90,7 @@ socket.on('sendUserData', (data) => {
 //////////RENDER DATA EVERY 1 SECOND////////////////////////////////////////
 
   setInterval(() => {
-      allData.push(que[counter]);
+      allData.push(queue[counter]);
       counter++;
       console.log('INSIDE INTERVAL', counter)
     }, 1000)
