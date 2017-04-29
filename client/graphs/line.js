@@ -27,16 +27,16 @@ socket.on('sendStreamData', (allData) => {
     console.log('queue', queue);
     console.log('data: ', data); 
 
-    if (data.length >= 30) {
-      data = data.slice(-29);
+    if (data.length >= 15) {
+      data = data.slice(-14);
     }
 if(allData) {
 
   var xScale = d3.scaleLinear()
     // .domain([0, 200])
     .domain([
-      d3.min(data, d => d.xScale),
-      Math.max(30, d3.max(data, d => d.xScale))
+      d3.min(allData, d => d.xScale),
+      Math.max(15, d3.max(allData, d => d.xScale))
     ])
     .range([0, width]);
   svg
@@ -56,7 +56,7 @@ if(allData) {
     .text('xLabel');
 
   var yScale = d3.scaleLinear()
-    .domain([0, 30])
+    .domain([0, 15])
     .range([height, 0]);
 
   svg
