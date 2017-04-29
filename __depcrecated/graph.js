@@ -28,13 +28,9 @@ var svg = d3.select('.chart')
 
   
 
-<<<<<<< HEAD
-socket.on('sendUserData', (data) => {
-  console.log('this is the data ______ ', data);
-=======
+
 socket.on('sendStreamData', (data) => {
 
->>>>>>> 4de3b4f292c2624eec2bcf101d70ce10c6b9a9fc
   if (data.num_docks_available && data.num_bikes_available && allData.length < 60) {
     queue.push(data);
   }

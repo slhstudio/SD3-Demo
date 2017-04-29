@@ -1,140 +1,62 @@
 const express = require('express');
 const app = express();
-let server = require('http').createServer(app);
-let io = require('socket.io').listen(server);
+const server = require('http').createServer(app);
 const path = require('path');
-const fs = require('fs');
-const mimicStream = require('./mimicStream.js');
-const mimicStream2 = require('./mimicStream2.js');
-var RTM = require("satori-sdk-js");
+const RTM = require("satori-sdk-js");
+const streamline = require('../lib/index.js');
 
 //---------------SEND CLIENT FILES-----------------------
 app.use(express.static(path.join(__dirname, 'client')));
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'client/index.html'));
+}, () => {
+  console.log('sending js...');
+  res.sendFile('../../lib/graphs/line.js')
 });
 
 
-//////////////////////////////SOCKETS///////////////////////////////////
+//______________GET DATA____________________________________
 
-let connections = [];
+let myData = [];
+var endpoint = "wss://open-data.api.satori.com";
+var appKey = "9BABD0370e2030dd5AFA3b1E35A9acBf";
+var channel = "US-Bike-Sharing-Channel";
 
-io.sockets.on('connection', (socket) => {
-  connections.push(socket);
-  console.log('CONNECTED: %s SOCKETS CONNECTED', connections.length)
+var rtm = new RTM(endpoint, appKey);
+rtm.on("enter-connected", function () {
+  console.log("Connected to RTM!");
+});
 
-  socket.on('disconnect', (data) => {
-    connections.splice(connections.indexOf(socket), 1);
-    console.log('CONNECTED: %s SOCKETS CONNECTED', connections.length);
+var subscription = rtm.subscribe(channel, RTM.SubscriptionMode.SIMPLE);
+subscription.on('rtm/subscription/data', function (pdu) {
+  pdu.body.messages.forEach(function (msg) {
+
+
+    if (msg.station_id < 100) {
+      myData.push(msg);
+      console.log('incoming data length', myData.length);
+    };
   });
 
-  //------------GET DATA FROM API AND SEND IT TO CLIENT --------------------
+  let counter = 0;
+  myData.forEach(obj => {
+    obj.counter = counter++;
+  });
 
-  //----------this socket connection is only if want to get data from graph.js-----
-  // socket.on('ApiData', (data) => {
-  //   io.sockets.emit('send data', data);
-  // })
+});
 
-
-  // let data = 'testing from kyle'
-
-  // console.log('function ', mimicStream.createStream());
-  // let newStream = mimicStream.createStream();
-  // // console.log(newStream);
-  // setInterval(() => io.sockets.emit('send data', newStream), 500);
-  // // io.sockets.emit('send data', apiCall());
-  // // io.sockets.emit('send data', newStream);
-  //   function apiCall() {
-  //   return [
-  //     {value: 5, createdAt: 1},
-  //     {value: 7, createdAt: 2},
-  //     {value: 9, createdAt: 3},
-  //     {value: 2, createdAt: 4},
-  //   ]
-  //   }
-
-  // setInterval(() => { io.sockets.emit('send data', newStream) }, 1000);
+rtm.start();
 
 
+//____________________connect to lib / sockets___________________________________
 
-  //let newStream = mimicStream.createStream();
-  //setInterval(() => io.sockets.emit('send data', newStream), 1000);
+let bikeStream = new streamline(server);
 
-//------------------------------------------------------------------------
-  // var endpoint = "wss://open-data.api.satori.com";
-  // var appKey = "9BABD0370e2030dd5AFA3b1E35A9acBf";
-  // var channel = "US-Bike-Sharing-Channel";
-
-  // var rtm = new RTM(endpoint, appKey);
-  // rtm.on("enter-connected", function() {
-  //   console.log("Connected to RTM!");
-  // });
-
-  // var subscription = rtm.subscribe(channel, RTM.SubscriptionMode.SIMPLE);
-  // subscription.on('rtm/subscription/data', function (pdu) {
-  //   pdu.body.messages.forEach(function (msg) {
-  //     //console.log('THIS IS THE MSG FROM SATORI', msg);
-  //     var graph = new RT(msg);
-  //     graph.line(msg);
-  //     //io.sockets.emit('send data', msg);
- 
-  //   });
-  // });
-
-  // rtm.start();
-//------------------------------------------------------------------------------
+bikeStream.connect((socket) => {
+    bikeStream.line(socket, myData);
+});
 
 
-})
-
-////////////GRAPH FUNCTIONS////////////////////////////////////////
-
-
-
-class RT {
-  constructor(myData, config, url) {
-    this.config = config;
-    this.url = url;
-  }
-
-  line(myData, config, url) {
-    //console.log('this is our line graph', config.x, url);
-  
-   io.sockets.emit('sendStreamData', myData);
-    
-
-  }
-
-
-}
-
-module.exports = RT;
-
-<<<<<<< HEAD
-
-=======
->>>>>>> 4de3b4f292c2624eec2bcf101d70ce10c6b9a9fc
-//------------------SERVER ---------------------------------------
 server.listen(process.env.port || 3000, () => console.log('SERVER RUNNING ON 3000'));
 
-
-
-
-
-//////////////////////ANOTHER WAY TO CREATE GRAPH FUNCTIONS//////////////
-// var RT = function(config) {
-//   //return new RT.line(config)
-// }
-
-// RT.line = function (config) {
-//   this.config = config;
-//   console.log('this is our line')
-//   //send configurations to socket in graph.js
-// }
-
-// RT.scatter = function (config) {
-//   this.config = config;
-//   console.log('this is our scatter')
-//   //send configurations to socket in graph.js
-// }
