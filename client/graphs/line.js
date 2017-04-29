@@ -2,8 +2,8 @@
 var socket = io.connect();
 
 let queue = [];
-let allData = [];
-let counter = 0;
+let data = [];
+let count = 0;
 
 /////////////USE SOCKET DATA TO BUILD D3 GRAPH//////////////////////////////////
 
@@ -19,17 +19,24 @@ var svg = d3.select('.chart')
   .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
 
-socket.on('sendStreamData', (data) => {
-    console.log('received data!', data); 
+socket.on('sendStreamData', (allData) => {
+    console.log('all data: ', allData);
+
+    queue = queue.concat(allData);
+
+    console.log('queue', queue);
+    console.log('data: ', data); 
+
     if (data.length >= 30) {
-      var data1 = data.slice(data.length-29);
+      data = data.slice(-29);
     }
+if(allData) {
 
   var xScale = d3.scaleLinear()
     // .domain([0, 200])
     .domain([
-      data1.length <= 30 ? 0 : d3.min(data1, d => d.xScale),
-      Math.max(30, d3.max(data1, d => d.xScale))
+      d3.min(data, d => d.xScale),
+      Math.max(30, d3.max(data, d => d.xScale))
     ])
     .range([0, width]);
   svg
@@ -80,11 +87,11 @@ socket.on('sendStreamData', (data) => {
 
   svg
     .selectAll('.line')
-    .data(data1)
+    .data(allData)
     .enter()
     .append('path')
     .attr('class', 'line')
-    .attr('d', d => line(data1))
+    .attr('d', d => line(allData))
     .style('stroke', '#5176B6')
     .style('stroke-width', 1)
     .style('fill', 'none')
@@ -92,7 +99,7 @@ socket.on('sendStreamData', (data) => {
 
 
 svg.selectAll('.dot')
-  .data(data1)
+  .data(allData)
   .enter()
   .append('circle')
     .attr('class', 'dot')
@@ -102,9 +109,16 @@ svg.selectAll('.dot')
     .style('fill', 'white')
     .style('stroke-width', 1.5)
     .style('stroke', 'DodgerBlue');
-
+}
 
 })
+
+setInterval(() => {
+  if(queue.length > 1) {
+    data.push(queue[count]);
+    count++;
+  }
+}, 1000);
 
 
 

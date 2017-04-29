@@ -22,19 +22,19 @@ let myData = [];
 var endpoint = "wss://open-data.api.satori.com";
 var appKey = "9BABD0370e2030dd5AFA3b1E35A9acBf";
 var channel = "US-Bike-Sharing-Channel";
+let counter = 0;
 
 var rtm = new RTM(endpoint, appKey);
 rtm.on("enter-connected", function () {
   console.log("Connected to RTM!");
 });
-  let counter = 0;
 
 var subscription = rtm.subscribe(channel, RTM.SubscriptionMode.SIMPLE);
 subscription.on('rtm/subscription/data', function (pdu) {
   pdu.body.messages.forEach(function (msg) {
 
 
-    if (msg.station_id < 200) {
+    if (msg.station_id < 300) {
       let config = {
         width:  10, //data.time
         height:  10,
@@ -46,9 +46,11 @@ subscription.on('rtm/subscription/data', function (pdu) {
         yScale:   msg.num_bikes_available,//data for yAxis
         xLabel_text: 'abc',
         yLabel_text: 'abc'
-      }
+      };
+
       myData.push(config);
       console.log('incoming data length', myData.length);
+      console.log('counter: ', counter);
     };
   })
 
