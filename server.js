@@ -27,22 +27,30 @@ var rtm = new RTM(endpoint, appKey);
 rtm.on("enter-connected", function () {
   console.log("Connected to RTM!");
 });
+  let counter = 0;
 
 var subscription = rtm.subscribe(channel, RTM.SubscriptionMode.SIMPLE);
 subscription.on('rtm/subscription/data', function (pdu) {
   pdu.body.messages.forEach(function (msg) {
 
 
-    if (msg.station_id < 100) {
-      myData.push(msg);
+    if (msg.station_id < 200) {
+      let config = {
+        width:  10, //data.time
+        height:  10,
+        xdomain:  10,//width of xAxis
+        ydomain:  10,//height of yAxis
+        xticks: 10,
+        yticks: 10,
+        xScale:   counter++,//data for xAxis
+        yScale:   msg.num_bikes_available,//data for yAxis
+        xLabel_text: 'abc',
+        yLabel_text: 'abc'
+      }
+      myData.push(config);
       console.log('incoming data length', myData.length);
     };
-  });
-
-  let counter = 0;
-  myData.forEach(obj => {
-    obj.counter = counter++;
-  });
+  })
 
 });
 

@@ -21,12 +21,16 @@ var svg = d3.select('.chart')
 
 socket.on('sendStreamData', (data) => {
     console.log('received data!', data); 
+    if (data.length >= 30) {
+      var data1 = data.slice(data.length-29);
+    }
+
   var xScale = d3.scaleLinear()
-    .domain([0, 200])
-    // .domain([
-    //   data.length <= 20 ? 0 : d3.min(data, d => d.num_bikes_available),
-    //   Math.max(20, d3.max(data, d => d.num_bikes_available))
-    // ])
+    // .domain([0, 200])
+    .domain([
+      data1.length <= 30 ? 0 : d3.min(data1, d => d.xScale),
+      Math.max(30, d3.max(data1, d => d.xScale))
+    ])
     .range([0, width]);
   svg
     .append('g')
@@ -67,8 +71,8 @@ socket.on('sendStreamData', (data) => {
         .text("yLabel");
 
   var line = d3.line()
-    .x(d => xScale(d.counter))
-    .y(d => yScale(d.num_bikes_available))
+    .x(d => xScale(d.xScale))
+    .y(d => yScale(d.yScale))
     //.curve(d3.curveCatmullRom.alpha(.5));
 
   d3.selectAll('path.line').remove();
@@ -76,11 +80,11 @@ socket.on('sendStreamData', (data) => {
 
   svg
     .selectAll('.line')
-    .data(data)
+    .data(data1)
     .enter()
     .append('path')
     .attr('class', 'line')
-    .attr('d', d => line(data))
+    .attr('d', d => line(data1))
     .style('stroke', '#5176B6')
     .style('stroke-width', 1)
     .style('fill', 'none')
@@ -88,7 +92,7 @@ socket.on('sendStreamData', (data) => {
 
 
 svg.selectAll('.dot')
-  .data(data)
+  .data(data1)
   .enter()
   .append('circle')
     .attr('class', 'dot')
