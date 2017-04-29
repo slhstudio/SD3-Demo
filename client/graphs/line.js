@@ -27,8 +27,8 @@ socket.on('sendStreamData', (allData) => {
     console.log('queue', queue);
     console.log('data: ', data); 
 
-    if (data.length >= 15) {
-      data = data.slice(-14);
+    if (allData.length >= 15) {
+      allData = allData.slice(-14);
     }
 if(allData) {
 
