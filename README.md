@@ -1,2 +1,2 @@
-# prototyping
-Prototyping phase for our senior project
+# StreamlineD3 Demo
+
