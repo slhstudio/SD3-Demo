@@ -5,11 +5,9 @@ let queue = [];
 let data = [];
 let count = 0;
 
-/////////////USE SOCKET DATA TO BUILD D3 GRAPH//////////////////////////////////
-
-var margin = { top: 100, right: 20, bottom: 50, left: 120 };
-var width = 1200 - margin.left - margin.right;
-var height = 700 - margin.top - margin.bottom;
+var margin = { top: 20, right: 20, bottom: 20, left: 20 };
+var width = 700 - margin.left - margin.right;
+var height = 500 - margin.top - margin.bottom;
 
 var svg = d3.select('.chart')
   .append('svg')
@@ -18,7 +16,7 @@ var svg = d3.select('.chart')
   .append('g')
   .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-
+//-----------------------------------------------------------
 socket.on('sendStreamData', (allData) => {
     console.log('all data: ', allData);
 
@@ -27,8 +25,8 @@ socket.on('sendStreamData', (allData) => {
     console.log('queue', queue);
     console.log('data: ', data); 
 
-    if (allData.length >= 15) {
-      allData = allData.slice(-14);
+    if (allData.length >= 50) {
+      allData = allData.slice(-49);
     }
 if(allData) {
 
@@ -36,7 +34,7 @@ if(allData) {
     // .domain([0, 200])
     .domain([
       d3.min(allData, d => d.xScale),
-      Math.max(15, d3.max(allData, d => d.xScale))
+      Math.max(50, d3.max(allData, d => d.xScale))
     ])
     .range([0, width]);
   svg
@@ -53,10 +51,10 @@ if(allData) {
     .style('text-anchor', 'end')
     .style('font-family', 'sans-serif')
     .style('font-size', '13px')
-    .text('xLabel');
+    .text('');
 
   var yScale = d3.scaleLinear()
-    .domain([0, 15])
+    .domain([0, 35])
     .range([height, 0]);
 
   svg
@@ -75,7 +73,7 @@ if(allData) {
         .style("text-anchor", "end")
         .style('font-family', 'sans-serif')
         .style('font-size', '13px')
-        .text("yLabel");
+        .text("");
 
   var line = d3.line()
     .x(d => xScale(d.xScale))

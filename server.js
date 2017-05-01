@@ -4,6 +4,9 @@ const server = require('http').createServer(app);
 const path = require('path');
 const RTM = require("satori-sdk-js");
 const streamline = require('./lib/index.js');
+const dotenv = require('dotenv');
+
+dotenv.load()
 
 //---------------SEND CLIENT FILES-----------------------
 app.use(express.static(path.join(__dirname, 'client')));
@@ -68,5 +71,5 @@ bikeStream.connect((socket) => {
 });
 
 
-server.listen(process.env.port || 3000, () => console.log('SERVER RUNNING ON 3000'));
+server.listen(process.env.PORT || 3000, () => console.log('SERVER RUNNING ON 3000'));
 
