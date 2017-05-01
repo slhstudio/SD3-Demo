@@ -52,8 +52,7 @@ subscription.on('rtm/subscription/data', function (pdu) {
       };
 
       myData.push(config);
-      console.log('incoming data length', myData.length);
-      console.log('counter: ', counter);
+      
     };
   })
 
