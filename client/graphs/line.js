@@ -16,8 +16,9 @@ let svg = d3.select('.chart')
 
 socket.on('sendStreamData', (allData) => {
   
-  if(allData.length > currData.length) {
+  if( allData.length > 0 || (currData.length > 0 && allData[allData.length-1].xScale !== currData[currData.length-1].xScale)) {
     currData = allData;
+  if (allData.length >= 50) allData = allData.slice(-49);
     drawViz(allData)
   };
 })
@@ -34,7 +35,6 @@ function drawViz(allData) {
       .attr('class', 'mount')
       .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-  if (allData.length >= 50) allData = allData.slice(-49);
 
   let xScale;
 
@@ -78,17 +78,15 @@ function drawViz(allData) {
     .attr('class', 'yAxis')
     .call(d3.axisLeft(yScale).ticks(allData[0].yTicks));
 
-  svg.select('.yAxis').append("text")
-    .attr("transform", "rotate(0)")
+  svg.append("text")
+    .attr("transform", "rotate(90)")
     .attr("y", -10)
     .attr("x", -40)
     .attr("dy", "1em")
-    .attr('color', 'black')
-    .attr('class', 'yLabel')
     .style("text-anchor", "end")
     .style('font-family', 'sans-serif')
     .style('font-size', '13px')
-    .text('');
+    .text('what');
 
   // d3.selectAll('path.line').remove();
   // d3.selectAll('.dot').remove();
