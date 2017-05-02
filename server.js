@@ -50,14 +50,15 @@ rtm.start();
 
 
 //____________________connect to lib / sockets___________________________________
+
 let config = {
-  // setWidth: 10, //number
-  // setHeight: 10, //number
+  setWidth: 10,                   //number
+  setHeight: 10,                  //number
   shiftingXAxis: true,
-  xdomain: 10, //width of xAxis
-  ydomain: 10, //height of yAxis
-  xScale: "counter",//data for xAxis
-  yScale: 'num_bikes_available',//data for yAxis
+  xdomain: 10,                    //width of xAxis
+  ydomain: 10,                    //height of yAxis
+  xScale: "counter",              //data for xAxis
+  yScale: 'num_bikes_available',  //data for yAxis
   xLabel_text: 'abc',
   yLabel_text: 'abc'
 };
