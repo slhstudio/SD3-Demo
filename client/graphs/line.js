@@ -78,17 +78,15 @@ function drawViz(allData) {
     .attr('class', 'yAxis')
     .call(d3.axisLeft(yScale).ticks(allData[0].yTicks));
 
-  svg.select('.yAxis').append("text")
-    .attr("transform", "rotate(0)")
+  svg.append("text")
+    .attr("transform", "rotate(90)")
     .attr("y", -10)
     .attr("x", -40)
     .attr("dy", "1em")
-    .attr('color', 'black')
-    .attr('class', 'yLabel')
     .style("text-anchor", "end")
     .style('font-family', 'sans-serif')
     .style('font-size', '13px')
-    .text('');
+    .text('what');
 
   // d3.selectAll('path.line').remove();
   // d3.selectAll('.dot').remove();
