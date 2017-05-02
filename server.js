@@ -36,23 +36,11 @@ var subscription = rtm.subscribe(channel, RTM.SubscriptionMode.SIMPLE);
 subscription.on('rtm/subscription/data', function (pdu) {
   pdu.body.messages.forEach(function (msg) {
 
-
     if (msg.station_id < 300) {
-      let config = {
-        width:  10, //data.time
-        height:  10,
-        xdomain:  10,//width of xAxis
-        ydomain:  10,//height of yAxis
-        xticks: 10,
-        yticks: 10,
-        xScale:   counter++,//data for xAxis
-        yScale:   msg.num_bikes_available,//data for yAxis
-        xLabel_text: 'abc',
-        yLabel_text: 'abc'
-      };
+      msg.counter = counter ++;
 
-      myData.push(config);
-      
+      myData.push(msg);
+
     };
   })
 
@@ -63,10 +51,24 @@ rtm.start();
 
 //____________________connect to lib / sockets___________________________________
 
+let config = {
+  setWidth: 700,                   //number
+  setHeight: 500,                  //number
+  shiftXAxis: true,
+  xDomain: 10,                    //width of xAxis
+  yDomain: 10,                    //height of yAxis
+  xTicks: 10,
+  yTicks: 10,                  
+  xScale: 'counter',              //data for xAxis
+  yScale: 'num_bikes_available',  //data for yAxis
+  xLabel_text: 'abc',
+  yLabel_text: 'abc'
+};
+
 let bikeStream = new streamline(server);
 
 bikeStream.connect((socket) => {
-    bikeStream.line(socket, myData);
+  bikeStream.line(socket, myData, config);
 });
 
 
