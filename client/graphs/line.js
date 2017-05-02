@@ -16,8 +16,9 @@ let svg = d3.select('.chart')
 
 socket.on('sendStreamData', (allData) => {
   
-  if(allData.length > currData.length) {
+  if( allData.length > 0 || (currData.length > 0 && allData[allData.length-1].xScale !== currData[currData.length-1].xScale)) {
     currData = allData;
+  if (allData.length >= 50) allData = allData.slice(-49);
     drawViz(allData)
   };
 })
@@ -34,7 +35,6 @@ function drawViz(allData) {
       .attr('class', 'mount')
       .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-  if (allData.length >= 50) allData = allData.slice(-49);
 
   let xScale;
 
