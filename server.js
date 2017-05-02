@@ -56,10 +56,8 @@ let config = {
   shiftingXAxis: true,
   xdomain: 10, //width of xAxis
   ydomain: 10, //height of yAxis
-  xticks: 10,
-  yticks: 10,
-  xScale: "data.counter",//data for xAxis
-  yScale: 'data.num_bikes_available',//data for yAxis
+  xScale: "counter",//data for xAxis
+  yScale: 'num_bikes_available',//data for yAxis
   xLabel_text: 'abc',
   yLabel_text: 'abc'
 };
