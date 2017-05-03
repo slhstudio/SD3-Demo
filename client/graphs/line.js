@@ -1,10 +1,11 @@
-
+(function() {
 let socket = io.connect();
 
 //set initial SVG params
 let margin = { top: 20, right: 20, bottom: 40, left: 60 };
 let width = 700 - margin.left - margin.right;
 let height = 500 - margin.top - margin.bottom;
+
 
 //array to compare incoming data >> if data is the same, do not rerender
 let currData = [];
@@ -23,7 +24,9 @@ drawAxis(
   }]
   );
 
-socket.on('sendStreamData', (allData) => {
+socket.on('sendLineData', (allData) => {
+  
+  console.log('ALL DATA: ', allData);
 
   //if data is not empty or data is new...
   if (allData.length > 0 || (currData.length > 0 && allData[allData.length - 1].xScale !== currData[currData.length - 1].xScale)) {
@@ -128,3 +131,4 @@ function drawContent(line, allData) {
     .style('stroke-width', 1.5)
     .style('stroke', 'DodgerBlue');
 }
+})();
