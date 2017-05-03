@@ -13,9 +13,6 @@ app.use(express.static(path.join(__dirname, 'client')));
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'client/index.html'));
-}, () => {
-  console.log('sending js...');
-  res.sendFile('../../lib/graphs/line.js')
 });
 
 
@@ -40,7 +37,9 @@ subscription.on('rtm/subscription/data', function (pdu) {
       msg.counter = counter ++;
 
       myData.push(msg);
-
+      if(myData.length > 20) {
+        myData.shift();
+      };
     };
   })
 
@@ -52,22 +51,25 @@ rtm.start();
 //____________________connect to lib / sockets___________________________________
 
 let config = {
-  setWidth: 700,                   //number
-  setHeight: 500,                  //number
+  setWidth: 700,                   
+  setHeight: 500,                  
   shiftXAxis: true,
-  xDomain: 10,                    //width of xAxis
-  yDomain: 10,                    //height of yAxis
+  xDomainUpper: 20,
+  xDomainLower: 0,                
+  yDomainUpper: 40,
+  yDomainLower: 0,                  
   xTicks: 10,
   yTicks: 10,                  
-  xScale: 'counter',              //data for xAxis
-  yScale: 'num_bikes_available',  //data for yAxis
-  xLabel_text: 'abc',
-  yLabel_text: 'abc'
+  xScale: 'counter',              
+  yScale: 'num_bikes_available',
+  xLabel_text: 'x axis label',
+  yLabel_text: 'y axis label'
 };
 
 let bikeStream = new streamline(server);
 
 bikeStream.connect((socket) => {
+  console.log('MY DATA LEN ', myData.length);
   bikeStream.line(socket, myData, config);
 });
 

@@ -1,97 +1,108 @@
 
 let socket = io.connect();
 
-let margin = { top: 20, right: 20, bottom: 20, left: 20 };
+//set initial SVG params
+let margin = { top: 20, right: 20, bottom: 40, left: 60 };
 let width = 700 - margin.left - margin.right;
 let height = 500 - margin.top - margin.bottom;
 
+//array to compare incoming data >> if data is the same, do not rerender
 let currData = [];
-let svg = d3.select('.chart')
-    .append('svg')
-      .attr('width', width + margin.left + margin.right)
-      .attr('height', height + margin.top + margin.bottom)
-    .append('g')
-      .attr('class', 'mount')
-      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+//draw initial blank graph placeholder
+drawAxis(
+  d3.scaleLinear().domain([0, 20]).range([0, width]), 
+  d3.scaleLinear().domain([0, 40]).range([height, 0]),
+  [{
+    setWidth: 700,
+    setHeight: 500,
+    xTicks: 10,
+    yTicks: 10,
+    xLabel_text: '',
+    yLabel_text: '',
+  }]
+  );
 
 socket.on('sendStreamData', (allData) => {
-  
-  if(allData.length > currData.length) {
+
+  //if data is not empty or data is new...
+  if (allData.length > 0 || (currData.length > 0 && allData[allData.length - 1].xScale !== currData[currData.length - 1].xScale)) {
+
     currData = allData;
-    drawViz(allData)
+
+    width = allData[0].setWidth - margin.left - margin.right;
+    height = allData[0].setHeight - margin.top - margin.bottom;
+
+    let xScale;
+
+    if (allData[0].shiftXAxis) {
+      xScale = d3.scaleLinear()
+        .domain([
+          d3.min(allData, d => d.xScale),
+          Math.max(allData[0].xDomainUpper, d3.max(allData, d => d.xScale))
+        ])
+        .range([0, width]);
+
+    } else {
+      xScale = d3.scaleLinear()
+        .domain([allData[0].xDomainLower, allData[0].xDomainUpper])
+        .range([0, width]);
+    }
+
+    let yScale = d3.scaleLinear()
+      .domain([allData[0].yDomainLower, allData[0].yDomainUpper])
+      .range([height, 0]);
+
+    let line = d3.line()
+      .x(d => xScale(d.xScale))
+      .y(d => yScale(d.yScale))
+    
+    drawAxis(xScale, yScale, allData);
+    drawContent(line, allData);
   };
 })
 
-function drawViz(allData) {
-  console.log('ALL DATA:  ', allData);
+function drawAxis(xScale, yScale, allData) {
+
   d3.select('svg').remove();
 
   svg = d3.select('.chart')
     .append('svg')
-      .attr('width', allData[0].setWidth + margin.left + margin.right)
-      .attr('height', allData[0].setHeight + margin.top + margin.bottom)
+    .attr('width', width + margin.left + margin.right)
+    .attr('height', height + margin.top + margin.bottom)
     .append('g')
-      .attr('class', 'mount')
-      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-
-  if (allData.length >= 50) allData = allData.slice(-49);
-
-  let xScale;
-
-  if (allData[0].shiftXAxis) {
-    xScale = d3.scaleLinear()
-      .domain([
-        d3.min(allData, d => d.xScale),
-        Math.max(50, d3.max(allData, d => d.xScale))
-      ])
-      .range([0, allData[0].setWidth]);
-
-  } else {
-    xScale = d3.scaleLinear()
-      .domain([0, allData[0].xDomain])
-      .range([0, allData[0].setWidth]);
-  }
-  
-  let yScale = d3.scaleLinear()
-    .domain([0, 35])
-    .range([height, 0]);
-
-  let line = d3.line()
-    .x(d => xScale(d.xScale))
-    .y(d => yScale(d.yScale))
+    .attr('class', 'mount')
+    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
   svg
     .append('g')
     .attr('transform', `translate(0, ${height})`)
     .call(d3.axisBottom(xScale).ticks(allData[0].xTicks));
 
-  // Add the text label for the x axis
   svg.append("text")
     .attr('transform', 'translate(' + (width) + ' ,' + (height + margin.bottom) + ')')
     .style('text-anchor', 'end')
     .style('font-family', 'sans-serif')
     .style('font-size', '13px')
-    .text('');
+    .text(allData[0].xLabel_text);
 
   svg
     .append('g')
     .attr('class', 'yAxis')
     .call(d3.axisLeft(yScale).ticks(allData[0].yTicks));
 
-  svg.select('.yAxis').append("text")
-    .attr("transform", "rotate(0)")
-    .attr("y", -10)
-    .attr("x", -40)
+  svg.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", -50)
+    .attr("x", 0)
     .attr("dy", "1em")
-    .attr('color', 'black')
-    .attr('class', 'yLabel')
     .style("text-anchor", "end")
     .style('font-family', 'sans-serif')
     .style('font-size', '13px')
-    .text('');
+    .text(allData[0].yLabel_text);
+}
 
-  // d3.selectAll('path.line').remove();
-  // d3.selectAll('.dot').remove();
+function drawContent(line, allData) {
 
   svg
     .selectAll('.line')
