@@ -1,7 +1,7 @@
 
 let socket = io.connect();
 
-let margin = { top: 20, right: 20, bottom: 20, left: 20 };
+let margin = { top: 20, right: 20, bottom: 40, left: 60 };
 let width = 700 - margin.left - margin.right;
 let height = 500 - margin.top - margin.bottom;
 
@@ -15,16 +15,15 @@ let svg = d3.select('.chart')
       .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
 socket.on('sendStreamData', (allData) => {
-  
+  console.log('received data length: ', allData);
   if( allData.length > 0 || (currData.length > 0 && allData[allData.length-1].xScale !== currData[currData.length-1].xScale)) {
     currData = allData;
-  if (allData.length >= 50) allData = allData.slice(-49);
-    drawViz(allData)
+    drawContent(allData)
   };
 })
 
-function drawViz(allData) {
-  console.log('ALL DATA:  ', allData);
+function drawContent(allData) {
+
   d3.select('svg').remove();
 
   svg = d3.select('.chart')
@@ -42,18 +41,18 @@ function drawViz(allData) {
     xScale = d3.scaleLinear()
       .domain([
         d3.min(allData, d => d.xScale),
-        Math.max(50, d3.max(allData, d => d.xScale))
+        Math.max(allData[0].xDomainUpper, d3.max(allData, d => d.xScale))
       ])
       .range([0, allData[0].setWidth]);
 
   } else {
     xScale = d3.scaleLinear()
-      .domain([0, allData[0].xDomain])
+      .domain([allData[0].xDomainLower, allData[0].xDomainUpper])
       .range([0, allData[0].setWidth]);
   }
   
   let yScale = d3.scaleLinear()
-    .domain([0, 35])
+    .domain([allData[0].yDomainLower, allData[0].yDomainUpper])
     .range([height, 0]);
 
   let line = d3.line()
@@ -65,13 +64,12 @@ function drawViz(allData) {
     .attr('transform', `translate(0, ${height})`)
     .call(d3.axisBottom(xScale).ticks(allData[0].xTicks));
 
-  // Add the text label for the x axis
   svg.append("text")
     .attr('transform', 'translate(' + (width) + ' ,' + (height + margin.bottom) + ')')
     .style('text-anchor', 'end')
     .style('font-family', 'sans-serif')
     .style('font-size', '13px')
-    .text('');
+    .text(allData[0].xLabel_text);
 
   svg
     .append('g')
@@ -79,17 +77,14 @@ function drawViz(allData) {
     .call(d3.axisLeft(yScale).ticks(allData[0].yTicks));
 
   svg.append("text")
-    .attr("transform", "rotate(90)")
-    .attr("y", -10)
-    .attr("x", -40)
+    .attr("transform", "rotate(-90)")
+    .attr("y", -50)
+    .attr("x", 0)
     .attr("dy", "1em")
     .style("text-anchor", "end")
     .style('font-family', 'sans-serif')
     .style('font-size', '13px')
-    .text('what');
-
-  // d3.selectAll('path.line').remove();
-  // d3.selectAll('.dot').remove();
+    .text(allData[0].yLabel_text);
 
   svg
     .selectAll('.line')
