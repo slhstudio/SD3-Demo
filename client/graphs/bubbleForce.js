@@ -1,5 +1,5 @@
 (function () {
-
+	let currData = [];
 	let socket = io.connect();
 
 	//set initial SVG params
@@ -7,22 +7,37 @@
 	let width = 700 - margin.left - margin.right;
 	let height = 500 - margin.top - margin.bottom;
 
-	//trump trends bubble
+	let svg;
+
+	drawGrid([{setWidth: 700, setHeight: 500}]);
 
 	socket.on('sendBubbleData', (data) => {
 		//check if data is the same
-		
+		if (isNewData(currData, data)) {
+			currData = data;
+			drawGrid(data);
+			drawContent(data, svg);
+		}
 
+	});
 
+	function drawGrid(data) {
 
-		d3.select('svg').remove();		
-		console.log('received bubble data');
-		var svg = d3.select('.chart')
+		width = data[0].setWidth - margin.left - margin.right;
+		height = data[0].setHeight - margin.top - margin.bottom;
+
+		d3.select('svg').remove();
+
+		svg = d3.select('.chart')
 			.append('svg')
 			.attr('width', width + margin.left + margin.right)
 			.attr('height', height + margin.top + margin.bottom)
 			.append('g')
 			.attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
+
+	}
+
+	function drawContent(data, svg) {
 
 		var radiusScale = d3.scaleSqrt().domain([0, 10]).range([0, 50])
 
@@ -31,48 +46,52 @@
 			.force('Y', d3.forceY(0).strength(.1))
 			.force('collide', d3.forceCollide(d => radiusScale(d.volume)))
 
-			var circles = svg
-				.selectAll('.word')
-				.data(data)
-				.enter()
-				.append('g')
-				.attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
+		var circles = svg
+			.selectAll('.word')
+			.data(data)
+			.enter()
+			.append('g')
+			.attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
 
-			circles.append('circle')
-				.attr('class', 'word')
-				.attr('r', d => radiusScale(d.volume))
-				.attr('fill', 'yellow')
-				.attr('fill-opacity', .8)
-				.attr('cx', width / 2)
-				.attr('cy', height / 2)
+		circles.append('circle')
+			.attr('r', d => radiusScale(d.volume))
+			.attr('fill', 'yellow')
+			.attr('fill-opacity', .8)
+			.attr('cx', width / 2)
+			.attr('cy', height / 2)
 
+		circles.append('text')
+			.style('text-anchor', 'middle')
+			.style('fill', 'black')
+			.style('font-size', '16px')
+			.attr('y', 4)
+			.text(d => d.text)
+			.append('text');
 
-			circles.append('text')
-				.style('text-anchor', 'middle')
-				.style('fill', 'black')
-				.style('font-size', '16px')
-				.attr('y', 4)
-				.text(d => d.text)
-				.append('text')
-				.text(d => d.text);
+		circles
+			.on('click', d => console.log(d))
 
-			circles
-				.on('click', d => console.log(d))
+		simulation.nodes(data)
+			.on('tick', ticked)
 
-			simulation.nodes(data)
-				.on('tick', ticked)
+		function ticked() {
+			svg.selectAll('circle')
+				.attr('cx', d => d.x)
+				.attr('cy', d => d.y);
 
-			function ticked() {
-				svg.selectAll('circle')
-					.attr('cx', d => d.x)
-					.attr('cy', d => d.y);
+			svg.selectAll('text')
+				.attr('dx', d => d.x)
+				.attr('dy', d => d.y);
+		}
+	}
 
-				svg.selectAll('text')
-					.attr('dx', d => d.x)
-					.attr('dy', d => d.y);
-			}
+	function isNewData(a, b) {
 
-	});
-	console.log('creating circles!');
+		if (a.length !== b.length) {return true};
 
+		for (let i = 0; i < a.length; i += 1) {
+			if (a[i].text !== b[i].text || a[i].volume !== b[i].volume) {return true};
+		}
+		return false;
+	}
 })();
