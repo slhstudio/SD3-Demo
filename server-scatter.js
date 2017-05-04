@@ -33,8 +33,10 @@ var subscription = rtm.subscribe(channel, RTM.SubscriptionMode.SIMPLE);
 subscription.on('rtm/subscription/data', function (pdu) {
   pdu.body.messages.forEach(function (msg) {
 
+    console.log('MESSAGE DATA', msg);
+
     if (msg.station_id < 300) {
-      msg.counter = counter ++;
+      msg.counter = Math.random() * 19;
 
       myData.push(msg);
       if(myData.length > 20) {
