@@ -63,15 +63,15 @@ socket.on('sendStreamData', (data) => {
     .call(d3.axisLeft(yScale).ticks(10));
 
   svg.append("text")
-        .attr("transform", "rotate(0)")
-        .attr("y",-10)
-        .attr("x", -40)
-        .attr("dy", "1em")
-        .attr('class', 'yLabel')
-        .style("text-anchor", "end")
-        .style('font-family', 'sans-serif')
-        .style('font-size', '13px')
-        .text("yLabel");
+    .attr("transform", "rotate(0)")
+    .attr("y",-10)
+    .attr("x", -40)
+    .attr("dy", "1em")
+    .attr('class', 'yLabel')
+    .style("text-anchor", "end")
+    .style('font-family', 'sans-serif')
+    .style('font-size', '13px')
+    .text("yLabel");
 
   var line = d3.line()
     .x(d => xScale(d.counter))
