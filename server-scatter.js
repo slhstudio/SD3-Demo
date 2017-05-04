@@ -70,7 +70,7 @@ let bikeStream = new streamline(server);
 
 bikeStream.connect((socket) => {
   console.log('MY DATA LEN ', myData.length);
-  bikeStream.line(socket, myData, config);
+  bikeStream.scatter(socket, myData, config);
 });
 
 
