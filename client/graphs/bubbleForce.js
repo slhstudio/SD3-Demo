@@ -9,7 +9,7 @@
 
 	let svg;
 
-	drawGrid([{setWidth: 700, setHeight: 500}]);
+	drawGrid([{ setWidth: 700, setHeight: 500 }]);
 
 	socket.on('sendBubbleData', (data) => {
 		//check if data is the same
@@ -56,7 +56,9 @@
 		circles.append('circle')
 			.attr('r', d => radiusScale(d.volume))
 			.attr('fill', 'yellow')
+			.attr('class', 'word')
 			.attr('fill-opacity', .8)
+			.attr('id', d => 'c' + d.text)
 			.attr('cx', width / 2)
 			.attr('cy', height / 2)
 
@@ -86,12 +88,30 @@
 	}
 
 	function isNewData(a, b) {
-
-		if (a.length !== b.length) {return true};
+		if (a.length !== b.length) { return true };
 
 		for (let i = 0; i < a.length; i += 1) {
-			if (a[i].text !== b[i].text || a[i].volume !== b[i].volume) {return true};
+			if (a[i].text === b[i].text && a[i].volume !== b[i].volume) {
+				reRenderNode(b[i]);
+
+			} else if (a[i].text !== b[i].text) {
+				return true;
+			};
 		}
 		return false;
 	}
 })();
+
+function reRenderNode(element) {
+	console.log('rerender!');
+
+	var simulation = d3.forceSimulation()
+		.force('x', d3.forceX(0).strength(.1))
+		.force('Y', d3.forceY(0).strength(.1))
+		.force('collide', d3.forceCollide(d => radiusScale(d.volume)))
+
+	d3.select('#' + 'c' + element.text)
+		.attr('fill', 'red')
+		.attr('r', element.volume)
+
+}
