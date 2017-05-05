@@ -33,7 +33,7 @@ var subscription = rtm.subscribe(channel, RTM.SubscriptionMode.SIMPLE);
 subscription.on('rtm/subscription/data', function (pdu) {
   pdu.body.messages.forEach(function (msg) {
 
-    console.log('MESSAGE DATA', msg);
+    //console.log('MESSAGE DATA', msg);
 
     if (msg.station_id < 300) {
       msg.counter = Math.random() * 19;
@@ -71,7 +71,6 @@ let config = {
 let bikeStream = new streamline(server);
 
 bikeStream.connect((socket) => {
-  console.log('MY DATA LEN ', myData.length);
   bikeStream.scatter(socket, myData, config);
 });
 
