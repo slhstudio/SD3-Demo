@@ -1,3 +1,4 @@
+(() => {
 
   let socket = io.connect();
 
@@ -10,7 +11,7 @@
 
   socket.on('sendScatterData', (allData) => {
   
-    console.log('ALL DATA: ', allData);
+    //console.log('ALL DATA: ', allData);
 
     //if data is not empty or data is new...
     if (allData.length > 0 || (currData.length > 0 && allData[allData.length - 1].xScale !== currData[currData.length - 1].xScale)) {
@@ -56,9 +57,6 @@
           .domain([0, d3.max(allData, d => d.yScale)])
           .range([0, 40])
 
-
-
-
         //create circles but group them in svg container so work better with text when animating 
         var circles = svg
           .selectAll('.ball')
@@ -81,6 +79,7 @@
           .style('fill', 'steelblue')
           .style('fill-opacity', 0.5)
 
+        //IF WANT TEXT INSIDE CIRCLES UNCOMMENT THIS SECTION BELOW 
         // circles
         //   .append('text')
         //   //put text in middle of element
@@ -89,11 +88,12 @@
         //   //adjust y position by 4px
         //   .attr('y', 4)
         //   //set text to the country code
-        //   .text(d => d.code)
+        //   .text(d => d.xLabel_text)
     }
     
   });
 
+})()
 
 
 

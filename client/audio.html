@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Web Speech API Demo</title>
+      <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,700" rel="stylesheet">
+    <link rel="stylesheet" href="audio-style.css">
+  </head>
+  <body>
+    <div id="record">
+      <h1>Speech to Text Visualization</h1>
+      <!--<h2 class="headers">Transcription</h2>-->
+
+      <div id="results-container">
+        <span id="results">Results:</span>
+        <label class="radio"><input type="radio" name="recognition-type" value="final" /> Final only</label>
+        <label class="radio"><input type="radio" name="recognition-type" value="interim" checked="checked" />Interim</label>
+      </div>
+
+      <textarea id="transcription" readonly="readonly"></textarea>
+      <!--<h3 class="headers">Log</h3>-->
+
+      <div class="buttons-wrapper">
+        <button id="button-play-ws" class="button-demo">Record</button>
+        <button id="button-stop-ws" class="button-demo">Stop</button>
+        <button id="clear-all" class="button-demo">Clear</button>
+      </div>
+      <span id="ws-unsupported" class="hidden">API not supported</span>
+      
+      <div id="log"></div>
+    </div>
+
+<!--WORDCLOUD++++++++++++++++++++++++++++++++-->
+   
+    <div id="vis"></div>
+   
+
+<!--SCRIPTS+++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>  
+    <script src="http://d3js.org/d3.v3.min.js"></script>  
+
+    <script src="audio.js"></script>
+    <script src="graphs/d3.layout.cloud.js"></script>
+    <script src="graphs/word-cloud.js"></script>
+   
+
+  </body>
+</html>
