@@ -79,7 +79,7 @@ bikeStream.connect((socket) => {
 let wordCloud = new streamline(server);
 
 wordCloud.connect((socket) => {
-  //wordCloud.wordCloud(socket);
+  wordCloud.wordCloud(socket);
 });
 
 server.listen(process.env.PORT || 3000, () => console.log('SERVER RUNNING ON 3000'));
