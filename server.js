@@ -69,7 +69,6 @@ let config = {
 let bikeStream = new streamline(server);
 
 bikeStream.connect((socket) => {
-  //console.log('MY DATA LEN ', myData.length);
   bikeStream.line(socket, myData, config);
 });
 
@@ -77,10 +76,10 @@ bikeStream.connect((socket) => {
 
 
 
-// let wordCloud = new streamline(server);
+let wordCloud = new streamline(server);
 
-bikeStream.connect((socket) => {
-  //bikeStream.wordCloud(socket);
+wordCloud.connect((socket) => {
+  //wordCloud.wordCloud(socket);
 });
 
 server.listen(process.env.PORT || 3000, () => console.log('SERVER RUNNING ON 3000'));
