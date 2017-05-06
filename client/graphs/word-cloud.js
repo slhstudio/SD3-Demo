@@ -9,8 +9,8 @@ function includes(word){
   })
 }
 
-socket.on('send data', (data) => {
-
+socket.on('send audioData', (data) => {
+  console.log('WORD CLOUD AUDIO DATA', data);
   //if word is in freq arr, then add 1; if not add it
 	data.split(' ').forEach(word => {
     freq.forEach(obj => {
@@ -25,8 +25,13 @@ socket.on('send data', (data) => {
     })
 	});
 
+
+
 //--------------------CREATE GRAPH----------------------------------
-  let fillColor = d3.scale.category20b();
+  //d3 version 3 way of adding color;
+  //let fillColor = d3.scale.category20b();
+  
+  let fillColor = d3.scaleOrdinal(d3.schemeCategory20);
   let w = 1200;
   let h = 500;
 
@@ -40,10 +45,10 @@ socket.on('send data', (data) => {
     .start();
 
   function drawCloud(words) {
-		//remove so doesn't make multiple word clouds
-		d3.select('svg').remove();
-    
-		d3.select("#vis").append("svg")
+    //remove so doesn't make multiple word clouds
+		//d3.select('svg').remove();
+		
+    d3.select("#word-cloud").append("svg")
         .attr("width", w)
         .attr("height", h)
       .append("g")
