@@ -52,7 +52,7 @@ rtm.start();
 
 //____________________connect to lib / sockets___________________________________
 
-let config = {
+let config2 = {
   setWidth: 700,                   
   setHeight: 500,                  
   shiftXAxis: true,
@@ -71,7 +71,7 @@ let config = {
 let bikeStream = new streamline(server);
 
 bikeStream.connect((socket) => {
-  bikeStream.scatter(socket, myData, config);
+  bikeStream.scatter(socket, myData, config2);
 });
 
 

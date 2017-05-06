@@ -25,7 +25,7 @@
         //remove svg so won't render twice
         d3.select('svg').remove();
 
-      var svg = d3.select('.chart')
+      var svg = d3.select('#scatter-plot')
         .append('svg')
           .attr('width', width + margin.left + margin.right)
           .attr('height', height + margin.top + margin.bottom)
