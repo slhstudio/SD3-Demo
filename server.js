@@ -66,12 +66,36 @@ let config = {
   yLabel_text: 'y axis label'
 };
 
+let config2 = {
+  setWidth: 700,                   
+  setHeight: 500,                  
+  shiftXAxis: true,
+  xDomainUpper: 20,
+  xDomainLower: 0,                
+  yDomainUpper: 40,
+  yDomainLower: 0,                  
+  xTicks: 10,
+  yTicks: 10,                  
+  xScale: 'counter',              
+  yScale: 'num_bikes_available',
+  xLabel_text: 'x axis label',
+  yLabel_text: 'y axis label'
+};
+
 let bikeStream = new streamline(server);
+//let bikeStream2 = new streamline(server);
 
 bikeStream.connect((socket) => {
-  //console.log('MY DATA LEN ', myData.length);
   bikeStream.line(socket, myData, config);
+  //bikeStream2.scatter(socket, myData, config2);
 });
+
+//_________________SCATTER__________________________
+
+
+// bikeStream.connect((socket) => {
+//   bikeStream.scatter(socket, myData, config2);
+// });
 
 //__________________WORD CLOUD__________________________
 
@@ -79,9 +103,9 @@ bikeStream.connect((socket) => {
 
 // let wordCloud = new streamline(server);
 
-bikeStream.connect((socket) => {
-  //bikeStream.wordCloud(socket);
-});
+// wordCloud.connect((socket) => {
+//   wordCloud.wordCloud(socket);
+// });
 
 server.listen(process.env.PORT || 3000, () => console.log('SERVER RUNNING ON 3000'));
 

@@ -35,7 +35,8 @@ socket.on('send audioData', (data) => {
   let w = 1200;
   let h = 500;
 
-  cloud().size([w, h])
+  cloud()
+    .size([w, h])
     .words(freq) 
     .padding(25)
     .rotate(0)      
@@ -46,7 +47,7 @@ socket.on('send audioData', (data) => {
 
   function drawCloud(words) {
     //remove so doesn't make multiple word clouds
-		//d3.select('svg').remove();
+		d3.select("svg").remove()
 		
     d3.select("#word-cloud").append("svg")
         .attr("width", w)
