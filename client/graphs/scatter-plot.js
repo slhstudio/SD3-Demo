@@ -23,10 +23,11 @@
 
       /////////////////MAKE BG///////////////////////////////////////
         //remove svg so won't render twice
-        d3.select('svg').remove();
+        d3.select('#scatterSVG').remove();
 
       var svg = d3.select('#scatter-plot')
         .append('svg')
+          .attr('id', 'scatterSVG')
           .attr('width', width + margin.left + margin.right)
           .attr('height', height + margin.top + margin.bottom)
         .append('g')

@@ -47,9 +47,10 @@ socket.on('send audioData', (data) => {
 
   function drawCloud(words) {
     //remove so doesn't make multiple word clouds
-		d3.select("svg").remove()
+		d3.select("#wordCloud").remove()
 		
     d3.select("#word-cloud").append("svg")
+        .attr('id', 'wordCloud')
         .attr("width", w)
         .attr("height", h)
       .append("g")

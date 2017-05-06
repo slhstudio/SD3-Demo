@@ -87,7 +87,8 @@ let bikeStream = new streamline(server);
 
 bikeStream.connect((socket) => {
   bikeStream.line(socket, myData, config);
-  //bikeStream2.scatter(socket, myData, config2);
+  bikeStream.scatter(socket, myData, config2);
+  bikeStream.wordCloud(socket);
 });
 
 //_________________SCATTER__________________________

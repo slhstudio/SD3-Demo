@@ -67,10 +67,11 @@ socket.on('sendLineData', (allData) => {
 
 function drawAxis(xScale, yScale, allData) {
 
-  d3.select('svg').remove();
+  d3.select('#lineSVG').remove();
 
   svg = d3.select('.chart')
     .append('svg')
+    .attr('id', 'lineSVG')
     .attr('width', width + margin.left + margin.right)
     .attr('height', height + margin.top + margin.bottom)
     .append('g')
