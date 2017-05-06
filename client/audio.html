@@ -9,8 +9,7 @@
   </head>
   <body>
     <div id="record">
-      <h1>Speech to Text Visualization</h1>
-      <!--<h2 class="headers">Transcription</h2>-->
+      <h1 id="speech-header">Speech to Text Visualization</h1>
 
       <div id="results-container">
         <span id="results">Results:</span>
@@ -19,7 +18,6 @@
       </div>
 
       <textarea id="transcription" readonly="readonly"></textarea>
-      <!--<h3 class="headers">Log</h3>-->
 
       <div class="buttons-wrapper">
         <button id="button-play-ws" class="button-demo">Record</button>
@@ -33,11 +31,10 @@
 
 <!--WORDCLOUD++++++++++++++++++++++++++++++++-->
    
-    <div id="vis"></div>
+    <div id="word-cloud"></div>
    
 
 <!--SCRIPTS+++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>  
     <script src="http://d3js.org/d3.v3.min.js"></script>  
 

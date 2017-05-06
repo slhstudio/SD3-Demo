@@ -22,7 +22,7 @@ io.sockets.on('connection', (socket) => {
   console.log('CONNECTED: %s SOCKETS CONNECTED', connections.length);
 
   socket.on('send audioText', (data) => {
-    io.sockets.emit('send data', data);
+    io.sockets.emit('send audioData', data);
   })
 })
 

@@ -4,7 +4,6 @@
 }
 
 body {
-  font-size: 20px;
   font-family: 'Source Sans Pro', sans-serif;
 }
 
@@ -13,7 +12,7 @@ body {
   margin: 2em auto;
 }
 
-h1 {
+#speech-header {
   text-align: center;
   margin-bottom: 20px;
 }
@@ -40,6 +39,7 @@ h1 {
 
 .buttons-wrapper {
   text-align: center;
+  width: 525px;
 }
 
 .hidden {
@@ -67,7 +67,8 @@ h1 {
   line-height: 1em;
   font-size: 1em;
   font-weight: 300;
-  margin-left: 175px;
+ /* margin-left: 190px;*/
+  margin-left: 145px;
 }
 
 .button-demo {
@@ -109,7 +110,6 @@ h1 {
 #clear-all:hover {
   background-color: rgb(114, 175, 187);
 }
-
 
 #vis {
   text-align: center;

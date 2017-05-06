@@ -1,4 +1,27 @@
 // (function(exports) {
+
+// Copies a variable number of methods from source to target.
+d3.rebind = function(target, source) {
+  var i = 1, n = arguments.length, method;
+  while (++i < n) target[method = arguments[i]] = d3_rebind(target, source, source[method]);
+  return target;
+};
+
+// Method is assumed to be a standard D3 getter-setter:
+// If passed with no arguments, gets the value.
+// If passed with arguments, sets the value and returns the target.
+function d3_rebind(target, source, method) {
+  return function() {
+    var value = method.apply(source, arguments);
+    return value === source ? target : value;
+  };
+}
+
+function d3_functor(v) {
+  return typeof v === "function" ? v : function() { return v; };
+}
+d3.functor = d3_functor;
+
 function cloud() {
 	var size = [256, 256],
 		text = cloudText,
@@ -187,6 +210,7 @@ function cloud() {
 		return cloud;
 	};
 
+	//this is the version 3 way of doing things
 	return d3.rebind(cloud, event, "on");
 }
 
