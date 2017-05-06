@@ -19,6 +19,7 @@ app.get('/', (req, res) => {
 //______________GET DATA____________________________________
 
 let myData = [];
+let myData2 = [];
 var endpoint = "wss://open-data.api.satori.com";
 var appKey = "9BABD0370e2030dd5AFA3b1E35A9acBf";
 var channel = "US-Bike-Sharing-Channel";
@@ -34,14 +35,24 @@ subscription.on('rtm/subscription/data', function (pdu) {
   pdu.body.messages.forEach(function (msg) {
 
     if (msg.station_id < 300) {
-      msg.counter = counter ++;
-
+      msg.counter = counter++;
       myData.push(msg);
-      if(myData.length > 20) {
+
+      if (myData.length > 20) {
         myData.shift();
-      };
-    };
-  })
+      }
+    }
+    
+    if (msg.station_id < 250) {
+      msg.counter = Math.random() * 19; 
+      myData2.push(msg);
+
+      if (myData2.length > 20) {
+        myData2.shift();
+      }
+    }
+
+  });
 
 });
 
@@ -83,30 +94,12 @@ let config2 = {
 };
 
 let bikeStream = new streamline(server);
-//let bikeStream2 = new streamline(server);
 
 bikeStream.connect((socket) => {
   bikeStream.line(socket, myData, config);
-  bikeStream.scatter(socket, myData, config2);
+  bikeStream.scatter(socket, myData2, config2);
   bikeStream.wordCloud(socket);
 });
-
-//_________________SCATTER__________________________
-
-
-// bikeStream.connect((socket) => {
-//   bikeStream.scatter(socket, myData, config2);
-// });
-
-//__________________WORD CLOUD__________________________
-
-
-
-// let wordCloud = new streamline(server);
-
-// wordCloud.connect((socket) => {
-//   wordCloud.wordCloud(socket);
-// });
 
 server.listen(process.env.PORT || 3000, () => console.log('SERVER RUNNING ON 3000'));
 
