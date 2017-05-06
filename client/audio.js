@@ -26,24 +26,9 @@ if (window.SpeechRecognition === null) {
     for (var i = event.resultIndex; i < event.results.length; i++) {
       if (event.results[i].isFinal) {
         transcription.textContent = event.results[i][0].transcript;
-        //console.log('SPOKEN WORD', transcription.textContent);
 
-        //////////////send to socket///////////////////////////////
+        //send to socket
         socket.emit('send audioText', transcription.textContent)
-
-
-        ////////////////write to file////////////////////////////
-        // $.ajax({
-        //   method: 'POST',
-        //   //contentType: "application/json; charset=utf-8",
-        //   url: 'http://localhost:3000/receive',
-        //   dataType: "text/plain",
-        //   data: transcription.textContent,
-        //   //data: JSON.stringify({"message": transcription.textContent}),
-        //   success: function (data) {
-        //     console.log('POST SENT');
-        //   }
-        // })
 
       } else {
         transcription.textContent += event.results[i][0].transcript;

@@ -2,7 +2,7 @@
 
   let socket = io.connect();
 
-  var margin = { top: 10, right: 20, bottom: 30, left: 30 };
+  var margin = { top: 25, right: 20, bottom: 25, left: 20 };
   var width = 400 - margin.left - margin.right;
   var height = 400 - margin.top - margin.bottom;
 
@@ -23,10 +23,11 @@
 
       /////////////////MAKE BG///////////////////////////////////////
         //remove svg so won't render twice
-        d3.select('svg').remove();
+        d3.select('#scatterSVG').remove();
 
       var svg = d3.select('#scatter-plot')
         .append('svg')
+          .attr('id', 'scatterSVG')
           .attr('width', width + margin.left + margin.right)
           .attr('height', height + margin.top + margin.bottom)
         .append('g')
