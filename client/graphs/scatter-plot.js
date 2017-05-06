@@ -2,7 +2,7 @@
 
   let socket = io.connect();
 
-  var margin = { top: 10, right: 20, bottom: 30, left: 30 };
+  var margin = { top: 25, right: 20, bottom: 25, left: 20 };
   var width = 400 - margin.left - margin.right;
   var height = 400 - margin.top - margin.bottom;
 

@@ -44,7 +44,7 @@ subscription.on('rtm/subscription/data', function (pdu) {
     }
     
     if (msg.station_id < 250) {
-      msg.counter = Math.random() * 19; 
+      msg.counter2 = Math.random() * 19; 
       myData2.push(msg);
 
       if (myData2.length > 20) {
@@ -73,8 +73,8 @@ let config = {
   yTicks: 10,                  
   xScale: 'counter',              
   yScale: 'num_bikes_available',
-  xLabel_text: 'x axis label',
-  yLabel_text: 'y axis label'
+  xLabel_text: '',
+  yLabel_text: ''
 };
 
 let config2 = {
@@ -87,10 +87,10 @@ let config2 = {
   yDomainLower: 0,                  
   xTicks: 10,
   yTicks: 10,                  
-  xScale: 'counter',              
+  xScale: 'counter2',              
   yScale: 'num_bikes_available',
-  xLabel_text: 'x axis label',
-  yLabel_text: 'y axis label'
+  xLabel_text: '',
+  yLabel_text: ''
 };
 
 let bikeStream = new streamline(server);

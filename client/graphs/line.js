@@ -2,7 +2,7 @@
 let socket = io.connect();
 
 //set initial SVG params
-let margin = { top: 20, right: 20, bottom: 40, left: 60 };
+let margin = { top: 25, right: 20, bottom: 25, left: 20 };
 let width = 700 - margin.left - margin.right;
 let height = 500 - margin.top - margin.bottom;
 
@@ -69,7 +69,7 @@ function drawAxis(xScale, yScale, allData) {
 
   d3.select('#lineSVG').remove();
 
-  svg = d3.select('.chart')
+  svg = d3.select('#line-chart')
     .append('svg')
     .attr('id', 'lineSVG')
     .attr('width', width + margin.left + margin.right)

@@ -1,7 +1,7 @@
 
 //get data from socket and store it in freq
 
-var freq = [{"text":"study","size": 34},{"text":"motion","size": 22},{"text":"horse","size": 54}];
+var freq = [{"text":"your","size": 10},{"text":"the","size": 20},{"text":"at","size": 10}];
 
 function includes(word){
   return freq.some(obj => {
@@ -10,16 +10,16 @@ function includes(word){
 }
 
 socket.on('send audioData', (data) => {
-  console.log('WORD CLOUD AUDIO DATA', data);
+  console.log('WORD CLOUD AUDIO DATA', freq);
   //if word is in freq arr, then add 1; if not add it
 	data.split(' ').forEach(word => {
     freq.forEach(obj => {
       if (obj.text === word) {
-        obj.size += 10;
+        obj.size += 20;
       }
       if (!includes(word)) {
         freq.push(
-          {text: word, size: 10}
+          {text: word, size: 20}
         )
       }
     })
