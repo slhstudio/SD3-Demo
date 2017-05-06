@@ -39,7 +39,7 @@
 
 	function drawContent(data, svg) {
 
-		var radiusScale = d3.scaleSqrt().domain([0, 10]).range([0, 50])
+		var radiusScale = d3.scaleSqrt().domain([0, 10]).range([0, 50]);
 
 		var simulation = d3.forceSimulation()
 			.force('x', d3.forceX(0).strength(.1))
@@ -110,8 +110,11 @@ function reRenderNode(element) {
 		.force('Y', d3.forceY(0).strength(.1))
 		.force('collide', d3.forceCollide(d => radiusScale(d.volume)))
 
+	var radiusScale = d3.scaleSqrt().domain([0, 10]).range([0, 50]);
+		
+
 	d3.select('#' + 'c' + element.text)
 		.attr('fill', 'red')
-		.attr('r', element.volume)
+		.attr('r', radiusScale(element.volume))
 
 }
