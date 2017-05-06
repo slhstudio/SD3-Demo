@@ -12,51 +12,56 @@
   let svg;
 
   socket.on('sendBarData', (allData) => {
+    
 
-    d3.select('svg').remove();
+      });
 
-    svg = d3.select('.chart')
-      .append('svg')
-      .attr('width', width + margin.left + margin.right)
-      .attr('height', height + margin.top + margin.bottom)
-      .append('g')
-      .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
+    function drawViz(allData) {
+      d3.select('svg').remove();
 
-    let yScale = d3.scaleLinear()
-      .domain([0, 70])
-      .range([height, 0]);
+      svg = d3.select('.chart')
+        .append('svg')
+        .attr('id', 'barSVG')
+        .attr('width', width + margin.left + margin.right)
+        .attr('height', height + margin.top + margin.bottom)
+        .append('g')
+        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
 
-    let yAxis = d3.axisLeft(yScale);
+      let yScale = d3.scaleLinear()
+        .domain([0, 70])
+        .range([height, 0]);
 
-    svg.call(yAxis);
+      let yAxis = d3.axisLeft(yScale);
 
-    let xScale = d3.scaleBand()
-      .paddingOuter(.5)
-      .paddingInner(0.1)
-      .domain(allData.map(d => d.xScale))
-      .range([0, width]);
+      svg.call(yAxis);
 
-    let xAxis = d3.axisBottom(xScale)
-      .ticks(5)
-      .tickSize(10)
-      .tickPadding(5);
+      let xScale = d3.scaleBand()
+        .paddingOuter(.5)
+        .paddingInner(0.1)
+        .domain(allData.map(d => d.xScale))
+        .range([0, width]);
 
-    svg
-      .append('g')
-      .attr('transform', `translate(0, ${height})`)
-      .call(xAxis)
-      .selectAll('text')
+      let xAxis = d3.axisBottom(xScale)
+        .ticks(5)
+        .tickSize(10)
+        .tickPadding(5);
 
-    svg
-      .selectAll('rect')
-      .data(allData)
-      .enter()
-      .append('rect')
-      .attr('x', d => xScale(d.xScale))
-      .attr('y', d => yScale(d.volume))
-      .attr('width', d => xScale.bandwidth())
-      .attr('height', d => height - yScale(d.volume))
-      .attr('fill', (d,i) => d.color[i]);
-  });
+      svg
+        .append('g')
+        .attr('transform', `translate(0, ${height})`)
+        .call(xAxis)
+        .selectAll('text')
+
+      svg
+        .selectAll('rect')
+        .data(allData)
+        .enter()
+        .append('rect')
+        .attr('x', d => xScale(d.xScale))
+        .attr('y', d => yScale(d.volume))
+        .attr('width', d => xScale.bandwidth())
+        .attr('height', d => height - yScale(d.volume))
+        .attr('fill', (d, i) => d.color[i]);
+    }
 
 })();
