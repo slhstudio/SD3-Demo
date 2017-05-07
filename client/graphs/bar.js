@@ -71,11 +71,23 @@
   function isNewData(a, b) {
     if (a.length !== b.length) { return 'NEW_OBJ' };
 
+    let yScale = d3.scaleLinear()
+      .domain([0, 70])
+      .range([height, 0]);
+
+
     for (let i = 0; i < a.length; i += 1) {
       if (a[i].xScale === b[i].xScale && a[i].volume !== b[i].volume) {
         console.log('in loop');
-        reRenderNode(b[i]);
-        return 'NEW_VOL'
+
+        let node = d3.select('#' + b[i].id);
+
+        node
+          .attr('y', yScale(b[i].volume))
+          .attr('height', height - yScale(b[i].volume))
+          .attr('fill', 'black');
+
+        // return 'NEW_VOL'
       } else if (a[i].xScale !== b[i].xScale) {
         return 'NEW_OBJ';
       };
@@ -83,16 +95,16 @@
     return 'OLD_DATA';
   }
 
-  function reRenderNode(changedObj) {
-    let yScale = d3.scaleLinear()
-      .domain([0, 70])
-      .range([height, 0]);
+  // function reRenderNode(changedObj) {
+  //   let yScale = d3.scaleLinear()
+  //     .domain([0, 70])
+  //     .range([height, 0]);
 
-    let node = d3.select('#' + changedObj.id);
-    console.log('RERENDERING: ', changedObj.xScale);
-    node
-      .attr('y', yScale(changedObj.volume))
-      .attr('height', height - yScale(changedObj.volume))
-      .attr('fill', 'black');
-  }
+  //   let node = d3.select('#' + changedObj.id);
+  //   console.log('RERENDERING: ', changedObj.xScale);
+  //   node
+  //     .attr('y', yScale(changedObj.volume))
+  //     .attr('height', height - yScale(changedObj.volume))
+  //     .attr('fill', 'black');
+  // }
 })();
