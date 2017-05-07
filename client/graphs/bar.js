@@ -13,7 +13,7 @@
 
   socket.on('sendBarData', (allData) => {
     let incomingData = isNewData(currData, allData);
-    if(incomingData === 'NEW_OBJ') {
+    if (incomingData === 'NEW_OBJ') {
       currData = allData;
       drawViz(allData);
     }
@@ -64,6 +64,7 @@
       .attr('y', d => yScale(d.volume))
       .attr('width', d => xScale.bandwidth())
       .attr('height', d => height - yScale(d.volume))
+      .attr('id', d => d.id)
       .attr('fill', (d, i) => d.color[i]);
   }
 
@@ -72,12 +73,26 @@
 
     for (let i = 0; i < a.length; i += 1) {
       if (a[i].xScale === b[i].xScale && a[i].volume !== b[i].volume) {
-        // reRenderNode(b[i]);
+        console.log('in loop');
+        reRenderNode(b[i]);
         return 'NEW_VOL'
       } else if (a[i].xScale !== b[i].xScale) {
         return 'NEW_OBJ';
       };
     }
     return 'OLD_DATA';
+  }
+
+  function reRenderNode(changedObj) {
+    let yScale = d3.scaleLinear()
+      .domain([0, 70])
+      .range([height, 0]);
+
+    let node = d3.select('#' + changedObj.id);
+    console.log('RERENDERING: ', changedObj.xScale);
+    node
+      .attr('y', yScale(changedObj.volume))
+      .attr('height', height - yScale(changedObj.volume))
+      .attr('fill', 'black');
   }
 })();
