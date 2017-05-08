@@ -42,10 +42,10 @@ var svg = d3.select('.chart')
   .attr('transform', 'translate(' + width/2 + ', ' + height/2 + ')');
 
   //parse the data
-  allData.forEach(d => {
-    d.category_name = d.category_name;
-    d.category_value = +d.category_value;
-  });
+  // allData.forEach(d => {
+  //   d.category_name = d.category_name;
+  //   d.category_value = +d.category_value;
+  // });
 
  //pie:
   //append g elements (arc)
@@ -55,12 +55,12 @@ var svg = d3.select('.chart')
     .append('g')
     .attr('class', 'arc');
 
-console.log('category', allData[0].category_name);
+console.log('category', allData[0].category);
 
   //append the path of the arc
   g.append('path')
     .attr('d', arc)
-    .style('fill', color(allData[0].category_name))
+    .style('fill', color(allData[0].category))
     .transition()
     .ease(d3.easeLinear)
     .duration(2000)
@@ -81,11 +81,5 @@ console.log('category', allData[0].category_name);
   var i = d3.interpolate({startAngle: 0, endAngle: 0}, b);
   return (t => arc(i(t)));
 }
-
-
-
-
-
-  
 
 });
