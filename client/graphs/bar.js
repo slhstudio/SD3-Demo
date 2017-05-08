@@ -22,7 +22,7 @@
   function drawViz(allData) {
     d3.select('svg').remove();
 
-    svg = d3.select('.chart')
+    svg = d3.select('#bar-graph')
       .append('svg')
       .attr('id', 'barSVG')
       .attr('width', width + margin.left + margin.right)
@@ -94,9 +94,9 @@
       .range([height, 0]);
 
     let node = d3.select('#' + changedObj.id);
+    
     node
       .attr('y', yScale(changedObj.volume))
       .attr('height', height - yScale(changedObj.volume))
-      .attr('fill', 'black');
   }
 })();
