@@ -22,7 +22,7 @@
   function drawViz(allData) {
     d3.select('svg').remove();
 
-    svg = d3.select('.chart')
+    svg = d3.select('#barchart')
       .append('svg')
       .attr('id', 'barSVG')
       .attr('width', width + margin.left + margin.right)
