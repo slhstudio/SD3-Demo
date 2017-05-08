@@ -11,7 +11,7 @@ let radius = width / 2;
 socket.on('sendPieData', (allData) => {
 
  // if (error) throw error;
-console.log(allData);
+console.log('allData', allData);
 d3.select('svg').remove();
 
 //color range
@@ -60,11 +60,11 @@ console.log('category', allData[0].category);
   //append the path of the arc
   g.append('path')
     .attr('d', arc)
-    .style('fill', color(allData[0].category))
-    .transition()
-    .ease(d3.easeLinear)
-    .duration(2000)
-    .attrTween('d', pieTween);
+    .style('fill', d => color(d.allData.category))
+    // .transition()
+    // .ease(d3.easeLinear)
+    // .duration(2000)
+    // .attrTween('d', pieTween);
   
   //append the text (labels)
   g.append('text')
@@ -73,13 +73,13 @@ console.log('category', allData[0].category);
     .duration(2000)
     .attr('transform', d => ('translate(' + labelArc.centroid(d) + ')'))
     .attr('dy', '.35em')
-    .text(allData.category_name);
+    .text(allData.category);
 
 
- function pieTween(b) {
-  b.innerRadius = 0;
-  var i = d3.interpolate({startAngle: 0, endAngle: 0}, b);
-  return (t => arc(i(t)));
-}
+//  function pieTween(b) {
+//   b.innerRadius = 0;
+//   var i = d3.interpolate({startAngle: 0, endAngle: 0}, b);
+//   return (t => arc(i(t)));
+// }
 
 });
