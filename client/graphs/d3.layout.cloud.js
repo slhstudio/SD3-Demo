@@ -1,4 +1,4 @@
-// (function(exports) {
+
 
 // Copies a variable number of methods from source to target.
 d3.rebind = function(target, source) {
@@ -505,5 +505,5 @@ var c = canvas.getContext("2d"),
 c.fillStyle = c.strokeStyle = "red";
 c.textAlign = "center";
 
-//     exports.cloud = cloud;
-// })(typeof exports === "undefined" ? d3.layout || (d3.layout = {}) : exports);
+
+
