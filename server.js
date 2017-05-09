@@ -93,12 +93,20 @@ let config2 = {
   yLabel_text: ''
 };
 
+let config3 = {
+  colors: ['red', 'blue', 'green', 'yellow', 'purple'],
+  font: 'Source Sans Pro',
+  height: 500,
+  width: 1200,
+  padding: 25,
+  rotate: 0,
+}
 let bikeStream = new streamline(server);
 
 bikeStream.connect((socket) => {
   bikeStream.line(socket, myData, config);
   bikeStream.scatter(socket, myData2, config2);
-  bikeStream.wordCloud(socket);
+  bikeStream.wordCloud(socket, config3);
 });
 
 server.listen(process.env.PORT || 3000, () => console.log('SERVER RUNNING ON 3000'));
