@@ -44,11 +44,6 @@
       .tickSize(10)
       .tickPadding(5);
 
-    svg
-      .append('g')
-      .attr('transform', `translate(0, ${height})`)
-      .call(xAxis)
-      .selectAll('text')
 
     let settings = {
       data,
@@ -65,13 +60,35 @@
   function drawChart(settings) {
     let data = settings.data;
 
+    settings.svg
+      .append('g')
+      .attr('id', 'xAxis')
+      .attr('transform', `translate(0, ${height})`)
+      .call(settings.xAxis)
+      .selectAll('text')
+
     //ENTER.
-    let column = settings.svg.selectAll('rect.column')
-      .data(data);
+    let column = settings.svg.selectAll('g.column-container')
+      .data(data, d => d.xScale);
+
+    // let newColumn = column
+    //   .enter()
+    //   .append('rect')
+    //   .attr('class', 'column')
+    //   .attr('x', d => settings.xScale(d.xScale))
+    //   .attr('y', d => settings.yScale(d.volume))
+    //   .attr('width', d => settings.xScale.bandwidth())
+    //   .attr('height', d => height - settings.yScale(d.volume))
+    //   .attr('id', d => d.id)
+    //   .attr('fill', (d, i) => d.color[i]);
 
     let newColumn = column
       .enter()
-      .append('rect')
+      .append('g')
+      .attr('class', 'column-container')
+
+
+    newColumn.append('rect')
       .attr('class', 'column')
       .attr('x', d => settings.xScale(d.xScale))
       .attr('y', d => settings.yScale(d.volume))
@@ -80,19 +97,22 @@
       .attr('id', d => d.id)
       .attr('fill', (d, i) => d.color[i]);
 
-    
+
+      console.log('UPDATE?: ', column.select('.column-container'));
     //UPDATE.
     column.select('.column')
-    .attr('height', d => height - settings.yScale(d.volume))
-    .attr('fill', 'black');
-    
+      .data(data, d => d.xScale)
+      .attr('height', d => height - settings.yScale(d.volume))
+      .attr('fill', 'black');
+
   }
 
 
-
+  let settings;
 
   socket.on('sendBarData', (data) => {
-    let settings = drawGrid(data);
+
+    settings = drawGrid(data);
     drawChart(settings)
   })
 
