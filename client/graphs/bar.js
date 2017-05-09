@@ -72,6 +72,7 @@
     let newColumn = column
       .enter()
       .append('rect')
+      .attr('class', 'column')
       .attr('x', d => settings.xScale(d.xScale))
       .attr('y', d => settings.yScale(d.volume))
       .attr('width', d => settings.xScale.bandwidth())
@@ -79,7 +80,12 @@
       .attr('id', d => d.id)
       .attr('fill', (d, i) => d.color[i]);
 
-
+    
+    //UPDATE.
+    column.select('.column')
+    .attr('height', d => height - settings.yScale(d.volume))
+    .attr('fill', 'black');
+    
   }
 
 
