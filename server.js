@@ -94,12 +94,12 @@ let config2 = {
 };
 
 let config3 = {
-  colors: ['red', 'blue', 'green', 'yellow', 'purple'],
-  colorDomain: [0,1,2,3,4,5,6,10,15,20,100],
+  colors: ['#FB3640', '#605F5E', '#1D3461', '#1F487E', '#247BA0'],
+  colorDomain: [5,10,15,20,100],
   font: 'Source Sans Pro',
   height: 500,
   width: 1200,
-  padding: 25,
+  padding: 15,
   rotate: 0,
 }
 let bikeStream = new streamline(server);
