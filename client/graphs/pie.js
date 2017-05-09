@@ -1,4 +1,4 @@
-
+(function() {
 let socket = io.connect();
 
 //set initial SVG params
@@ -7,11 +7,15 @@ let width = 500 - margin.left - margin.right;
 let height = 500 - margin.top - margin.bottom;
 let radius = width / 2;
 
+// let currData = [];
+// let svg;
 
 socket.on('sendPieData', (allData) => {
 
- // if (error) throw error;
-console.log('allData', allData);
+drawViz(allData);
+
+
+function drawViz(allData) {
 d3.select('svg').remove();
 
 //color range
@@ -31,7 +35,7 @@ var labelArc = d3.arc()
 //pie generator
 var pie = d3.pie()
   .sort(null)
-  .value(5);
+  .value(d => d.count); //how many in each category --??
 
 //define svg for pie
 var svg = d3.select('.chart')
@@ -41,12 +45,6 @@ var svg = d3.select('.chart')
   .append('g')
   .attr('transform', 'translate(' + width/2 + ', ' + height/2 + ')');
 
-  //parse the data
-  // allData.forEach(d => {
-  //   d.category_name = d.category_name;
-  //   d.category_value = +d.category_value;
-  // });
-
  //pie:
   //append g elements (arc)
   var g = svg.selectAll('.arc')
@@ -55,12 +53,11 @@ var svg = d3.select('.chart')
     .append('g')
     .attr('class', 'arc');
 
-console.log('category', allData[0].category);
-
   //append the path of the arc
   g.append('path')
     .attr('d', arc)
-    .style('fill', d => color(d.allData.category))
+    .style('fill', (d) => color(d.data.category))
+    .style('stroke', '#fff');
     // .transition()
     // .ease(d3.easeLinear)
     // .duration(2000)
@@ -68,12 +65,12 @@ console.log('category', allData[0].category);
   
   //append the text (labels)
   g.append('text')
-    .transition()
-    .ease(d3.easeLinear)
-    .duration(2000)
+    // .transition()
+    // .ease(d3.easeLinear)
+    // .duration(2000)
     .attr('transform', d => ('translate(' + labelArc.centroid(d) + ')'))
     .attr('dy', '.35em')
-    .text(allData.category);
+    .text((d) => d.data.category);
 
 
 //  function pieTween(b) {
@@ -82,4 +79,13 @@ console.log('category', allData[0].category);
 //   return (t => arc(i(t)));
 // }
 
-});
+}
+
+ 
+  })
+})();
+
+
+
+
+

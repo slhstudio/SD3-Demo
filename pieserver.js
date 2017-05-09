@@ -19,6 +19,7 @@ app.get('/', (req, res) => {
 //______________GET DATA____________________________________
 
 let myData = [];
+let cache = {};
 var endpoint = "wss://open-data.api.satori.com";
 var appKey = "34DF1ecf6B793beA053a60aa1cdDdC2C";
 var channel = "tv-commercial-airings";
@@ -32,11 +33,25 @@ rtm.on("enter-connected", function () {
 var subscription = rtm.subscribe(channel, RTM.SubscriptionMode.SIMPLE);
 subscription.on('rtm/subscription/data', function (pdu) {
   pdu.body.messages.forEach(function (msg) {
+     let newMsg = JSON.parse(msg);
+      
+     
+      if (!cache[newMsg.genre]) {
+        cache[newMsg.genre] = 1;
+        newMsg.count = cache[newMsg.genre];
+        console.log('first', newMsg.count);
+      } else  {
+          cache[newMsg.genre] = cache[newMsg.genre] + 1;
+          newMsg.count = cache[newMsg.genre];
+          console.log('second', newMsg.count)
+       }
+     console.log('cache', cache);  
+     console.log('newMsg', newMsg);
+     myData.push(newMsg);
+    })
+   
 
-    
-    myData.push(msg);
-
-  });
+  // console.log('myData', myData);
 });
 
 rtm.start();
@@ -48,13 +63,12 @@ let config = {
   setWidth: 700,                   
   setHeight: 500,                  
   category: 'genre',//category to be show in pie slices
-  //category_value: 'Speed' //value of data to be shown in pie slices
 };
 
 let tvAdAirings = new streamline(server);
 
 tvAdAirings.connect((socket) => {
-  //console.log('myData', myData);
+ // setInterval (() => {console.log('myData', myData)}, 1000);
   tvAdAirings.pie(socket, myData, config);
 });
 
