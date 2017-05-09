@@ -95,6 +95,7 @@ let config2 = {
 
 let config3 = {
   colors: ['red', 'blue', 'green', 'yellow', 'purple'],
+  colorDomain: [0,1,2,3,4,5,6,10,15,20,100],
   font: 'Source Sans Pro',
   height: 500,
   width: 1200,

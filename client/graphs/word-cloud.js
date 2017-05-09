@@ -21,6 +21,7 @@
     console.log('DATA RECEIVED', Date.now());
     //if word is in freq arr, then add 1; if not add it
     data.split(' ').forEach(word => {
+      word = word.toLowerCase();
       freq.forEach(obj => {
         if (obj.text === word) {
           obj.size += 20;
@@ -39,7 +40,7 @@
     //d3 version 3 way of adding color;
     //let fillColor = d3.scale.category20b();
     let color = d3.scaleLinear()
-      .domain([0,1,2,3,4,5,6,10,15,20,100])
+      .domain(dataObj.colorDomain)
       .range(dataObj.colors);
 
     let fillColor = d3.scaleOrdinal(d3.schemeCategory20);
