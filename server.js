@@ -105,8 +105,8 @@ let config3 = {
 let bikeStream = new streamline(server);
 
 bikeStream.connect((socket) => {
-  bikeStream.line(socket, myData, config);
-  bikeStream.scatter(socket, myData2, config2);
+  // bikeStream.line(socket, myData, config);
+  // bikeStream.scatter(socket, myData2, config2);
   bikeStream.wordCloud(socket, config3);
 });
 
