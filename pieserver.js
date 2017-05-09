@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
 
 
 //______________GET DATA____________________________________
-
+//let check = [];
 let myData = [];
 let cache = {};
 var endpoint = "wss://open-data.api.satori.com";
@@ -35,23 +35,37 @@ subscription.on('rtm/subscription/data', function (pdu) {
   pdu.body.messages.forEach(function (msg) {
      let newMsg = JSON.parse(msg);
       
-     
       if (!cache[newMsg.genre]) {
         cache[newMsg.genre] = 1;
         newMsg.count = cache[newMsg.genre];
-        console.log('first', newMsg.count);
       } else  {
           cache[newMsg.genre] = cache[newMsg.genre] + 1;
           newMsg.count = cache[newMsg.genre];
-          console.log('second', newMsg.count)
        }
-     console.log('cache', cache);  
-     console.log('newMsg', newMsg);
-     myData.push(newMsg);
-    })
    
+    //  if (!check.includes(newMsg.genre))
+    //    check.push(newMsg.genre);
+    //    console.log(check);
+      //console.log(check);
+//only push message into my data whose genre is not already there.
+// if it is there, replace it
 
-  // console.log('myData', myData);
+//check.includes(newMsg.genre)
+      if (myData.length === 0) myData.push(newMsg);
+//cache[newMsg.genre]
+      let found = false;
+      for (let i = 0; i < myData.length; i++) {
+        if (myData[i].genre === newMsg.genre) {
+          myData[i] = newMsg;
+          found = true;
+          break;
+        }
+      }
+      if (!found)  myData.push(newMsg);
+      console.log('myData', myData);
+    
+  })
+  
 });
 
 rtm.start();
@@ -63,6 +77,7 @@ let config = {
   setWidth: 700,                   
   setHeight: 500,                  
   category: 'genre',//category to be show in pie slices
+  count: 'count'
 };
 
 let tvAdAirings = new streamline(server);

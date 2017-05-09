@@ -12,15 +12,14 @@ let radius = width / 2;
 
 socket.on('sendPieData', (allData) => {
 
-drawViz(allData);
 
+drawViz(allData);
 
 function drawViz(allData) {
 d3.select('svg').remove();
-
 //color range
-var color = d3.scaleOrdinal()
-.range(['#BBDEF8', '#98CAF9', '#64B5F6', '#42A5F5', '#2196F3']);
+var color = d3.scaleSequential(d3.interpolateGnBu(.5));///d3.scaleOrdinal()
+//.range(['#BBDEF8', '#98CAF9', '#64B5F6', '#42A5F5', '#2196F3']);
 
 // arc generator for pie
 var arc = d3.arc()
@@ -35,7 +34,7 @@ var labelArc = d3.arc()
 //pie generator
 var pie = d3.pie()
   .sort(null)
-  .value(d => d.count); //how many in each category --??
+  .value(d => d.count); 
 
 //define svg for pie
 var svg = d3.select('.chart')
