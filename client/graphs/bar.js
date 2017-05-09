@@ -16,7 +16,7 @@
     width = 700 - margin.left - margin.right;
     height = 500 - margin.top - margin.bottom;
 
-    d3.select('#barSVG').remove();
+    // d3.select('#bar-graph').selectAll('svg').remove();
     let svg = d3.select('#bar-graph')
       .append('svg')
       .attr('id', 'barSVG')
@@ -33,6 +33,18 @@
 
     svg.call(yAxis);
 
+    let settings = {
+      data,
+      svg,
+      yScale,
+      yAxis,
+    }
+
+    return settings;
+  }
+
+  function drawChart(settings, data) {
+
     let xScale = d3.scaleBand()
       .paddingOuter(.5)
       .paddingInner(0.1)
@@ -44,43 +56,17 @@
       .tickSize(10)
       .tickPadding(5);
 
-
-    let settings = {
-      data,
-      svg,
-      xScale,
-      yScale,
-      xAxis,
-      yAxis,
-    }
-
-    return settings;
-  }
-
-  function drawChart(settings) {
-    let data = settings.data;
-
+    d3.select('#xAxis').remove();
     settings.svg
       .append('g')
       .attr('id', 'xAxis')
       .attr('transform', `translate(0, ${height})`)
-      .call(settings.xAxis)
+      .call(xAxis)
       .selectAll('text')
 
     //ENTER.
     let column = settings.svg.selectAll('g.column-container')
       .data(data, d => d.xScale);
-
-    // let newColumn = column
-    //   .enter()
-    //   .append('rect')
-    //   .attr('class', 'column')
-    //   .attr('x', d => settings.xScale(d.xScale))
-    //   .attr('y', d => settings.yScale(d.volume))
-    //   .attr('width', d => settings.xScale.bandwidth())
-    //   .attr('height', d => height - settings.yScale(d.volume))
-    //   .attr('id', d => d.id)
-    //   .attr('fill', (d, i) => d.color[i]);
 
     let newColumn = column
       .enter()
@@ -88,32 +74,38 @@
       .attr('class', 'column-container')
 
 
-    newColumn.append('rect')
+    newColumn.append('rect').transition()
+      .duration(300)
+      .attr("opacity", 1)
       .attr('class', 'column')
-      .attr('x', d => settings.xScale(d.xScale))
+      .attr('x', d => xScale(d.xScale))
       .attr('y', d => settings.yScale(d.volume))
-      .attr('width', d => settings.xScale.bandwidth())
+      .attr('width', d => xScale.bandwidth())
       .attr('height', d => height - settings.yScale(d.volume))
       .attr('id', d => d.id)
       .attr('fill', (d, i) => d.color[i]);
 
-
-      console.log('UPDATE?: ', column.select('.column-container'));
     //UPDATE.
-    column.select('.column')
-      .data(data, d => d.xScale)
+    column.select('.column').transition()
+      .duration(1000)
+      .attr("opacity", 1)
+      .attr('width', d => xScale.bandwidth())
       .attr('height', d => height - settings.yScale(d.volume))
-      .attr('fill', 'black');
-
+      .attr('x', d => xScale(d.xScale))
+      .attr('y', d => settings.yScale(d.volume))
   }
 
 
   let settings;
 
   socket.on('sendBarData', (data) => {
-
-    settings = drawGrid(data);
-    drawChart(settings)
+    if (data.length > 0) {
+      if (!settings) {
+        console.log('filling settings');
+        settings = drawGrid(data)
+      };
+      drawChart(settings, data);
+    }
   })
 
 
