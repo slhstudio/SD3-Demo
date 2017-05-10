@@ -75,7 +75,7 @@ rtm.start();
 
 let config = {
   setWidth: 700,                   
-  setHeight: 500,                  
+  setHeight: 700,                  
   category: 'genre',//category to be show in pie slices
   count: 'count'
 };
