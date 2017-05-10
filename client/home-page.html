@@ -7,6 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,700" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="audio-style.css">
   <title>StreamLine D3</title>
 </head>
 
@@ -22,19 +23,64 @@
     </div>
   </div>
 
+<!-- Line Chart-->
   <div class="chart-container">
-    <div class="chart"></div>
+    <div id="line-chart"></div>
+  </div>
+
+
+<!-- Bar Graph -->
+
+  <div class="bar-container">
+    <div id="bar-graph"></div>
     </div>
+
   <div class="pitch-container">
     <h3>Streaming Data Visualized</h3>
     <p>Let's face it, setting up D3 graphs is hard. Setting up real-time visualizations is even harder. <br /> StreamLine D3 takes the hassle out of creating real-time visualizations while still giving you compelete creative control. No more setting up sockets, no more manipulating streams, no more long hours of learning advanced D3.  StreamLine D3 is here to help.</p>
   </div>
   
-  <hr class="line" />
-
   <div class="instructions-container">
     <h3>For detailed instructions visit our <a href="https://github.com/StreamlineD3/StreamlineD3#getting-started">Github</a> page.</h3>
   </div>
+
+  <!--<hr class="line" />-->
+  <div id="pie-chart"></div>
+<!--WORDCLOUD++++++++++++++++++++++++++++++++-->
+  <div id="record">
+    <h1 id="speech-header">Speech to Text Visualization</h1>
+
+    <div id="results-container">
+      <span id="results">Results:</span>
+      <label class="radio"><input type="radio" name="recognition-type" value="final" /> Final only</label>
+      <label class="radio"><input type="radio" name="recognition-type" value="interim" checked="checked" />Interim</label>
+    </div>
+
+    <textarea id="transcription" readonly="readonly"></textarea>
+
+    <div class="buttons-wrapper">
+      <button id="button-play-ws" class="button-demo">Record</button>
+      <button id="button-stop-ws" class="button-demo">Stop</button>
+      <button id="clear-all" class="button-demo">Clear</button>
+    </div>
+    <span id="ws-unsupported" class="hidden">API not supported</span>
+    
+    <div id="log"></div>
+  </div>
+
+  <div id="word-cloud"></div>
+
+  <div class="short-strip"></div>
+  <div id="scatter-container">
+    <div id="scatter-plot"></div>
+  </div>
+
+  <div id="barchart-container">
+    <div id="barchart"></div>
+  </div>
+
+
+  <div id="bubbleForce"></div>
 
   <footer id="footer">
     <h4>Created by Sarah Hodges, Jordan Bautista, and Kyle Davelaar</h4>
@@ -42,9 +88,19 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.8.0/d3.min.js"></script>
-  <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
-  <script type="text/javascript" src="graphs/pie.js"></script>
+  
+  <script type="text/javascript" src="graphs/bubbleForce.js"></script>
+  <script type="text/javascript" src="graphs/scatter-plot.js"></script>
+  <script type="text/javascript" src="graphs/line.js"></script> 
+  <script type="text/javascript" src="graphs/pie.js"></script> 
+
+  <!--<script src="graphs/word-cloud-master.js"></script> -->
+  
+  <script type="text/javascript" src="graphs/bar.js"></script>
+
+  <script src="audio.js"></script>
+  <script src="graphs/d3.layout.cloud.js"></script>
+  <script src="graphs/word-cloud.js"></script>
 
 </body>
-
 </html>
