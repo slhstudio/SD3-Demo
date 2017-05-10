@@ -13,18 +13,9 @@ let currData = [];
 socket.on('sendPieData', (newData) => {
 drawViz(newData);
 
-  function drawViz(data) {
-    console.log('data', data);
-   
-    //console.log('width', data[0].setWidth);
 
-    width = data[0].setWidth - margin.left - margin.right;
-    height = data[0].setHeight - margin.top - margin.bottom;
 
-    d3.select('svg').remove();
-
-  //var color = d3.scaleOrdinal()//
-  //.range(['#BBDEF8', '#98CAF9', '#64B5F6', '#42A5F5', '#2196F3']);
+function drawGrid(data) {
 
     let color = d3.scaleSequential(d3.interpolateSpectral)
       .domain([0, 25]);
@@ -39,18 +30,38 @@ drawViz(newData);
       .outerRadius(radius + 30)
       .innerRadius(radius + 10)
 
-    //pie generator
-    let pie = d3.pie()
-      .sort(null)
-      .value(d => d.count); 
+}
 
-  //define svg for pie
+function drawContent(data) {
     let svg = d3.select('.chart')
       .append('svg')
       .attr('width', width)
       .attr('height', height)
       .append('g')
       .attr('transform', 'translate(' + width/2 + ', ' + height/2 + ')');
+}
+
+  function drawViz(data) {
+    console.log('data', data);
+   
+    //console.log('width', data[0].setWidth);
+
+    width = data[0].setWidth - margin.left - margin.right;
+    height = data[0].setHeight - margin.top - margin.bottom;
+
+    d3.select('svg').remove();
+
+  //var color = d3.scaleOrdinal()//
+  //.range(['#BBDEF8', '#98CAF9', '#64B5F6', '#42A5F5', '#2196F3']);
+
+
+    //pie generator
+    let pie = d3.pie()
+      .sort(null)
+      .value(d => d.count); 
+
+  //define svg for pie
+
 
   //pie:
     //append g elements (arc)
