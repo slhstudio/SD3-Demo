@@ -2,7 +2,7 @@
 
   let socket = io.connect();
 
-  var margin = { top: 25, right: 20, bottom: 25, left: 20 };
+  var margin = { top: 20, right: 20, bottom: 30, left: 40 };
   var width = 400 - margin.left - margin.right;
   var height = 400 - margin.top - margin.bottom;
 
@@ -28,7 +28,7 @@
       var svg = d3.select('#scatter-plot')
         .append('svg')
           .attr('id', 'scatterSVG')
-          .attr('width', width + margin.left + margin.right)
+          .attr('width', width+ margin.left + margin.right)
           .attr('height', height + margin.top + margin.bottom)
         .append('g')
           .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
@@ -39,19 +39,42 @@
           .domain([allData[0].yDomainLower, allData[0].yDomainUpper])
           .range([height, 0])
           //make axis end on round numbers b/c pulling non-round #s from our data 
-          .nice()
-        var yAxis = d3.axisLeft(yScale)
-        svg.call(yAxis);
+          .nice();
+
+        var yAxis = d3.axisLeft(yScale).ticks(allData[0].yTicks);
+
+        svg.append('g')
+            .call(yAxis)
+          .append("text")
+          .attr("transform", "rotate(-90)")
+          .attr("y", 6)
+          //.attr("x", 0)
+          .attr("dy", ".71em")
+          .style("text-anchor", "end")
+          .style('font-family', 'sans-serif')
+          .style('font-size', '13px')
+          .text('text');
+
+       //console.log('alldata', allData);
+       console.log('ylabel', allData[0].yLabel_text);
 
         var xScale = d3.scaleLinear()
           .domain([allData[0].xDomainLower, allData[0].xDomainUpper])
           .range([0, width])
           .nice();
-        var xAxis = d3.axisBottom(xScale).ticks(5)
-        svg
-          .append('g')
+        var xAxis = d3.axisBottom(xScale).ticks(allData[0].xTicks);
+
+        svg.append('g')
             .attr('transform', `translate(0, ${height})`)
-          .call(xAxis);  
+            .call(xAxis)  
+           .append("text")
+            //.attr('transform', 'translate(' + (width) + ' ,' + (height + margin.bottom) + ')')
+            .attr('x', width)
+            .attr('y',-6)
+            .style('text-anchor', 'end')
+            .style('font-family', 'sans-serif')
+            .style('font-size', '13px')
+            .text('text');
 
         //circles scale
         var rScale = d3.scaleSqrt()

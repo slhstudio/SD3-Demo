@@ -48,7 +48,7 @@ socket.on('sendPieData', (newData) => {
       .value(d => d.count); 
 
   //define svg for pie
-    let svg = d3.select('.chart')
+    let svg = d3.select('#piechart')
       .append('svg')
       .attr('width', width)
       .attr('height', height)
