@@ -6,7 +6,7 @@
 
 
   //array to compare incoming data >> if data is the same, do not rerender
-  let currData = [];
+  let dataCache = {};
 
   //function that draws setup
   //on socket, function that draws elements
@@ -86,7 +86,13 @@
       .attr('fill', (d, i) => d.color[i]);
 
     //UPDATE.
-    column.select('.column').transition()
+    let updateNodes = column.select('.column');
+
+    if (Object.keys(dataCache).length === data.length) {
+      updateNodes._groups[0] = column.select('.column')._groups[0].filter(d => d.__data__.volume === dataCache[d.__data__.id]);
+    }
+
+    updateNodes.transition()
       .duration(1000)
       .attr("opacity", 1)
       .attr('width', d => xScale.bandwidth())
@@ -94,7 +100,6 @@
       .attr('x', d => xScale(d.xScale))
       .attr('y', d => settings.yScale(d.volume))
   }
-
 
   let settings;
 
@@ -105,6 +110,10 @@
         settings = drawGrid(data)
       };
       drawChart(settings, data);
+
+      for (let i = 0; i < data.length; i += 1) {
+        dataCache[data[i].id] = data[i].volume;
+      }
     }
   })
 
