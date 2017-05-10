@@ -46,7 +46,7 @@ function createStream() {
 }
 
 
-myData = createStream();
+let myData = createStream();
 
 //____________________connect to lib / sockets___________________________________
 

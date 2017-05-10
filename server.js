@@ -76,6 +76,35 @@ subscriptionBar.on('rtm/subscription/data', function (pdu) {
 
 rtm.start();
 
+//------------------
+
+function createStream() {
+    function ranNum() {
+        return Math.floor(Math.random() * 10);;
+    }
+    function newArray() {
+        for (let i = 0; i < array.length; i += 1) {
+            array[i].randNum = ranNum();
+        }
+    }
+
+    let array = [
+        { id: 0, randNum: 7 },
+        { id: 1, randNum: 6 },
+        { id: 2, randNum: 3 },
+        { id: 3, randNum: 9 },
+        { id: 4, randNum: 9 },
+        { id: 5, randNum: 5 },
+        { id: 6, randNum: 7 }];
+
+    setInterval(newArray, 1000);
+
+    return array;
+}
+
+let myData4 = createStream();
+
+
 
 //____________________connect to lib / sockets___________________________________
 
@@ -137,6 +166,13 @@ let config4 = {
   color: ['#DAF7A6', '#FFC300', '#FF5733', '#C70039', '#900C3F', '#581845'],
 };
 
+let config5 = {
+  setWidth: 700,
+  setHeight: 500,
+  text: 'id',
+  volume: 'randNum',
+};
+
 let bikeStream = new streamline(server);
 
 bikeStream.connect((socket) => {
@@ -144,7 +180,7 @@ bikeStream.connect((socket) => {
   bikeStream.scatter(socket, myData2, config2);
   bikeStream.wordCloud(socket, config3);
   bikeStream.bar(socket, myData3, config4);
-
+  bikeStream.bubbleGraph(socket, myData4, config5);
 });
 
 server.listen(process.env.PORT || 3000, () => console.log('SERVER RUNNING ON 3000'));

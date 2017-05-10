@@ -28,7 +28,7 @@
 
 		d3.select('svg').remove();
 
-		svg = d3.select('.chart')
+		svg = d3.select('#bubble-chart')
 			.append('svg')
 			.attr('width', width + margin.left + margin.right)
 			.attr('height', height + margin.top + margin.bottom)
