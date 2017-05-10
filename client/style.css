@@ -50,6 +50,7 @@ body {
 
 .download-button-container button {
   background-color:#6AB038;
+  margin-bottom: 20px;
   padding: 15px 30px;
   font-size: 20px;
   border-radius: 5px;
