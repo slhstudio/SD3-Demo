@@ -1,3 +1,30 @@
+let socket = io.connect();
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+/*The MIT License (MIT)
+
+Copyright (c) 2015-2016 Scott Logic Ltd.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.*/
 
 
 // Copies a variable number of methods from source to target.
@@ -22,8 +49,40 @@ function d3_functor(v) {
 }
 d3.functor = d3_functor;
 
+
+
+
 //==========================================================================
 //--------------DISPATCH-------------------------------------------------------
+
+/*Copyright 2010-2016 Mike Bostock
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+* Neither the name of the author nor the names of contributors may be used to
+  endorse or promote products derived from this software without specific prior
+  written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
+
 var noop = {value: function() {}};
 
 function dispatch() {
@@ -108,6 +167,33 @@ function set(type, name, callback) {
 }
 
 //------------------------------------------------------------------
+/*Copyright (c) 2013, Jason Davies.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+  * Redistributions of source code must retain the above copyright notice, this
+    list of conditions and the following disclaimer.
+
+  * Redistributions in binary form must reproduce the above copyright notice,
+    this list of conditions and the following disclaimer in the documentation
+    and/or other materials provided with the distribution.
+
+  * The name Jason Davies may not be used to endorse or promote products
+    derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL JASON DAVIES BE LIABLE FOR ANY DIRECT, INDIRECT,
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
+
 function cloud() {
 	var size = [256, 256],
 		text = cloudText,
@@ -122,7 +208,6 @@ function cloud() {
 		timeInterval = Infinity,
 		event = dispatch("word", "end"),
 		timer = null,
-		overflow = false,
 		cloud = {};
 
 	cloud.start = function () {
@@ -209,12 +294,7 @@ function cloud() {
 			tag.y = startY + dy;
 
 			if (tag.x + tag.x0 < 0 || tag.y + tag.y0 < 0 ||
-				tag.x + tag.x1 > size[0] || tag.y + tag.y1 > size[1]) {
-          if (!overflow) {
-            continue;
-          }
-        }
-
+				tag.x + tag.x1 > size[0] || tag.y + tag.y1 > size[1]) continue;
 			// TODO only check for collisions within current bounds.
 			if (!bounds || !cloudCollide(tag, board, size[0])) {
 				if (!bounds || collideRects(tag, bounds)) {
@@ -299,12 +379,6 @@ function cloud() {
 	cloud.padding = function (x) {
 		if (!arguments.length) return padding;
 		padding = d3.functor(x);
-		return cloud;
-	};
-
-	cloud.overflow = function(x) {
-		if (!arguments.length) return overflow;
-		overflow = d3.functor(x);
 		return cloud;
 	};
 
@@ -518,4 +592,160 @@ c.fillStyle = c.strokeStyle = "red";
 c.textAlign = "center";
 
 
+////////////////////////////////AUDIO/////////////////////////////////////////////
 
+
+
+/////////////////TEST IF AUDIO WORKS IN BROWSER//////////
+window.SpeechRecognition = window.SpeechRecognition ||
+  window.webkitSpeechRecognition || null;
+
+if (window.SpeechRecognition === null) {
+  document.getElementById('ws-unsupported').classList.remove('hidden');
+  document.getElementById('button-play-ws').setAttribute('disabled', 'disabled');
+  document.getElementById('button-stop-ws').setAttribute('disabled', 'disabled');
+
+/////////////////IF BROWSER WORKS, THEN RECORD//////////
+} else {
+  var recognizer = new window.SpeechRecognition();
+  var transcription = document.getElementById('transcription');
+  var log = document.getElementById('log');
+
+  // Recognizer doesn't stop listening even if the user pauses
+  recognizer.continuous = true;
+
+  // Start recognizing
+  recognizer.onresult = function (event) {
+    transcription.textContent = '';
+
+    for (var i = event.resultIndex; i < event.results.length; i++) {
+      if (event.results[i].isFinal) {
+        transcription.textContent = event.results[i][0].transcript;
+
+        //send to socket
+        socket.emit('send AudioText', transcription.textContent)
+        console.log('AUDIO DATA SENT', Date.now())
+
+      } else {
+        transcription.textContent += event.results[i][0].transcript;
+      }
+    }
+
+  };
+
+
+  // Listen for errors
+  recognizer.onerror = function (event) {
+    log.innerHTML = 'Recognition error: ' + event.message + '<br />' + log.innerHTML;
+  };
+
+  document.getElementById('button-play-ws').addEventListener('click', function () {
+    // Set if we need interim results
+    recognizer.interimResults = document.querySelector('input[name="recognition-type"][value="interim"]').checked;
+
+    try {
+      recognizer.start();
+      log.innerHTML = 'Recognition started' + '<br />' + log.innerHTML;
+    } catch (ex) {
+      log.innerHTML = 'Recognition error: ' + ex.message + '<br />' + log.innerHTML;
+    }
+  });
+
+  document.getElementById('button-stop-ws').addEventListener('click', function () {
+    recognizer.stop();
+    log.innerHTML = 'Recognition stopped' + '<br />' + log.innerHTML;
+  });
+
+  document.getElementById('clear-all').addEventListener('click', function () {
+    transcription.textContent = '';
+    log.textContent = '';
+  });
+}
+
+(() => {
+
+
+////////////////////////////////////////GRAPH//////////////////////////////////////
+let dataObj = {};
+
+  socket.on('send custom', (emitData) => {
+    for (let key in emitData) {
+      dataObj[key] = emitData[key]
+    }
+  });
+
+  //get data from socket and store it in freq
+  var freq = [{"text":"your","size": 10},{"text":"the","size": 20},{"text":"at","size": 10}];
+
+  function includes(word){
+    return freq.some(obj => {
+      return obj.text === word;
+    })
+  }
+
+  socket.on('send audioData', (data) => {
+    console.log('DATA RECEIVED', Date.now());
+    //if word is in freq arr, then add 1; if not add it
+    data.split(' ').forEach(word => {
+      word = word.toLowerCase();
+      freq.forEach(obj => {
+        if (obj.text === word) {
+          obj.size += 20;
+        }
+        if (!includes(word)) {
+          freq.push(
+            {text: word, size: 20}
+          )
+        }
+      })
+    });
+
+
+
+  //--------------------CREATE GRAPH----------------------------------
+    //d3 version 3 way of adding color;
+    //let fillColor = d3.scale.category20b();
+    let color = d3.scaleLinear()
+      .domain(dataObj.colorDomain)
+      .range(dataObj.colors);
+
+    let fillColor = d3.scaleOrdinal(d3.schemeCategory20);
+    let w = dataObj.width;
+    let h = dataObj.height;
+
+    cloud()
+      .size([w, h])
+      .words(freq) 
+      .padding(dataObj.padding)
+      .rotate(dataObj.rotate)      
+      .font(dataObj.font)
+      .fontSize(function(d) { return d.size; })
+      .on("end", drawCloud)
+      .start();
+
+    function drawCloud(words) {
+      //remove so doesn't make multiple word clouds
+      d3.select("#wordCloud").remove()
+      
+      d3.select("#word-cloud").append("svg")
+          .attr('id', 'wordCloud')
+          .attr("width", w)
+          .attr("height", h)
+        .append("g")
+        .attr("transform", "translate(" + w/2 + "," + h/2 + ")")
+        .selectAll("text")
+          .data(words)
+          .enter().append("text")
+          .style("font-size", function(d) { return (d.size) + "px"; })
+          .style("font-family", dataObj.font)
+          .style("fill", function(d, i) { return color(i); })
+          .attr("text-anchor", "middle")
+          .attr("transform", function(d,i) {
+            return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+          })
+        .text(function(d) { return d.text; });
+    }
+
+  })
+
+})()

@@ -12,7 +12,7 @@ dotenv.load()
 app.use(express.static(path.join(__dirname, 'client')));
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client/index.html'));
+  res.sendFile(path.join(__dirname, 'client/home-page.html'));
 }, () => {
   console.log('sending js...');
   res.sendFile('../../lib/graphs/line.js')
@@ -20,41 +20,47 @@ app.get('/', (req, res) => {
 
 
 //______________GET DATA____________________________________
+let myData = [];
+var endpoint = "wss://open-data.api.satori.com";
+var appKey = "9BABD0370e2030dd5AFA3b1E35A9acBf";
+var channel = "US-Bike-Sharing-Channel";
+let counter = 0;
 
-function createStream() {
-    function ranNum() {
-        return Math.floor(Math.random() * 10);;
-    }
-    function newArray() {
-        for (let i = 0; i < array.length; i += 1) {
-            array[i].randNum = ranNum();
+var rtm = new RTM(endpoint, appKey);
+rtm.on("enter-connected", function () {
+  console.log("Connected to RTM!");
+});
+
+var subscription = rtm.subscribe(channel, RTM.SubscriptionMode.SIMPLE);
+subscription.on('rtm/subscription/data', function (pdu) {
+  pdu.body.messages.forEach(function (msg) {
+
+    if (msg.station_id < 300) {
+      msg.counter = counter++;
+      let idExists = false;
+      
+      for (let i = 0; i < myData.length; i += 1) {
+        if (myData[i].station_id === msg.station_id) {
+          myData[i] = msg;
+          idExists = true;
         }
-    }
+      }
 
-    let array = [
-        { id: 0, randNum: 7 },
-        { id: 1, randNum: 6 },
-        { id: 2, randNum: 3 },
-        { id: 3, randNum: 9 },
-        { id: 4, randNum: 9 },
-        { id: 5, randNum: 5 },
-        { id: 6, randNum: 7 }];
+      if (!idExists) myData.push(msg);
+      if (myData.length > 30) myData.shift();
+    };
+  })
+});
 
-    setInterval(newArray, 1000);
-
-    return array;
-}
-
-
-myData = createStream();
+rtm.start();
 
 //____________________connect to lib / sockets___________________________________
 
 let config = {
   setWidth: 700,
   setHeight: 500,
-  text: 'id',
-  volume: 'randNum',
+  text: 'station_id',
+  volume: 'num_bikes_available',
 };
 
 let fauxStream = new streamline(server);

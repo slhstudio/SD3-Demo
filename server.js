@@ -97,8 +97,7 @@ let config3 = {
   colors: ['#FB3640', '#605F5E', '#1D3461', '#1F487E', '#247BA0'],
   colorDomain: [5,10,15,20,100], 
   font: 'Source Sans Pro',
-  height: 500,
-  width: 1200,
+  fontSize: 40,
   padding: 15,
   rotate: 0,
 }

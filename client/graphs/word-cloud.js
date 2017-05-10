@@ -1,12 +1,18 @@
 (() => {
 
-  let dataObj = {};
+  let customData = {};
 
   socket.on('send custom', (emitData) => {
     for (let key in emitData) {
-      dataObj[key] = emitData[key]
+      customData[key] = emitData[key]
     }
   });
+
+ 
+  //these values will change dynamically based on how many words are in freq;
+  let cachedSize = 5;  
+  let h = 200;
+  let w = 500;
 
   //get data from socket and store it in freq
   var freq = [{"text":"your","size": 10},{"text":"the","size": 20},{"text":"at","size": 10}];
@@ -17,6 +23,7 @@
     })
   }
 
+  
   socket.on('send audioData', (data) => {
     console.log('DATA RECEIVED', Date.now());
     //if word is in freq arr, then add 1; if not add it
@@ -24,11 +31,11 @@
       word = word.toLowerCase();
       freq.forEach(obj => {
         if (obj.text === word) {
-          obj.size += 20;
+          obj.size += customData.fontSize;
         }
         if (!includes(word)) {
           freq.push(
-            {text: word, size: 20}
+            {text: word, size: customData.fontSize}
           )
         }
       })
@@ -40,19 +47,31 @@
     //d3 version 3 way of adding color;
     //let fillColor = d3.scale.category20b();
     let color = d3.scaleLinear()
-      .domain(dataObj.colorDomain)
-      .range(dataObj.colors);
+      .domain(customData.colorDomain)
+      .range(customData.colors);
 
     let fillColor = d3.scaleOrdinal(d3.schemeCategory20);
-    let w = dataObj.width;
-    let h = dataObj.height;
+   
+    function alterSize() {
+      if (freq.length >= cachedSize) {
+        h += 40;
+        w += 70;
+        cachedSize += 5;
+      }
+    }
+    alterSize();
+
+    console.log('WIDTH', w, 'HEIGHT', h);
+    console.log('LENGTH', freq.length);  
+    console.log('cache', cachedSize);  
 
     cloud()
       .size([w, h])
       .words(freq) 
-      .padding(dataObj.padding)
-      .rotate(dataObj.rotate)      
-      .font(dataObj.font)
+      .padding(customData.padding)
+      .overflow(true)
+      .rotate(customData.rotate)      
+      .font(customData.font)
       .fontSize(function(d) { return d.size; })
       .on("end", drawCloud)
       .start();
@@ -71,7 +90,7 @@
           .data(words)
           .enter().append("text")
           .style("font-size", function(d) { return (d.size) + "px"; })
-          .style("font-family", dataObj.font)
+          .style("font-family", customData.font)
           .style("fill", function(d, i) { return color(i); })
           .attr("text-anchor", "middle")
           .attr("transform", function(d,i) {
