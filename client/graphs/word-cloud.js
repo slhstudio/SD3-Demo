@@ -8,11 +8,9 @@
     }
   });
 
+ 
   //these values will change dynamically based on how many words are in freq;
-  let cachedSize = 5;
-  let w1 = parseInt(customData.width, 10);
-  let h1 = parseInt(customData.height, 10);
-  
+  let cachedSize = 5;  
   let h = 200;
   let w = 500;
 
@@ -33,11 +31,11 @@
       word = word.toLowerCase();
       freq.forEach(obj => {
         if (obj.text === word) {
-          obj.size += 20;
+          obj.size += customData.fontSize;
         }
         if (!includes(word)) {
           freq.push(
-            {text: word, size: 20}
+            {text: word, size: customData.fontSize}
           )
         }
       })
