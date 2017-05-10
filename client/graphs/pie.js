@@ -11,10 +11,7 @@ let currData = [];
 //let svg;
 
 socket.on('sendPieData', (newData) => {
-  if (currData != newData) {
-    currData = newData;
-    drawViz(currData);
-  }
+drawViz(newData);
 
   function drawViz(data) {
     console.log('data', data);
@@ -66,7 +63,7 @@ socket.on('sendPieData', (newData) => {
     //append the path of the arc
     g.append('path')
       .attr('d', arc)
-      .style('fill', (d, i) => color(d.index))
+      .style('fill', 'gray')
       .style('stroke', '#fff')
       // .transition()
       // .ease(d3.easeLinear)
