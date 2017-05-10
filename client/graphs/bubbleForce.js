@@ -26,10 +26,11 @@
 		width = data[0].setWidth - margin.left - margin.right;
 		height = data[0].setHeight - margin.top - margin.bottom;
 
-		d3.select('svg').remove();
+		d3.select('#bubbleSVG').remove();
 
 		svg = d3.select('#bubbleForce')
 			.append('svg')
+			.attr('id', 'bubbleSVG')
 			.attr('width', width + margin.left + margin.right)
 			.attr('height', height + margin.top + margin.bottom)
 			.append('g')

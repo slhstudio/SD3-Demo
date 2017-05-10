@@ -60,7 +60,7 @@ let config = {
   setWidth: 700,
   setHeight: 500,
   text: 'station_id',
-  volume: 'bikes_num_available',
+  volume: 'num_bikes_available',
 };
 
 let fauxStream = new streamline(server);
