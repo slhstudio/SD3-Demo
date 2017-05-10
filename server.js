@@ -20,9 +20,11 @@ app.get('/', (req, res) => {
 
 let myData = [];
 let myData2 = [];
+let myData3 = [];
 var endpoint = "wss://open-data.api.satori.com";
 var appKey = "9BABD0370e2030dd5AFA3b1E35A9acBf";
 var channel = "US-Bike-Sharing-Channel";
+var channelTraffic = "nyc-traffic-speed";
 let counter = 0;
 
 var rtm = new RTM(endpoint, appKey);
@@ -51,9 +53,25 @@ subscription.on('rtm/subscription/data', function (pdu) {
         myData2.shift();
       }
     }
+  });
+});
+
+var subscriptionBar = rtm.subscribe(channelTraffic, RTM.SubscriptionMode.SIMPLE);
+subscriptionBar.on('rtm/subscription/data', function (pdu) {
+  pdu.body.messages.forEach(function (msg) {
+    //console.log('SERVER MSG', msg); 
+    let found = false;
+    for(let i = 0; i < myData3.length; i += 1) {
+      if( myData3[i].Borough === msg.Borough) {
+        myData3[i].Speed = (Number(myData3[i].Speed) + Number(msg.Speed)) / 2;
+        found = true;
+      }
+    }
+
+    msg.Speed = Number(msg.Speed);
+    if(!found) myData3.push(msg);
 
   });
-
 });
 
 rtm.start();
@@ -101,12 +119,32 @@ let config3 = {
   padding: 15,
   rotate: 0,
 }
+
+let config4 = {
+  setWidth: 700,                   
+  setHeight: 500,                  
+  shiftYAxis: true,
+  xDomainUpper: 20,
+  xDomainLower: 0,                
+  yDomainUpper: 40,
+  yDomainLower: 0,                  
+  xTicks: 10,
+  yTicks: 10,                  
+  xScale: 'Borough',              
+  volume: 'Speed',
+  xLabel_text: 'x axis label',
+  yLabel_text: 'y axis label',
+  color: ['#DAF7A6', '#FFC300', '#FF5733', '#C70039', '#900C3F', '#581845'],
+};
+
 let bikeStream = new streamline(server);
 
 bikeStream.connect((socket) => {
   bikeStream.line(socket, myData, config);
   bikeStream.scatter(socket, myData2, config2);
   bikeStream.wordCloud(socket, config3);
+  bikeStream.bar(socket, myData3, config4);
+
 });
 
 server.listen(process.env.PORT || 3000, () => console.log('SERVER RUNNING ON 3000'));

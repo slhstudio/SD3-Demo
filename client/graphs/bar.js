@@ -12,7 +12,7 @@
   //on socket, function that draws elements
 
   function drawGrid(data) {
-    margin = { top: 20, right: 20, bottom: 40, left: 60 };
+    margin = { top: 20, right: 20, bottom: 25, left: 20 };
     width = 700 - margin.left - margin.right;
     height = 500 - margin.top - margin.bottom;
 
