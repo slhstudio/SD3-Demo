@@ -16,6 +16,8 @@
     width = 700 - margin.left - margin.right;
     height = 500 - margin.top - margin.bottom;
 
+
+
     // d3.select('#bar-graph').selectAll('svg').remove();
     let svg = d3.select('#bar-graph')
       .append('svg')
