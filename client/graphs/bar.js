@@ -13,8 +13,8 @@
 
   function drawGrid(data) {
     margin = { top: 20, right: 20, bottom: 25, left: 20 };
-    width = 700 - margin.left - margin.right;
-    height = 500 - margin.top - margin.bottom;
+    width = 500 - margin.left - margin.right;
+    height = 300 - margin.top - margin.bottom;
 
     // d3.select('#bar-graph').selectAll('svg').remove();
     let svg = d3.select('#bar-graph')

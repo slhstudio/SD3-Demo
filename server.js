@@ -80,8 +80,8 @@ rtm.start();
 //____________________connect to lib / sockets___________________________________
 
 let config = {
-  setWidth: 700,                   
-  setHeight: 500,                  
+  setWidth: 500,                   
+  setHeight: 300,                  
   shiftXAxis: true,
   xDomainUpper: 20,
   xDomainLower: 0,                
@@ -121,8 +121,8 @@ let config3 = {
 }
 
 let config4 = {
-  setWidth: 700,                   
-  setHeight: 500,                  
+  setWidth: 500,                   
+  setHeight: 300,                  
   shiftYAxis: true,
   xDomainUpper: 20,
   xDomainLower: 0,                
