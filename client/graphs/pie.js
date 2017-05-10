@@ -16,14 +16,12 @@ socket.on('sendPieData', (allData) => {
 drawViz(allData);
 
 function drawViz(allData) {
-d3.select('svg').remove();
-//color range
+//d3.select('svg').remove();
+
 // var color = d3.scaleOrdinal()//
 // .range(['#BBDEF8', '#98CAF9', '#64B5F6', '#42A5F5', '#2196F3']);
 
 var color = d3.scaleSequential(d3.interpolateSpectral)
-   // .range(['lightgreen', 'darkgreen']) // or use hex values
-   //.range([0,1])
    .domain([0, 25]);
 
 // arc generator for pie
