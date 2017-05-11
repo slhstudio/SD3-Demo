@@ -70,8 +70,6 @@
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-//common.js format
-
 var module1=__webpack_require__(1);
 module1.f1();
  
@@ -80,9 +78,6 @@ module2.f2();
  
 var module3=__webpack_require__(3);
 module3.f3();
-
-// var module4=require("./audio.js");
-// module4.audio();
 
 /***/ }),
 /* 1 */

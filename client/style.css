@@ -67,9 +67,28 @@ body {
   background: #54892f;
 }
 
-.chart-container {
-  margin-top: -50px;
-  margin-bottom: 50px;
+.line-container {
+  /*margin-top: -50px;
+  margin-bottom: 50px;*/
+  display: inline;
+  max-width: 400px;
+}
+
+#line-chart {
+  max-width: 800px;
+  display: inline;
+}
+
+.bar-container {
+  /*margin-top: -50px;
+  margin-bottom: 50px;*/
+  display: inline;
+  max-width: 400px;
+}
+
+#bar-graph {
+  max-width: 800px;
+  display: inline;
 }
 
 .pitch-container {
