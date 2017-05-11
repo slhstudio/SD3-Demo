@@ -87,12 +87,12 @@
       .append('g')
       .attr('class', 'arc');
 
-      console.log('COLOR: ', color);
+    console.log('COLOR: ', color);
     //append the path of the arc
     newCircles.append('path')
       .attr('d', arc)
       .attr('class', 'path')
-      .style('fill', (d, i) => color(d.index))
+      .style('fill', 'gray')
       .style('stroke', '#fff')
 
     newCircles.append('text')
@@ -111,7 +111,6 @@
       .attr("opacity", 1)
       .attr('d', arc)
       .style('stroke', '#fff')
-      .style('fill', (d, i) => color(d.index))
 
     circles.select('.text')
       .attr("transform", d => {
