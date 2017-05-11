@@ -22,11 +22,13 @@ app.get('/', (req, res) => {
 let myData = [];
 let myData2 = [];
 let myData3 = [];
+let myData5 = [];
 var endpoint = "wss://open-data.api.satori.com";
 var appKey = "9BABD0370e2030dd5AFA3b1E35A9acBf";
 var channel = "US-Bike-Sharing-Channel";
 var channelTraffic = "nyc-traffic-speed";
 let counter = 0;
+let counterBubble = 0;
 
 var rtm = new RTM(endpoint, appKey);
 rtm.on("enter-connected", function () {
@@ -54,6 +56,21 @@ subscription.on('rtm/subscription/data', function (pdu) {
         myData2.shift();
       }
     }
+
+    if (msg.station_id < 300) {
+      msg.counter = counterBubble++;
+      let idExists = false;
+      
+      for (let i = 0; i < myData5.length; i += 1) {
+        if (myData5[i].station_id === msg.station_id) {
+          myData5[i] = msg;
+          idExists = true;
+        }
+      }
+
+      if (!idExists) myData5.push(msg);
+      if (myData5.length > 30) myData5.shift();
+    };
   });
 });
 
@@ -174,6 +191,13 @@ let config5 = {
   volume: 'randNum',
 };
 
+let config6 = {
+  setWidth: 700,
+  setHeight: 500,
+  text: 'station_id',
+  volume: 'num_bikes_available',
+};
+
 let bikeStream = new streamline(server);
 
 bikeStream.connect((socket) => {
@@ -181,7 +205,8 @@ bikeStream.connect((socket) => {
   bikeStream.scatter(socket, myData2, config2);
   bikeStream.wordCloud(socket, config3);
   bikeStream.bar(socket, myData3, config4);
-  bikeStream.bubbleGraph(socket, myData4, config5);
+  //bikeStream.bubbleGraph(socket, myData4, config5);
+  bikeStream.bubbleGraph(socket, myData5, config6);
 });
 
 server.listen(process.env.PORT || 3000, () => console.log('SERVER RUNNING ON 3000'));
