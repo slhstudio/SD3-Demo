@@ -13,9 +13,6 @@ app.use(express.static(path.join(__dirname, 'client')));
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'client/home-page.html'));
-}, () => {
-  console.log('sending js...');
-  res.sendFile('../../lib/graphs/line.js')
 });
 
 
