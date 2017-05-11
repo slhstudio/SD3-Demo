@@ -52,7 +52,9 @@ subscription.on('rtm/subscription/data', function (pdu) {
   })
 });
 
+
 rtm.start();
+
 
 //____________________connect to lib / sockets___________________________________
 

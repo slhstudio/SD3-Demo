@@ -15,5 +15,9 @@
     "path": "^0.12.7",
     "satori-sdk-js": "^1.0.1",
     "socket.io": "^1.7.3"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.3.0"
   }
 }
