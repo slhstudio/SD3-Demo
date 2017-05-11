@@ -21,13 +21,12 @@ describe('includes function', () => {
   it('should return true if word is in freq', () => {
     
     assert.equal(includes('your'), true, 'should return true, your is in freq');
-  })
+  });
 
   it('should return false if word is not in freq', () => {
 
     assert.equal(includes('hi'), false, 'should return false, hi is not in freq');
   })
-
 });
 
 //-------------------------------------------
@@ -61,13 +60,12 @@ describe('custom data object', () => {
   it('should add objects to the freq array', () => {
     
     expect(freq.length).to.be.at.least(5);
-  })
+  });
 
   it('should increase size if word is already in freq', () => {
 
     let the = freq.filter(obj => obj.text === 'the');
 
     expect(the[0].size).to.be.at.least(30);
-  })
-
+  });
 });
