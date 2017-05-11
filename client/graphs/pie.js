@@ -1,33 +1,38 @@
-(function() {
-let socket = io.connect();
+(function () {
+  let socket = io.connect();
 
-//set initial SVG params
-let margin = { top: 10, right: 10, bottom: 10, left: 10 };
-let width = 600 - margin.left - margin.right;
-let height = 600 - margin.top - margin.bottom;
-let radius = width / 2;
+  //set initial SVG params
+  let margin = { top: 10, right: 10, bottom: 10, left: 10 };
+  let width = 600 - margin.left - margin.right;
+  let height = 600 - margin.top - margin.bottom;
+  let radius = width / 2;
 
-let currData = [];
-//let svg;
+  let dataCache = {};
+  //let svg;
+  let settings;
 
-socket.on('sendPieData', (newData) => {
-  if (currData != newData) {
-    currData = newData;
-    drawViz(currData);
-  }
+  socket.on('sendPieData', (data) => {
 
-  function drawViz(data) {
-    console.log('data', data);
-   
-    //console.log('width', data[0].setWidth);
+    if (data.length > 0) {
+      // console.log('DATA FROM CLIENT: ', data)
+      if (!settings) settings = drawGrid(data);
 
+      let needsChange = false;
+
+      for (let i = 0; i < data.length; i += 1) {
+        if (data[i].count !== dataCache[data[i].category]) {
+          needsChange = true;
+          dataCache[data[i].category] = data[i].count;
+        }
+      }
+      if (needsChange) drawContent(settings, data);
+    }
+  })
+
+  function drawGrid(data) {
+    console.log('DATA 0: ', data);
     width = data[0].setWidth - margin.left - margin.right;
     height = data[0].setHeight - margin.top - margin.bottom;
-
-    d3.select('svg').remove();
-
-  //var color = d3.scaleOrdinal()//
-  //.range(['#BBDEF8', '#98CAF9', '#64B5F6', '#42A5F5', '#2196F3']);
 
     let color = d3.scaleSequential(d3.interpolateSpectral)
       .domain([0, 25]);
@@ -37,70 +42,85 @@ socket.on('sendPieData', (newData) => {
       .outerRadius(radius - 10)
       .innerRadius(20);
 
-  // arc generator for labels
+    // arc generator for labels
     let labelArc = d3.arc()
       .outerRadius(radius + 30)
       .innerRadius(radius + 10)
 
-    //pie generator
-    let pie = d3.pie()
-      .sort(null)
-      .value(d => d.count); 
+    d3.select('#pieSVG').remove();
 
-  //define svg for pie
-    let svg = d3.select('.chart')
+    let svg = d3.select('#pie-chart')
       .append('svg')
+      .attr('id', 'pieSVG')
       .attr('width', width)
       .attr('height', height)
       .append('g')
-      .attr('transform', 'translate(' + width/2 + ', ' + height/2 + ')');
+      .attr('transform', 'translate(' + width / 2 + ', ' + height / 2 + ')');
 
-  //pie:
-    //append g elements (arc)
-    let g = svg.selectAll('.arc')
+    let settings = {
+      color,
+      arc,
+      labelArc,
+      svg
+    }
+
+    return settings;
+  }
+
+  function drawContent(settings, data) {
+    console.log('RENDERING')
+    let color = d3.scaleSequential(d3.interpolateSpectral)
+      .domain([0, 25]);
+    let arc = settings.arc;
+    let labelArc = settings.labelArc;
+    let svg = settings.svg;
+
+    let pie = d3.pie()
+      .sort(null)
+      .value(d => d.count);
+
+    let circles = svg.selectAll('.arc')
       .data(pie(data))
+
+    let newCircles = circles
       .enter()
       .append('g')
       .attr('class', 'arc');
 
+    console.log('COLOR: ', color);
     //append the path of the arc
-    g.append('path')
+    newCircles.append('path')
       .attr('d', arc)
-      .style('fill', (d, i) => color(d.index))
+      .attr('class', 'path')
+      .style('fill', 'gray')
       .style('stroke', '#fff')
-      // .transition()
-      // .ease(d3.easeLinear)
-      // .duration(2000)
-      // .attrTween('d', pieTween);
-  
-    //append the text (labels)
-    g.append('text')
-      // .transition()
-      // .ease(d3.easeLinear)
-      // .duration(2000)
-      // .attr('transform', d => ('translate('  + labelArc.centroid(d) + ')')) //('translate(' + labelArc.centroid(d) + ')'))
-      // .attr('dy', '.2em')
-      // .text(d => d.data.category)
 
-    //pie.append("text")
-	  .attr("transform", d => {
-    let midAngle = d.endAngle < Math.PI ? d.startAngle/2 + d.endAngle/2 : d.startAngle/2  + d.endAngle/2 + Math.PI ;
-      //let midAngle =  d.startAngle/2  + d.endAngle/2 + Math.PI ;
+    newCircles.append('text')
+      .attr('class', 'text')
+      .attr("transform", d => {
+        let midAngle = d.endAngle < Math.PI ? d.startAngle / 2 + d.endAngle / 2 : d.startAngle / 2 + d.endAngle / 2 + Math.PI;
+        return "translate(" + labelArc.centroid(d)[0] + "," + labelArc.centroid(d)[1] + ") rotate(-90) rotate(" + (midAngle * 180 / Math.PI) + ")";
+      })
+      .attr("dy", ".35em")
+      .attr('font-size', '14px')
+      .attr('text-anchor', 'middle')
+      .text(d => d.data.category);
 
-	  	return "translate(" + labelArc.centroid(d)[0] + "," + labelArc.centroid(d)[1] + ") rotate(-90) rotate(" + (midAngle * 180/Math.PI) + ")"; })
-	  .attr("dy", ".35em")
-    .attr('font-size', '14px')
-	  .attr('text-anchor','middle')
-	  .text(d =>  d.data.category);
+    circles.select('.path').transition()
+      .duration(1000)
+      .attr("opacity", 1)
+      .attr('d', arc)
+      .style('stroke', '#fff')
 
-//  function pieTween(b) {
-//   b.innerRadius = 0;
-//   var i = d3.interpolate({startAngle: 0, endAngle: 0}, b);
-//   return (t => arc(i(t)));
-// }
+    circles.select('.text')
+      .attr("transform", d => {
+        let midAngle = d.endAngle < Math.PI ? d.startAngle / 2 + d.endAngle / 2 : d.startAngle / 2 + d.endAngle / 2 + Math.PI;
+        return "translate(" + labelArc.centroid(d)[0] + "," + labelArc.centroid(d)[1] + ") rotate(-90) rotate(" + (midAngle * 180 / Math.PI) + ")";
+      })
+      .attr("dy", ".35em")
+      .text(d => d.data.category);
+  }
 
-    }
-  })
 })();
 
 
