@@ -62,7 +62,7 @@ subscription.on('rtm/subscription/data', function (pdu) {
         }
       }
       if (!found)  myData.push(newMsg);
-      console.log('myData', myData);
+      console.log('INCOMING DATA');
     
   })
   

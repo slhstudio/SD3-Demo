@@ -7,20 +7,32 @@
   let height = 600 - margin.top - margin.bottom;
   let radius = width / 2;
 
-  let currData = [];
+  let dataCache = {};
   //let svg;
   let settings;
 
   socket.on('sendPieData', (data) => {
-    settings = drawGrid(data);
 
-    drawContent(settings, data);
+    if (data.length > 0) {
+      // console.log('DATA FROM CLIENT: ', data)
+      if (!settings) settings = drawGrid(data);
+
+      let needsChange = false;
+
+      for (let i = 0; i < data.length; i += 1) {
+        if (data[i].count !== dataCache[data[i].category]) {
+          needsChange = true;
+          dataCache[data[i].category] = data[i].count;
+        }
+      }
+      if (needsChange) drawContent(settings, data);
+    }
   })
 
   function drawGrid(data) {
-
-    // width = data[0].setWidth - margin.left - margin.right;
-    // height = data[0].setHeight - margin.top - margin.bottom;
+    console.log('DATA 0: ', data);
+    width = data[0].setWidth - margin.left - margin.right;
+    height = data[0].setHeight - margin.top - margin.bottom;
 
     let color = d3.scaleSequential(d3.interpolateSpectral)
       .domain([0, 25]);
@@ -56,7 +68,9 @@
   }
 
   function drawContent(settings, data) {
-    let color = settings.color;
+    console.log('RENDERING')
+    let color = d3.scaleSequential(d3.interpolateSpectral)
+      .domain([0, 25]);
     let arc = settings.arc;
     let labelArc = settings.labelArc;
     let svg = settings.svg;
@@ -67,19 +81,22 @@
 
     let circles = svg.selectAll('.arc')
       .data(pie(data))
-    
+
     let newCircles = circles
       .enter()
       .append('g')
       .attr('class', 'arc');
 
+      console.log('COLOR: ', color);
     //append the path of the arc
     newCircles.append('path')
       .attr('d', arc)
-      .style('fill', 'gray')
+      .attr('class', 'path')
+      .style('fill', (d, i) => color(d.index))
       .style('stroke', '#fff')
 
     newCircles.append('text')
+      .attr('class', 'text')
       .attr("transform", d => {
         let midAngle = d.endAngle < Math.PI ? d.startAngle / 2 + d.endAngle / 2 : d.startAngle / 2 + d.endAngle / 2 + Math.PI;
         return "translate(" + labelArc.centroid(d)[0] + "," + labelArc.centroid(d)[1] + ") rotate(-90) rotate(" + (midAngle * 180 / Math.PI) + ")";
@@ -87,6 +104,21 @@
       .attr("dy", ".35em")
       .attr('font-size', '14px')
       .attr('text-anchor', 'middle')
+      .text(d => d.data.category);
+
+    circles.select('.path').transition()
+      .duration(1000)
+      .attr("opacity", 1)
+      .attr('d', arc)
+      .style('stroke', '#fff')
+      .style('fill', (d, i) => color(d.index))
+
+    circles.select('.text')
+      .attr("transform", d => {
+        let midAngle = d.endAngle < Math.PI ? d.startAngle / 2 + d.endAngle / 2 : d.startAngle / 2 + d.endAngle / 2 + Math.PI;
+        return "translate(" + labelArc.centroid(d)[0] + "," + labelArc.centroid(d)[1] + ") rotate(-90) rotate(" + (midAngle * 180 / Math.PI) + ")";
+      })
+      .attr("dy", ".35em")
       .text(d => d.data.category);
   }
 
