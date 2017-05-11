@@ -250,5 +250,5 @@ bikeStream.connect((socket) => {
   bikeStream.pie(socket, myData6, config7);
 });
 
-server.listen(process.env.PORT || 3000, () => console.log('SERVER RUNNING ON 3000'));
+// server.listen(process.env.PORT || 3000, () => console.log('SERVER RUNNING ON 3000'));
 
