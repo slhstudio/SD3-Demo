@@ -43,26 +43,23 @@ socket.on('sendMapData', (allData) => {
 
 		//	d3.csv("US-Mass-Shootings_1982-2015.csv", function(data) {
 
-				// svg.append("g")
-				//    	.attr("class", "bubble")
-				// 	.selectAll("circle")
-				// 	.data(allData)
-				// 		//.sort(function(a,b) {return b.Fatalities - a.Fatalities; }))
-				// 	.enter()
-				// 	.append("circle")
-				// 	.attr("cx", d => {
-				// 			return projection([d.longitude, d.latitude])[0];
-				// 	})
-				// 	.attr("cy", d => {
-				// 			return projection([d.longitude, d.latitude])[1];
-				// 	})
+				svg.append("g")
+				   	.attr("class", "bubble")
+					.selectAll("circle")
+					.data(allData)
+						//.sort(function(a,b) {return b.Fatalities - a.Fatalities; }))
+					.enter()
+					.append("circle")
+					.attr("cx", d => {
+							return projection([d.longitude, d.latitude])[0];
+					})
+					.attr("cy", d => {
+							return projection([d.longitude, d.latitude])[1];
+					})
 					// .attr("r", function(d) {
 					// 		return (d.Fatalities/1.5);
 					// })
-					
-			   
-					
-			   			
+	
 			});		
 
 })();		
