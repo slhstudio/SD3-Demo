@@ -23,10 +23,13 @@ let myData = [];
 let myData2 = [];
 let myData3 = [];
 let myData5 = [];
+let myData6 = [];
+let cacheTV = {};
 var endpoint = "wss://open-data.api.satori.com";
 var appKey = "9BABD0370e2030dd5AFA3b1E35A9acBf";
 var channel = "US-Bike-Sharing-Channel";
 var channelTraffic = "nyc-traffic-speed";
+var channelTV = "tv-commercial-airings";
 let counter = 0;
 let counterBubble = 0;
 
@@ -90,6 +93,36 @@ subscriptionBar.on('rtm/subscription/data', function (pdu) {
     if (!found) myData3.push(msg);
 
   });
+});
+
+var subscriptionTV = rtm.subscribe(channelTV, RTM.SubscriptionMode.SIMPLE);
+subscriptionTV.on('rtm/subscription/data', function (pdu) {
+  pdu.body.messages.forEach(function (msg) {
+     let newMsg = JSON.parse(msg);
+      
+      if (!cacheTV[newMsg.genre]) {
+        cacheTV[newMsg.genre] = 1;
+        newMsg.count = cacheTV[newMsg.genre];
+      } else  {
+          cacheTV[newMsg.genre] = cacheTV[newMsg.genre] + 1;
+          newMsg.count = cacheTV[newMsg.genre];
+       }
+
+      if (myData6.length === 0) myData6.push(newMsg);
+
+      let found = false;
+      for (let i = 0; i < myData6.length; i++) {
+        if (myData6[i].genre === newMsg.genre) {
+          myData6[i] = newMsg;
+          found = true;
+          break;
+        }
+      }
+      if (!found)  myData6.push(newMsg);
+      console.log('INCOMING DATA');
+    
+  })
+  
 });
 
 rtm.start();
@@ -198,6 +231,13 @@ let config6 = {
   volume: 'num_bikes_available',
 };
 
+let config7 = {
+  setWidth: 700,                   
+  setHeight: 700,                  
+  category: 'genre',//category to be show in pie slices
+  count: 'count'
+};
+
 let bikeStream = new streamline(server);
 
 bikeStream.connect((socket) => {
@@ -207,6 +247,7 @@ bikeStream.connect((socket) => {
   bikeStream.bar(socket, myData3, config4);
   //bikeStream.bubbleGraph(socket, myData4, config5);
   bikeStream.bubbleGraph(socket, myData5, config6);
+  bikeStream.pie(socket, myData6, config7);
 });
 
 server.listen(process.env.PORT || 3000, () => console.log('SERVER RUNNING ON 3000'));
