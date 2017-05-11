@@ -17,11 +17,12 @@ app.get('/', (req, res) => {
 
 
 //______________GET DATA____________________________________
-
+//let check = [];
 let myData = [];
+let cache = {};
 var endpoint = "wss://open-data.api.satori.com";
-var appKey = "9BABD0370e2030dd5AFA3b1E35A9acBf";
-var channel = "US-Bike-Sharing-Channel";
+var appKey = "34DF1ecf6B793beA053a60aa1cdDdC2C";
+var channel = "METAR-AWC-US";
 let counter = 0;
 
 var rtm = new RTM(endpoint, appKey);
@@ -32,19 +33,27 @@ rtm.on("enter-connected", function () {
 var subscription = rtm.subscribe(channel, RTM.SubscriptionMode.SIMPLE);
 subscription.on('rtm/subscription/data', function (pdu) {
   pdu.body.messages.forEach(function (msg) {
-
-    //console.log('MESSAGE DATA', msg);
-
-    if (msg.station_id < 300) {
-      msg.counter = Math.random() * 19;
-
+    // let newMsg = JSON.parse(msg);
+      
+    //  console.log(msg);
+   
+  
+      // if (myData.length === 0) 
       myData.push(msg);
-      if(myData.length > 20) {
-        myData.shift();
-      };
-    };
-  })
 
+      // let found = false;
+      // for (let i = 0; i < myData.length; i++) {
+      //   if (myData[i].genre === newMsg.genre) {
+      //     myData[i] = newMsg;
+      //     found = true;
+      //     break;
+      //   }
+      // }
+      // if (!found)  myData.push(newMsg);
+      // console.log('myData', myData);
+    
+  })
+  
 });
 
 rtm.start();
@@ -52,28 +61,22 @@ rtm.start();
 
 //____________________connect to lib / sockets___________________________________
 
-let config2 = {
-  setWidth: 700,                   
-  setHeight: 500,                  
- // shiftXAxis: true,
-  xDomainUpper: 20,
-  xDomainLower: 0,                
-  yDomainUpper: 40,
-  yDomainLower: 0,                  
-  xTicks: 10,
-  yTicks: 10,                  
-  xScale: 'counter',              
-  yScale: 'num_bikes_available',
-  xLabel_text: 'x axis label',
-  yLabel_text: 'y axis label'
+let config = {
+  setWidth: 900,                   
+  setHeight: 700,                  
+  latitude: 'latitude',
+  longitude: 'longitude',
+  propOne: 'temp_c',
+  propTwo: 'wind_speed_kt'
 };
 
-let bikeStream = new streamline(server);
+let aviationData = new streamline(server);
 
-bikeStream.connect((socket) => {
-  bikeStream.scatter(socket, myData, config2);
+aviationData.connect((socket) => {
+  //  setInterval (() => {console.log('myData', myData[0])}, 1000);
+  aviationData.map(socket, myData, config);
 });
 
 
-server.listen(process.env.PORT || 4000, () => console.log('SERVER RUNNING ON 4000'));
+server.listen(process.env.PORT || 3000, () => console.log('SERVER RUNNING ON 3000'));
 

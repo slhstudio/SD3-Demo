@@ -42,17 +42,9 @@ subscription.on('rtm/subscription/data', function (pdu) {
           cache[newMsg.genre] = cache[newMsg.genre] + 1;
           newMsg.count = cache[newMsg.genre];
        }
-   
-    //  if (!check.includes(newMsg.genre))
-    //    check.push(newMsg.genre);
-    //    console.log(check);
-      //console.log(check);
-//only push message into my data whose genre is not already there.
-// if it is there, replace it
-
-//check.includes(newMsg.genre)
+  
       if (myData.length === 0) myData.push(newMsg);
-//cache[newMsg.genre]
+
       let found = false;
       for (let i = 0; i < myData.length; i++) {
         if (myData[i].genre === newMsg.genre) {

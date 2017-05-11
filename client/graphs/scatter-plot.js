@@ -25,6 +25,7 @@
         }
       }
       if (needsChange) drawContent(settings, data);
+
     }
 
   });
