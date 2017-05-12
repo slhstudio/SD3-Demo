@@ -63,6 +63,7 @@
   }
 
   function drawGrid(data) {
+    console.log('drawing grid...', data);
 
     let color = d3.scaleLinear()
       .domain(customData.colorDomain)
@@ -96,9 +97,10 @@
     let color = settings.color;
     let fillColor = settings.fillColor;
 
-    d3.select('#g-container').selectAll('.text')
-      // .selectAll("text")
-      .data(words)
+    let Existingwords = svg.selectAll('.text')
+      .data(words);
+
+    let newWords = Existingwords
       .enter().append("text")
       .attr('class', 'text')
       .style("font-size", function (d) { return (d.size) + "px"; })
@@ -109,7 +111,17 @@
         return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
       })
       .text(function (d) { return d.text; });
+
+  Existingwords.select('.text').transition()
+    .duration(1000)
+    .attr("opacity", 1)
+    .attr("transform", function (d, i) {
+      return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+    })
+    .style("font-size", function (d) { return (d.size) + "px"; })
+    .text(function (d) { return d.text; });
   }
+
 
 
   //--------------------CREATE GRAPH----------------------------------
