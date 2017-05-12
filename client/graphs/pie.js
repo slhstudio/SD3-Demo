@@ -47,7 +47,9 @@
 
     d3.select('#pieSVG').remove();
 
+  //define svg for pie
     let svg = d3.select('#pie-chart')
+
       .append('svg')
       .attr('id', 'pieSVG')
       .attr('width', width)

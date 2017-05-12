@@ -55,7 +55,7 @@ rtm.start();
 let config2 = {
   setWidth: 700,                   
   setHeight: 500,                  
-  shiftXAxis: true,
+ // shiftXAxis: true,
   xDomainUpper: 20,
   xDomainLower: 0,                
   yDomainUpper: 40,
