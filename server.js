@@ -12,7 +12,7 @@ dotenv.load()
 //---------------SEND CLIENT FILES-----------------------
 
 
-  function sendFiles () {
+  function sendFiles(app) {
     app.use(express.static(path.join(__dirname, 'client')));
 
     app.get('/', (req, res) => {
@@ -20,6 +20,8 @@ dotenv.load()
     });
     console.log('inside function')
   }
+  
+ 
 
 
     // app.use(express.static(path.join(__dirname, 'client')));
@@ -250,6 +252,7 @@ let config7 = {
 let bikeStream = new streamline(sendFiles, 3000);
 
 bikeStream.connect((socket) => {
+  
   bikeStream.line(socket, myData, config);
   bikeStream.scatter(socket, myData2, config2);
   bikeStream.wordCloud(socket, config3);
