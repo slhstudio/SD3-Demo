@@ -15,7 +15,7 @@
   let w = 500;
 
   //get data from socket and store it in freq
-  var freq = [{ "text": "your", "size": 10 }, { "text": "the", "size": 20 }, { "text": "at", "size": 10 }];
+  var freq = [{ "text": " ", "size": 10 }];
 
   function includes(word) {
     return freq.some(obj => {
