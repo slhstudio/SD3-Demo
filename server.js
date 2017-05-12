@@ -1,7 +1,7 @@
-const express = require('express');
-const app = express();
-const server = require('http').createServer(app);
-const path = require('path');
+// const express = require('express');
+// const app = express();
+//const server = require('http').createServer();
+// const path = require('path');
 const RTM = require("satori-sdk-js");
 const streamline = require('./lib/index.js');
 var chai = require('chai');
@@ -10,11 +10,12 @@ const dotenv = require('dotenv');
 dotenv.load()
 
 //---------------SEND CLIENT FILES-----------------------
-app.use(express.static(path.join(__dirname, 'client')));
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client/home-page.html'));
-});
+// app.use(express.static(path.join(__dirname, 'client')));
+
+// app.get('/', (req, res) => {
+//   res.sendFile(path.join(__dirname, 'client/home-page.html'));
+// });
 
 
 //______________GET DATA____________________________________
@@ -238,7 +239,7 @@ let config7 = {
   count: 'count'
 };
 
-let bikeStream = new streamline(server);
+let bikeStream = new streamline();
 
 bikeStream.connect((socket) => {
   bikeStream.line(socket, myData, config);
