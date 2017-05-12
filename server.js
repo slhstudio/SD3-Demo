@@ -247,7 +247,7 @@ let config7 = {
   count: 'count'
 };
 
-let bikeStream = new streamline(sendFiles);
+let bikeStream = new streamline(sendFiles, 3000);
 
 bikeStream.connect((socket) => {
   bikeStream.line(socket, myData, config);
