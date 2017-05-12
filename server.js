@@ -4,7 +4,7 @@ const app = express();
 const path = require('path');
 const RTM = require("satori-sdk-js");
 const streamline = require('./lib/index.js');
-var chai = require('chai');
+//var chai = require('chai');
 const dotenv = require('dotenv');
 
 dotenv.load()
