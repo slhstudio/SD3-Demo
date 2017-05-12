@@ -33,8 +33,6 @@ dotenv.load()
 
 //BIKE STREAM
 let myData = [];
-<<<<<<< HEAD
-let myData2 = [];
 let myData3 = [];
 let myData5 = [];
 let myData6 = [];
@@ -44,12 +42,7 @@ var appKey = "9BABD0370e2030dd5AFA3b1E35A9acBf";
 var channel = "US-Bike-Sharing-Channel";
 var channelTraffic = "nyc-traffic-speed";
 var channelTV = "tv-commercial-airings";
-=======
 
-var endpoint = "wss://open-data.api.satori.com";
-var appKey = "9BABD0370e2030dd5AFA3b1E35A9acBf";
-var channel = "US-Bike-Sharing-Channel";
->>>>>>> refacCloud
 let counter = 0;
 let counterBubble = 0;
 
@@ -62,22 +55,13 @@ var subscription = rtm.subscribe(channel, RTM.SubscriptionMode.SIMPLE);
 subscription.on('rtm/subscription/data', function (pdu) {
   pdu.body.messages.forEach(function (msg) {
 
+
     if (msg.station_id < 300) {
       msg.counter = counter++;
       myData.push(msg);
 
       if (myData.length > 20) {
         myData.shift();
-      }
-    }
-
-<<<<<<< HEAD
-    if (msg.station_id < 250) {
-      msg.counter2 = Math.random() * 19;
-      myData2.push(msg);
-
-      if (myData2.length > 20) {
-        myData2.shift();
       }
     }
 
@@ -108,11 +92,7 @@ subscriptionBar.on('rtm/subscription/data', function (pdu) {
         found = true;
       }
     }
-=======
-    // if (msg.station_id < 250) {
-    //   msg.counter2 = Math.random() * 19;
-    //   myData2.push(msg);
->>>>>>> refacCloud
+
 
     //   if (myData2.length > 20) {
     //     myData2.shift();
@@ -235,7 +215,6 @@ let config3 = {
   rotate: 0,
 }
 
-<<<<<<< HEAD
 let config4 = {
   setWidth: 500,
   setHeight: 300,
