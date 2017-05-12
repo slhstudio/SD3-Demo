@@ -8,22 +8,22 @@ let height = 500 - margin.top - margin.bottom;
 
 
 socket.on('sendMapData', (allData) => {
- console.log('allData', allData);
+   console.log('allData', allData);
 	 width = allData[0].setWidth - margin.left - margin.right;
    height = allData[0].setHeight - margin.top - margin.bottom;
   
-	d3.select('svg').remove();
+	 d3.select('svg').remove();
 			//Define map projection
-			let projection = d3.geoAlbersUsa()
+			var projection = d3.geoAlbersUsa()
 								   .translate([width/2, height/2])
 								   .scale([1200]);
 
 			//Define path generator
-			let path = d3.geoPath()
+			var path = d3.geoPath()
 							 .projection(projection);
 
 			//Create SVG element
-			let svg = d3.select('#map')
+			var svg = d3.select('#map')
 						.append('svg')
 						.attr("width", width)
 						.attr("height", height);
@@ -42,6 +42,8 @@ socket.on('sendMapData', (allData) => {
 			});
 
 		//	d3.csv("US-Mass-Shootings_1982-2015.csv", function(data) {
+				// aa = [-122.490402, 37.786453];
+				// bb = [-122.389809, 37.72728];
 
 				svg.append("g")
 				   	.attr("class", "bubble")
@@ -51,16 +53,14 @@ socket.on('sendMapData', (allData) => {
 					.enter()
 					.append("circle")
 					.attr("cx", d => {
-							return projection([d.longitude, d.latitude])[0];
+						console.log('d', d);
+						console.log('d.lon', d.longitude);
+						return projection([d.longitude, d.latitude])[0];
 					})
-					.attr("cy", d => {
-							return projection([d.longitude, d.latitude])[1];
-					})
-					// .attr("r", function(d) {
-					// 		return (d.Fatalities/1.5);
-					// })
+					.attr("cy", d => projection([d.longitude, d.latitude])[1])
+					.attr("r", '5px')
+					.attr("fill", "red");
+			})
 	
-			});		
-
 })();		
 	

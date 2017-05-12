@@ -22,7 +22,7 @@ let myData = [];
 let cache = {};
 var endpoint = "wss://open-data.api.satori.com";
 var appKey = "34DF1ecf6B793beA053a60aa1cdDdC2C";
-var channel = "satellites";
+var channel = 'satellites';//"METAR-AWC-US";
 let counter = 0;
 
 var rtm = new RTM(endpoint, appKey);
@@ -33,7 +33,7 @@ rtm.on("enter-connected", function () {
 var subscription = rtm.subscribe(channel, RTM.SubscriptionMode.SIMPLE);
 subscription.on('rtm/subscription/data', function (pdu) {
   pdu.body.messages.forEach(function (msg) {
-
+   // console.log('msg', msg);
     let usLat;
     let usLon;
 
@@ -45,30 +45,28 @@ subscription.on('rtm/subscription/data', function (pdu) {
   
       let minSec =  minutes + seconds/60;
       let decimalDegrees = (degrees + minSec/60).toFixed(3);
-      
-      //return latitude if in US
+     // return decimalDegrees;
+    //return latitude if in US
       if (lat) {
         if (degrees > 18 && degrees < 71) return decimalDegrees;
       }
       //returns longitude if in US
       if (degrees > -162 && degrees < -65) return decimalDegrees;
-    }
-   // console.log('lat', decDegrees(msg.latitude));
-   // console.log('lon', decDegrees(msg.longitude));
+      }
 
     usLat = decDegrees(msg.latitude, true);
     usLon = decDegrees(msg.longitude, false);
 
-    if (usLat && usLon) {
-       //replace the properties in msg object
-       msg.latitude = usLat;
-       msg.longitude = usLon;
+   // console.log('lat', usLat, usLon);//(msg);
+
+   if (usLat && usLon) {
+     //  replace the properties in msg object
+     // console.log(msg);
+      msg.latitude = Number(usLat);
+      msg.longitude = Number(usLon);
        myData.push(msg);
     }
     
-   // console.log('usLat', usLat);
-   // console.log('usLon', usLon);
-
    console.log(myData);
     
   })

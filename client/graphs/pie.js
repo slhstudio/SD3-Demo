@@ -94,7 +94,7 @@
     newCircles.append('path')
       .attr('d', arc)
       .attr('class', 'path')
-      .style('fill', 'gray')
+      .style('fill', (d, i) => color(d.index))
       .style('stroke', '#fff')
 
     newCircles.append('text')
@@ -112,6 +112,7 @@
       .duration(1000)
       .attr("opacity", 1)
       .attr('d', arc)
+      .style('fill', (d, i) => color(d.index))
       .style('stroke', '#fff')
 
     circles.select('.text')
