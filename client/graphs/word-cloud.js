@@ -15,7 +15,10 @@
   let w = 500;
 
   //get data from socket and store it in freq
-  var freq = [{ "text": " ", "size": 10 }];
+
+  let cachedFreq = [];
+  let freq = [{"text":" ","size": 10},{"text":" ","size": 20}];
+
 
   function includes(word) {
     return freq.some(obj => {
@@ -40,6 +43,50 @@
         }
       })
     });
+    
+    function determineLargestChange() {
+      let largestSizeChange = 0;
+      
+      for (let i = 1; i < cachedFreq.length; i += 1) {
+        let changeInSize = freq[i].size - cachedFreq[i].size
+        if (changeInSize > largestSizeChange) {largestSizeChange = changeInSize;} 
+      }
+      if (cachedFreq.length === 0) {
+        largestSizeChange = freq.sort((a,b) => b.size - a.size)[0].size;
+      }
+			
+			return largestSizeChange;
+    }
+    
+    // console.log('----------------')
+    // console.log('CACHED FREQ', cachedFreq);
+    // console.log( determineLargestChange());
+    // console.log( freq.length, cachedSize);
+    // console.log( 'height', h , 'width', w);
+
+    function alterSize() {
+      if (freq.length >= cachedSize) {
+        h += 40;
+        w += 70;
+        cachedSize += 5;
+      }
+
+      if (determineLargestChange() >= 20 && determineLargestChange() < 40) {
+        h += 40;
+        w += 70;
+      }
+      else if (determineLargestChange() >= 40 && determineLargestChange() < 60) {
+        h += 80;
+        w += 150;
+      }
+      else if (determineLargestChange() >= 60 && determineLargestChange() < 100) {
+        h += 120;
+        w += 250;
+      }
+      else {
+        h += 200;
+        w += 400;
+      }
 
     cloud()
       .size([w, h])
@@ -53,6 +100,9 @@
       .start();
   })
 
+  //update cachedFreq for next chunk of data
+  cachedFreq = freq;
+  
   let settings;
 
   function hasGrid(words) {
@@ -68,7 +118,9 @@
     let color = d3.scaleLinear()
       .domain(customData.colorDomain)
       .range(customData.colors);
-
+    
+    //d3 version 3 way of adding color;
+    //let fillColor = d3.scale.category20b();
     let fillColor = d3.scaleOrdinal(d3.schemeCategory20);
 
     d3.select("#wordCloud").remove()
@@ -85,9 +137,11 @@
       svg,
       color,
       fillColor,
+
     }
     return settings;
   }
+    
 
   function drawCloud(settings, words) {
     console.log('drawing cloud...', words);
@@ -126,21 +180,5 @@
       .text(function (d) { return d.text; });
   }
 
-  //--------------------CREATE GRAPH----------------------------------
-  //d3 version 3 way of adding color;
-  //let fillColor = d3.scale.category20b();
-
-  function alterSize() {
-    if (freq.length >= cachedSize) {
-      h += 40;
-      w += 70;
-      cachedSize += 5;
-    }
-  }
-  alterSize();
-
-  console.log('WIDTH', w, 'HEIGHT', h);
-  console.log('LENGTH', freq.length);
-  console.log('cache', cachedSize);
 
 })()
