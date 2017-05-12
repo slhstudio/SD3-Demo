@@ -4,7 +4,6 @@ const app = express();
 const path = require('path');
 const RTM = require("satori-sdk-js");
 const streamline = require('./lib/index.js');
-var chai = require('chai');
 const dotenv = require('dotenv');
 
 dotenv.load()
@@ -32,7 +31,9 @@ dotenv.load()
 
 //______________GET DATA____________________________________
 
+//BIKE STREAM
 let myData = [];
+<<<<<<< HEAD
 let myData2 = [];
 let myData3 = [];
 let myData5 = [];
@@ -43,6 +44,12 @@ var appKey = "9BABD0370e2030dd5AFA3b1E35A9acBf";
 var channel = "US-Bike-Sharing-Channel";
 var channelTraffic = "nyc-traffic-speed";
 var channelTV = "tv-commercial-airings";
+=======
+
+var endpoint = "wss://open-data.api.satori.com";
+var appKey = "9BABD0370e2030dd5AFA3b1E35A9acBf";
+var channel = "US-Bike-Sharing-Channel";
+>>>>>>> refacCloud
 let counter = 0;
 let counterBubble = 0;
 
@@ -64,6 +71,7 @@ subscription.on('rtm/subscription/data', function (pdu) {
       }
     }
 
+<<<<<<< HEAD
     if (msg.station_id < 250) {
       msg.counter2 = Math.random() * 19;
       myData2.push(msg);
@@ -100,11 +108,19 @@ subscriptionBar.on('rtm/subscription/data', function (pdu) {
         found = true;
       }
     }
+=======
+    // if (msg.station_id < 250) {
+    //   msg.counter2 = Math.random() * 19;
+    //   myData2.push(msg);
+>>>>>>> refacCloud
 
-    msg.Speed = Number(msg.Speed);
-    if (!found) myData3.push(msg);
+    //   if (myData2.length > 20) {
+    //     myData2.shift();
+    //   }
+    // }
 
   });
+
 });
 
 var subscriptionTV = rtm.subscribe(channelTV, RTM.SubscriptionMode.SIMPLE);
@@ -138,41 +154,47 @@ subscriptionTV.on('rtm/subscription/data', function (pdu) {
 
 rtm.start();
 
-//------------------
 
-function createStream() {
-  function ranNum() {
-    return Math.floor(Math.random() * 10);;
-  }
-  function newArray() {
-    for (let i = 0; i < array.length; i += 1) {
-      array[i].randNum = ranNum();
+//NY TRAFFIC
+let myData2 = [
+  { Borough: 'Bronx', Lat: 40.8464305, Long: 73.93213, Speed: 20},
+  { Borough: 'Staten Island', Lat: 40.6077805, Long: 74.14091, Speed: 20 },
+  { Borough: 'Queens', Lat: 40.78795, Long: 73.790191, Speed: 20 },
+  { Borough: 'Manhattan', Lat: 40.71141, Long: 73.97866, Speed: 20 },
+  { Borough: 'Brooklyn', Lat: 40.61632, Long: 74.0263, Speed: 20 },
+
+];
+
+var endpoint1 = "wss://open-data.api.satori.com";
+var appKey1 = "A1FAF4aAb5637a603E53466cD2876778";
+var channel1 = "nyc-traffic-speed";
+
+var rtm1 = new RTM(endpoint1, appKey1);
+rtm1.on("enter-connected", function () {
+  console.log("Connected to RTM!");
+});
+
+var subscription = rtm1.subscribe(channel1, RTM.SubscriptionMode.SIMPLE);
+subscription.on('rtm/subscription/data', function (pdu) {
+  pdu.body.messages.forEach(function (msg) {
+
+    for (let i = 0; i < myData2.length; i += 1) {
+      if (myData2[i].Borough === msg.Borough) {
+        myData2[i].Speed = (Number(myData2[i].Speed) + Number(msg.Speed)) / 2;
+        myData2[i].Speed = msg.Speed;
+
+      }
     }
-  }
+  });
+});
 
-  let array = [
-    { id: 0, randNum: 7 },
-    { id: 1, randNum: 6 },
-    { id: 2, randNum: 3 },
-    { id: 3, randNum: 9 },
-    { id: 4, randNum: 9 },
-    { id: 5, randNum: 5 },
-    { id: 6, randNum: 7 }];
-
-  setInterval(newArray, 1000);
-
-  return array;
-}
-
-let myData4 = createStream();
-
-
+rtm1.start();
 
 //____________________connect to lib / sockets___________________________________
 
 let config = {
-  setWidth: 500,
-  setHeight: 300,
+  setWidth: 700,
+  setHeight: 500,
   shiftXAxis: true,
   xDomainUpper: 20,
   xDomainLower: 0,
@@ -190,16 +212,18 @@ let config2 = {
   setWidth: 700,
   setHeight: 500,
   shiftXAxis: true,
-  xDomainUpper: 20,
-  xDomainLower: 0,
-  yDomainUpper: 40,
-  yDomainLower: 0,
+  xDomainUpper: 40.85,
+  xDomainLower: 40.60,
+  yDomainUpper: 74.0,
+  yDomainLower: 73.5,
   xTicks: 10,
   yTicks: 10,
-  xScale: 'counter2',
-  yScale: 'num_bikes_available',
+  xScale: 'Lat',
+  yScale: 'Long',
+  volume: 'Speed',
   xLabel_text: '',
-  yLabel_text: ''
+  yLabel_text: '',
+  circle_text: 'Borough',
 };
 
 let config3 = {
@@ -211,6 +235,7 @@ let config3 = {
   rotate: 0,
 }
 
+<<<<<<< HEAD
 let config4 = {
   setWidth: 500,
   setHeight: 300,
@@ -264,3 +289,4 @@ bikeStream.connect((socket) => {
 
 //server.listen(process.env.PORT || 4000, () => console.log('SERVER RUNNING ON 3000'));
 
+// server.listen(process.env.PORT || 3000, () => console.log('SERVER RUNNING ON 3000'));
