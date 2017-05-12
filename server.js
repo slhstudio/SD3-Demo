@@ -1,7 +1,7 @@
-// const express = require('express');
-// const app = express();
-//const server = require('http').createServer();
-// const path = require('path');
+const express = require('express');
+const app = express();
+// const server = require('http').createServer();
+const path = require('path');
 const RTM = require("satori-sdk-js");
 const streamline = require('./lib/index.js');
 var chai = require('chai');
@@ -11,12 +11,22 @@ dotenv.load()
 
 //---------------SEND CLIENT FILES-----------------------
 
-// app.use(express.static(path.join(__dirname, 'client')));
 
-// app.get('/', (req, res) => {
-//   res.sendFile(path.join(__dirname, 'client/home-page.html'));
-// });
+  function sendFiles () {
+    app.use(express.static(path.join(__dirname, 'client')));
 
+    app.get('/', (req, res) => {
+      res.sendFile(path.join(__dirname, 'client/home-page.html'));
+    });
+    console.log('inside function')
+  }
+
+
+    // app.use(express.static(path.join(__dirname, 'client')));
+
+    // app.get('/', (req, res) => {
+    //   res.sendFile(path.join(__dirname, 'client/home-page.html'));
+    // });
 
 //______________GET DATA____________________________________
 
@@ -81,7 +91,6 @@ subscription.on('rtm/subscription/data', function (pdu) {
 var subscriptionBar = rtm.subscribe(channelTraffic, RTM.SubscriptionMode.SIMPLE);
 subscriptionBar.on('rtm/subscription/data', function (pdu) {
   pdu.body.messages.forEach(function (msg) {
-    //console.log('SERVER MSG', msg); 
     let found = false;
     for (let i = 0; i < myData3.length; i += 1) {
       if (myData3[i].Borough === msg.Borough) {
@@ -120,7 +129,6 @@ subscriptionTV.on('rtm/subscription/data', function (pdu) {
         }
       }
       if (!found)  myData6.push(newMsg);
-      console.log('INCOMING DATA');
     
   })
   
@@ -239,7 +247,7 @@ let config7 = {
   count: 'count'
 };
 
-let bikeStream = new streamline();
+let bikeStream = new streamline(sendFiles);
 
 bikeStream.connect((socket) => {
   bikeStream.line(socket, myData, config);
@@ -251,5 +259,5 @@ bikeStream.connect((socket) => {
   bikeStream.pie(socket, myData6, config7);
 });
 
-// server.listen(process.env.PORT || 3000, () => console.log('SERVER RUNNING ON 3000'));
+//server.listen(process.env.PORT || 4000, () => console.log('SERVER RUNNING ON 3000'));
 

@@ -61,10 +61,6 @@
     }
     alterSize();
 
-    console.log('WIDTH', w, 'HEIGHT', h);
-    console.log('LENGTH', freq.length);  
-    console.log('cache', cachedSize);  
-
     cloud()
       .size([w, h])
       .words(freq) 

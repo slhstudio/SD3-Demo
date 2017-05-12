@@ -11,8 +11,6 @@
 
   socket.on('sendScatterData', (allData) => {
   
-    //console.log('ALL DATA: ', allData);
-
     //if data is not empty or data is new...
     if (allData.length > 0 || (currData.length > 0 && allData[allData.length - 1].xScale !== currData[currData.length - 1].xScale)) {
 

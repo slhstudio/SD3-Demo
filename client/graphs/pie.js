@@ -14,7 +14,6 @@
   socket.on('sendPieData', (data) => {
 
     if (data.length > 0) {
-      // console.log('DATA FROM CLIENT: ', data)
       if (!settings) settings = drawGrid(data);
 
       let needsChange = false;
@@ -30,7 +29,6 @@
   })
 
   function drawGrid(data) {
-    console.log('DATA 0: ', data);
     width = data[0].setWidth - margin.left - margin.right;
     height = data[0].setHeight - margin.top - margin.bottom;
 
@@ -68,7 +66,6 @@
   }
 
   function drawContent(settings, data) {
-    console.log('RENDERING')
     let color = d3.scaleSequential(d3.interpolateSpectral)
       .domain([0, 25]);
     let arc = settings.arc;
@@ -87,7 +84,6 @@
       .append('g')
       .attr('class', 'arc');
 
-    console.log('COLOR: ', color);
     //append the path of the arc
     newCircles.append('path')
       .attr('d', arc)
