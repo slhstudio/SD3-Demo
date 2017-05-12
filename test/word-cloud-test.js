@@ -69,3 +69,36 @@ describe('custom data object', () => {
     expect(the[0].size).to.be.at.least(30);
   });
 });
+
+//--------------------------------------------------
+
+let cachedFreq = [{"text":"your","size": 10},{"text":"the","size": 20}];
+let newFreq = [{"text":"your","size": 10},{"text":"the","size": 50},{"text":"at","size": 10}];
+
+function determineLargestChange() {
+  let largestSizeChange = 0;
+  
+  for (let i = 1; i < cachedFreq.length; i += 1) {
+    let changeInSize = newFreq[i].size - cachedFreq[i].size
+    if (changeInSize > largestSizeChange) {largestSizeChange = changeInSize;} 
+  }
+  if (cachedFreq.length === 0) {
+    largestSizeChange = newFreq.sort((a,b) => b.size - a.size)[0].size;
+  }
+  
+  return largestSizeChange;
+}
+
+
+describe('determineLargestChange', () => {
+  it('should return a number', () => {
+
+    assert.isNumber(determineLargestChange(), true, 'should return true; output is a number');
+  });
+  
+  it('should find the change in size between two values', () => {
+    
+    assert.equal(determineLargestChange(), 30, 'should return 30');
+  });
+
+});

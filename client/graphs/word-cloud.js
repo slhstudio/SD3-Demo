@@ -15,7 +15,8 @@
   let w = 500;
 
   //get data from socket and store it in freq
-  var freq = [{"text":"your","size": 10},{"text":"the","size": 20},{"text":"at","size": 10}];
+  let cachedFreq = [];
+  let freq = [{"text":" ","size": 10},{"text":" ","size": 20}];
 
   function includes(word){
     return freq.some(obj => {
@@ -52,15 +53,56 @@
 
     let fillColor = d3.scaleOrdinal(d3.schemeCategory20);
    
+    function determineLargestChange() {
+      let largestSizeChange = 0;
+      
+      for (let i = 1; i < cachedFreq.length; i += 1) {
+        let changeInSize = freq[i].size - cachedFreq[i].size
+        if (changeInSize > largestSizeChange) {largestSizeChange = changeInSize;} 
+      }
+      if (cachedFreq.length === 0) {
+        largestSizeChange = freq.sort((a,b) => b.size - a.size)[0].size;
+      }
+			
+			return largestSizeChange;
+    }
+    // console.log('----------------')
+    // console.log('CACHED FREQ', cachedFreq);
+    // console.log( determineLargestChange());
+    // console.log( freq.length, cachedSize);
+    // console.log( 'height', h , 'width', w);
+
     function alterSize() {
       if (freq.length >= cachedSize) {
         h += 40;
         w += 70;
         cachedSize += 5;
       }
+
+      if (determineLargestChange() >= 20 && determineLargestChange() < 40) {
+        h += 40;
+        w += 70;
+      }
+      else if (determineLargestChange() >= 40 && determineLargestChange() < 60) {
+        h += 80;
+        w += 150;
+      }
+      else if (determineLargestChange() >= 60 && determineLargestChange() < 100) {
+        h += 120;
+        w += 250;
+      }
+      else {
+        h += 200;
+        w += 400;
+      }
     }
     alterSize();
 
+    //change freq to cachedFreq so have it updated for next chunk of data
+    cachedFreq = freq;
+
+
+    //draw the word-cloud
     cloud()
       .size([w, h])
       .words(freq) 
