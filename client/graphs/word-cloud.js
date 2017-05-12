@@ -91,7 +91,7 @@
   }
 
   function drawCloud(settings, words) {
-    console.log('drawing cloud...');
+    console.log('drawing cloud...', words);
     //remove so doesn't make multiple word clouds
     let svg = settings.svg;
     let color = settings.color;
@@ -100,8 +100,13 @@
     let Existingwords = svg.selectAll('.text')
       .data(words);
 
+    console.log('EXISTING WORDS: ', Existingwords);
+
     let newWords = Existingwords
-      .enter().append("text")
+      .enter()
+      .append("text").transition()
+      .duration(1000)
+      .attr("opacity", 1)
       .attr('class', 'text')
       .style("font-size", function (d) { return (d.size) + "px"; })
       .style("font-family", customData.font)
@@ -112,14 +117,14 @@
       })
       .text(function (d) { return d.text; });
 
-  Existingwords.select('.text').transition()
-    .duration(1000)
-    .attr("opacity", 1)
-    .attr("transform", function (d, i) {
-      return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
-    })
-    .style("font-size", function (d) { return (d.size) + "px"; })
-    .text(function (d) { return d.text; });
+    Existingwords.transition()
+      .duration(1000)
+      .attr("opacity", 1)
+      .attr("transform", function (d, i) {
+        return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+      })
+      .style("font-size", function (d) { return (d.size) + "px"; })
+      .text(function (d) { return d.text; });
   }
 
 
