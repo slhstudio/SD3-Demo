@@ -177,6 +177,8 @@ let wordCloudConfig = {
   fontSize: 40,
   padding: 10,
   rotate: 0,
+  height: 600,
+  width: 2000,
 }
 
 let barConfig = {

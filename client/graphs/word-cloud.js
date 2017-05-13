@@ -3,6 +3,7 @@
   let customData = {};
 
   socket.on('send custom', (emitData) => {
+    console.log('CLOUD DATA', emitData)
     for (let key in emitData) {
       customData[key] = emitData[key]
     }
@@ -10,13 +11,13 @@
 
 
   //these values will change dynamically based on how many words are in freq;
-  let cachedSize = 5;
-  let h = 600;
-  let w = 1500;
-
+  // let cachedSize = 5;
+  // let h = 600;
+  // let w = 2000;
+ 
   //get data from socket and store it in freq
 
-  let cachedFreq = [];
+  // let cachedFreq = [];
   let freq = [{"text":" ","size": 10},{"text":" ","size": 20}];
 
 
@@ -28,7 +29,6 @@
 
 
   socket.on('send audioData', (data) => {
-    console.log('DATA RECEIVED', Date.now());
     //if word is in freq arr, then add 1; if not add it
     data.split(' ').forEach(word => {
       word = word.toLowerCase();
@@ -44,58 +44,60 @@
       })
     });
     
-    function determineLargestChange() {
-      let largestSizeChange = 0;
+    // function determineLargestChange() {
+    //   let largestSizeChange = 0;
       
-      for (let i = 1; i < cachedFreq.length; i += 1) {
-        let changeInSize = freq[i].size - cachedFreq[i].size
-        if (changeInSize > largestSizeChange) {largestSizeChange = changeInSize;} 
-      }
-      if (cachedFreq.length === 0) {
-        largestSizeChange = freq.sort((a,b) => b.size - a.size)[0].size;
-      }
+    //   for (let i = 1; i < cachedFreq.length; i += 1) {
+    //     let changeInSize = freq[i].size - cachedFreq[i].size
+    //     if (changeInSize > largestSizeChange) {largestSizeChange = changeInSize;} 
+    //   }
+    //   if (cachedFreq.length === 0) {
+    //     largestSizeChange = freq.sort((a,b) => b.size - a.size)[0].size;
+    //   }
 			
-			return largestSizeChange;
-    }
+		// 	return largestSizeChange;
+    // }
     
   
-    function alterSize() {
-      if (freq.length >= cachedSize) {
-        h += 40;
-        w += 70;
-        cachedSize += 5;
-      }
+    // function alterSize() {
+    //   if (freq.length >= cachedSize) {
+    //     h += 40;
+    //     w += 70;
+    //     cachedSize += 5;
+    //   }
 
-      if (determineLargestChange() >= 20 && determineLargestChange() < 40) {
-        h += 20;
-        w += 70;
-      }
-      else if (determineLargestChange() >= 40 && determineLargestChange() < 60) {
-        h += 50;
-        w += 150;
-      }
-      else if (determineLargestChange() >= 60 && determineLargestChange() < 100) {
-        h += 70;
-        w += 250;
-      }
-      else {
-        h += 100;
-        w += 400;
-      }
-    };
-    alterSize();
+    //   if (determineLargestChange() >= 20 && determineLargestChange() < 40) {
+    //     h += 20;
+    //     w += 70;
+    //   }
+    //   else if (determineLargestChange() >= 40 && determineLargestChange() < 60) {
+    //     h += 50;
+    //     w += 150;
+    //   }
+    //   else if (determineLargestChange() >= 60 && determineLargestChange() < 100) {
+    //     h += 70;
+    //     w += 250;
+    //   }
+    //   else {
+    //     h += 100;
+    //     w += 400;
+    //   }
+    // };
 
-    console.log('----------------')
-    console.log('CACHED FREQ', cachedFreq);
-    console.log( determineLargestChange());
-    console.log( freq.length, cachedSize);
-    console.log( 'height', h , 'width', w);
+    //uncomment if want to use dynamic sizing of background svg, but then also need to uncomment line in function hasGrid 
+    // alterSize();
+
+    // console.log('----------------')
+    // console.log('CACHED FREQ', cachedFreq);
+    // console.log( determineLargestChange());
+    // console.log( freq.length, cachedSize);
+    // console.log( 'height', h , 'width', w);
 
     //update cachedFreq for next chunk of data
-    cachedFreq = freq;
+    // cachedFreq = freq;
 
     cloud()
-      .size([w, h])
+      .size([customData.width, customData.height])
       .words(freq)
       .padding(customData.padding)
       .overflow(true)
@@ -131,11 +133,11 @@
 
     let svg = d3.select("#word-cloud").append("svg")
       .attr('id', 'wordCloud')
-      .attr("width", w)
-      .attr("height", h)
+      .attr("width", customData.width)
+      .attr("height", customData.height)
       .append("g")
       .attr('id', 'g-container')
-      .attr("transform", "translate(" + w / 2 + "," + h / 2 + ")")
+      .attr("transform", "translate(" + customData.width / 2 + "," + customData.height / 2 + ")")
 
     let settings = {
       svg,
