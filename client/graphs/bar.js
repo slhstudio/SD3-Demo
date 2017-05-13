@@ -91,7 +91,7 @@
     let updateNodes = column.select('.column');
 
     if (Object.keys(dataCache).length === data.length) {
-      updateNodes._groups[0] = column.select('.column')._groups[0].filter(d => d.__data__.volume === dataCache[d.__data__.id]);
+      updateNodes._groups[0] = column.select('.column')._groups[0].filter(d => d.__data__.volume !== dataCache[d.__data__.id]);
     }
 
     updateNodes.transition()
