@@ -1,117 +1,144 @@
 const express = require('express');
 const app = express();
-const server = require('http').createServer(app);
+// const server = require('http').createServer();
 const path = require('path');
 const RTM = require("satori-sdk-js");
 const streamline = require('./lib/index.js');
-//var chai = require('chai');
 const dotenv = require('dotenv');
 
 dotenv.load()
 
-//---------------SEND CLIENT FILES-----------------------
-app.use(express.static(path.join(__dirname, 'client')));
-
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client/home-page.html'));
-});
-
 
 //______________GET DATA____________________________________
 
-let myData = [];
-let myData2 = [];
-let myData3 = [];
+// var endpoint1 = "wss://open-data.api.satori.com";
+// var appKey1 = "A1FAF4aAb5637a603E53466cD2876778";
+// var channel1 = "nyc-traffic-speed";
 var endpoint = "wss://open-data.api.satori.com";
 var appKey = "9BABD0370e2030dd5AFA3b1E35A9acBf";
-var channel = "US-Bike-Sharing-Channel";
+var channelBike = "US-Bike-Sharing-Channel";
 var channelTraffic = "nyc-traffic-speed";
-let counter = 0;
+var channelTV = "tv-commercial-airings";
+
+let scatterData = [
+  { Borough: 'Bronx', Lat: 40.8464305, Long: 73.93213, Speed: 20},
+  { Borough: 'Staten Island', Lat: 40.6077805, Long: 74.14091, Speed: 20 },
+  { Borough: 'Queens', Lat: 40.78795, Long: 73.790191, Speed: 20 },
+  { Borough: 'Manhattan', Lat: 40.71141, Long: 73.97866, Speed: 20 },
+  { Borough: 'Brooklyn', Lat: 40.61632, Long: 74.0263, Speed: 20 },
+];
+let lineData = [];
+let barData = [];
+let bubbleData = [];
+let pieData = [];
+let cacheTV = {};
+let counterLine = 0;
+let counterBubble = 0;
+
+//-------------------------------------
 
 var rtm = new RTM(endpoint, appKey);
 rtm.on("enter-connected", function () {
   console.log("Connected to RTM!");
 });
 
-var subscription = rtm.subscribe(channel, RTM.SubscriptionMode.SIMPLE);
-subscription.on('rtm/subscription/data', function (pdu) {
+var subscriptionBike = rtm.subscribe(channelBike, RTM.SubscriptionMode.SIMPLE);
+subscriptionBike.on('rtm/subscription/data', function (pdu) {
   pdu.body.messages.forEach(function (msg) {
 
+    //line chart data
     if (msg.station_id < 300) {
-      msg.counter = counter++;
-      myData.push(msg);
+      msg.counter = counterLine++;
+      lineData.push(msg);
 
-      if (myData.length > 20) {
-        myData.shift();
+      if (lineData.length > 20) {
+        lineData.shift();
       }
     }
 
-    if (msg.station_id < 250) {
-      msg.counter2 = Math.random() * 19;
-      myData2.push(msg);
-
-      if (myData2.length > 20) {
-        myData2.shift();
+    // bubble chart data 
+    if (msg.station_id < 300) {
+      msg.counter = counterBubble++;
+      let idExists = false;
+      
+      for (let i = 0; i < bubbleData.length; i += 1) {
+        if (bubbleData[i].station_id === msg.station_id) {
+          bubbleData[i] = msg;
+          idExists = true;
+        }
       }
-    }
+
+      if (!idExists) bubbleData.push(msg);
+      if (bubbleData.length > 30) bubbleData.shift();
+    };
   });
 });
 
-var subscriptionBar = rtm.subscribe(channelTraffic, RTM.SubscriptionMode.SIMPLE);
-subscriptionBar.on('rtm/subscription/data', function (pdu) {
+var subscriptionTraffic = rtm.subscribe(channelTraffic, RTM.SubscriptionMode.SIMPLE);
+subscriptionTraffic.on('rtm/subscription/data', function (pdu) {
   pdu.body.messages.forEach(function (msg) {
-    //console.log('SERVER MSG', msg); 
+
+    //bar data 
     let found = false;
-    for (let i = 0; i < myData3.length; i += 1) {
-      if (myData3[i].Borough === msg.Borough) {
-        myData3[i].Speed = (Number(myData3[i].Speed) + Number(msg.Speed)) / 2;
+    for (let i = 0; i < barData.length; i += 1) {
+      if (barData[i].Borough === msg.Borough) {
+        barData[i].Speed = (Number(barData[i].Speed) + Number(msg.Speed)) / 2;
         found = true;
       }
     }
 
     msg.Speed = Number(msg.Speed);
-    if (!found) myData3.push(msg);
+    if(!found) barData.push(msg);
+
+    //scatter data 
+    for (let i = 0; i < scatterData.length; i += 1) {
+      if (scatterData[i].Borough === msg.Borough) {
+        scatterData[i].Speed = (Number(scatterData[i].Speed) + Number(msg.Speed)) / 2;
+        scatterData[i].Speed = msg.Speed;
+      }
+    }
 
   });
 });
 
+var subscriptionTV = rtm.subscribe(channelTV, RTM.SubscriptionMode.SIMPLE);
+subscriptionTV.on('rtm/subscription/data', function (pdu) {
+  pdu.body.messages.forEach(function (msg) {
+     let newMsg = JSON.parse(msg);
+      
+      if (!cacheTV[newMsg.genre]) {
+        cacheTV[newMsg.genre] = 1;
+        newMsg.count = cacheTV[newMsg.genre];
+      } else  {
+          cacheTV[newMsg.genre] = cacheTV[newMsg.genre] + 1;
+          newMsg.count = cacheTV[newMsg.genre];
+       }
+
+      if (pieData.length === 0) pieData.push(newMsg);
+
+      let found = false;
+      for (let i = 0; i < pieData.length; i++) {
+        if (pieData[i].genre === newMsg.genre) {
+          pieData[i] = newMsg;
+          found = true;
+          break;
+        }
+      }
+      if (!found)  pieData.push(newMsg);
+    
+  })
+  
+});
+
 rtm.start();
 
-//------------------
-
-function createStream() {
-  function ranNum() {
-    return Math.floor(Math.random() * 10);;
-  }
-  function newArray() {
-    for (let i = 0; i < array.length; i += 1) {
-      array[i].randNum = ranNum();
-    }
-  }
-
-  let array = [
-    { id: 0, randNum: 7 },
-    { id: 1, randNum: 6 },
-    { id: 2, randNum: 3 },
-    { id: 3, randNum: 9 },
-    { id: 4, randNum: 9 },
-    { id: 5, randNum: 5 },
-    { id: 6, randNum: 7 }];
-
-  setInterval(newArray, 1000);
-
-  return array;
-}
-
-let myData4 = createStream();
 
 
+//____________________CONFIGURATION FILES___________________________________
 
-//____________________connect to lib / sockets___________________________________
-
-let config = {
-  setWidth: 500,
-  setHeight: 300,
+let lineConfig = {
+  setWidth: 700,
+  setHeight: 500,
   shiftXAxis: true,
   xDomainUpper: 20,
   xDomainLower: 0,
@@ -125,32 +152,34 @@ let config = {
   yLabel_text: ''
 };
 
-let config2 = {
+let scatterConfig = {
   setWidth: 700,
   setHeight: 500,
   shiftXAxis: true,
-  xDomainUpper: 20,
-  xDomainLower: 0,
-  yDomainUpper: 40,
-  yDomainLower: 0,
+  xDomainUpper: 40.85,
+  xDomainLower: 40.60,
+  yDomainUpper: 74.0,
+  yDomainLower: 73.5,
   xTicks: 10,
   yTicks: 10,
-  xScale: 'counter2',
-  yScale: 'num_bikes_available',
+  xScale: 'Lat',
+  yScale: 'Long',
+  volume: 'Speed',
   xLabel_text: '',
-  yLabel_text: ''
+  yLabel_text: '',
+  circle_text: 'Borough',
 };
 
-let config3 = {
+let wordCloudConfig = {
   colors: ['#FB3640', '#605F5E', '#1D3461', '#1F487E', '#247BA0'],
   colorDomain: [5, 10, 15, 20, 100],
   font: 'Source Sans Pro',
   fontSize: 40,
-  padding: 15,
+  padding: 10,
   rotate: 0,
 }
 
-let config4 = {
+let barConfig = {
   setWidth: 500,
   setHeight: 300,
   shiftYAxis: true,
@@ -167,22 +196,53 @@ let config4 = {
   color: ['#DAF7A6', '#FFC300', '#FF5733', '#C70039', '#900C3F', '#581845'],
 };
 
-let config5 = {
+let bubbleConfig2 = {
   setWidth: 700,
   setHeight: 500,
   text: 'id',
   volume: 'randNum',
 };
 
-let bikeStream = new streamline(server);
+let bubbleConfig = {
+  setWidth: 700,
+  setHeight: 500,
+  text: 'station_id',
+  volume: 'num_bikes_available',
+};
 
-bikeStream.connect((socket) => {
-  bikeStream.line(socket, myData, config);
-  bikeStream.scatter(socket, myData2, config2);
-  bikeStream.wordCloud(socket, config3);
-  bikeStream.bar(socket, myData3, config4);
-  bikeStream.bubbleGraph(socket, myData4, config5);
+let pieConfig = {
+  setWidth: 700,                   
+  setHeight: 700,                  
+  category: 'genre',//category to be show in pie slices
+  count: 'count'
+};
+
+//---------------SEND CLIENT FILES-----------------------
+
+
+  function sendFiles(app) {
+    app.use(express.static(path.join(__dirname, 'client')));
+
+    app.get('/', (req, res) => {
+      res.sendFile(path.join(__dirname, 'client/home-page.html'));
+    });
+    console.log('inside function')
+  }
+
+
+//---------------------------------CALL STREAMLINE FUNCTION------------------------------------
+
+let myStream = new streamline(sendFiles, 3000);
+
+myStream.connect((socket) => {
+  
+  myStream.line(socket, lineData, lineConfig);
+  myStream.scatter(socket, scatterData, scatterConfig);
+  myStream.wordCloud(socket, wordCloudConfig);
+  myStream.bar(socket, barData, barConfig);
+  myStream.bubbleGraph(socket, bubbleData, bubbleConfig);
+  myStream.pie(socket, pieData, pieConfig);
 });
 
-server.listen(process.env.PORT || 3000, () => console.log('SERVER RUNNING ON 3000'));
 
+// server.listen(process.env.PORT || 3000, () => console.log('SERVER RUNNING ON 3000'));

@@ -7,6 +7,7 @@
   let height = 400 - margin.top - margin.bottom;
 
   //array to compare incoming data >> if data is the same, do not rerender
+
   let dataCache = {};
   let settings;
 
@@ -25,7 +26,6 @@
         }
       }
       if (needsChange) drawContent(settings, data);
-
     }
 
   });
