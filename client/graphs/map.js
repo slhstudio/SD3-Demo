@@ -37,8 +37,8 @@ socket.on('sendMapData', (allData) => {
 					.enter()
 				   	.append("path")
 				   	.attr("d", path)
-						.style('fill', 'lightBlue')
-						.style('stroke', '#fff');
+						.style('fill', 'none')
+						.style('stroke', 'black');
 			});
 
 		//	d3.csv("US-Mass-Shootings_1982-2015.csv", function(data) {
@@ -52,7 +52,7 @@ socket.on('sendMapData', (allData) => {
 						//.sort(function(a,b) {return b.Fatalities - a.Fatalities; }))
 					.enter()
 					.append("circle")
-					.attr("cx", d => {
+					.attr("cx", (d) => {
 						console.log('d', d);
 						console.log('d.lon', d.longitude);
 						return projection([d.longitude, d.latitude])[0];
