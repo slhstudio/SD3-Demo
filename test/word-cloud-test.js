@@ -101,4 +101,10 @@ describe('determineLargestChange', () => {
     assert.equal(determineLargestChange(), 30, 'should return 30');
   });
 
+  it('should return the largest size in newFreq if cachedFreq.length === 0', () => {
+    
+    cachedFreq = [];
+
+    assert.equal(determineLargestChange(), 50);
+  });
 });

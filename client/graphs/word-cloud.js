@@ -11,8 +11,8 @@
 
   //these values will change dynamically based on how many words are in freq;
   let cachedSize = 5;
-  let h = 200;
-  let w = 500;
+  let h = 600;
+  let w = 1500;
 
   //get data from socket and store it in freq
 
@@ -58,12 +58,7 @@
 			return largestSizeChange;
     }
     
-    // console.log('----------------')
-    // console.log('CACHED FREQ', cachedFreq);
-    // console.log( determineLargestChange());
-    // console.log( freq.length, cachedSize);
-    // console.log( 'height', h , 'width', w);
-
+  
     function alterSize() {
       if (freq.length >= cachedSize) {
         h += 40;
@@ -72,21 +67,32 @@
       }
 
       if (determineLargestChange() >= 20 && determineLargestChange() < 40) {
-        h += 40;
+        h += 20;
         w += 70;
       }
       else if (determineLargestChange() >= 40 && determineLargestChange() < 60) {
-        h += 80;
+        h += 50;
         w += 150;
       }
       else if (determineLargestChange() >= 60 && determineLargestChange() < 100) {
-        h += 120;
+        h += 70;
         w += 250;
       }
       else {
-        h += 200;
+        h += 100;
         w += 400;
       }
+    };
+    alterSize();
+
+    console.log('----------------')
+    console.log('CACHED FREQ', cachedFreq);
+    console.log( determineLargestChange());
+    console.log( freq.length, cachedSize);
+    console.log( 'height', h , 'width', w);
+
+    //update cachedFreq for next chunk of data
+    cachedFreq = freq;
 
     cloud()
       .size([w, h])
@@ -98,18 +104,16 @@
       .fontSize(function (d) { return d.size; })
       .on("end", hasGrid)
       .start();
-  })
-
-  //update cachedFreq for next chunk of data
-  cachedFreq = freq;
   
+  });
+
+
   let settings;
 
   function hasGrid(words) {
-
     if (!settings) settings = drawGrid(words);
+    // settings = drawGrid(words);
     drawCloud(settings, words);
-
   }
 
   function drawGrid(data) {
