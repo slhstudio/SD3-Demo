@@ -19,14 +19,9 @@ var appKey = "9BABD0370e2030dd5AFA3b1E35A9acBf";
 var channelBike = "US-Bike-Sharing-Channel";
 var channelTraffic = "nyc-traffic-speed";
 var channelTV = "tv-commercial-airings";
+var channelTwitter = "Twitter-statuses-sample";
 
-let scatterData = [
-  { Borough: 'Bronx', Lat: 40.8464305, Long: 73.93213, Speed: 20},
-  { Borough: 'Staten Island', Lat: 40.6077805, Long: 74.14091, Speed: 20 },
-  { Borough: 'Queens', Lat: 40.78795, Long: 73.790191, Speed: 20 },
-  { Borough: 'Manhattan', Lat: 40.71141, Long: 73.97866, Speed: 20 },
-  { Borough: 'Brooklyn', Lat: 40.61632, Long: 74.0263, Speed: 20 },
-];
+let scatterData = [];
 let lineData = [];
 let barData = [];
 let bubbleData = [];
@@ -89,15 +84,6 @@ subscriptionTraffic.on('rtm/subscription/data', function (pdu) {
 
     msg.Speed = Number(msg.Speed);
     if(!found) barData.push(msg);
-
-    //scatter data 
-    for (let i = 0; i < scatterData.length; i += 1) {
-      if (scatterData[i].Borough === msg.Borough) {
-        scatterData[i].Speed = (Number(scatterData[i].Speed) + Number(msg.Speed)) / 2;
-        scatterData[i].Speed = msg.Speed;
-      }
-    }
-
   });
 });
 
@@ -133,6 +119,32 @@ subscriptionTV.on('rtm/subscription/data', function (pdu) {
 rtm.start();
 
 
+//SCATTER DATA -- TWITTER
+var subscriptionTwitter = rtm.subscribe(channelTwitter, RTM.SubscriptionMode.SIMPLE);
+subscriptionTwitter.on('rtm/subscription/data', function (pdu) {
+  pdu.body.messages.forEach(function (msg) {
+    // console.log(msg);
+
+    if(msg.created_at && msg.user.time_zone === 'Pacific Time (US & Canada)' && msg.lang === 'en') {
+      let obj = {
+        followers_count: msg.user.followers_count,
+        favourites_count: msg.user.favourites_count,
+        statuses_count: msg.user.statuses_count,
+        time_zone: msg.user.time_zone,
+        text: msg.text,
+        created_at: msg.created_at,
+        id: msg.id,
+        screen_name: msg.user.screen_name
+      }
+      scatterData.push(obj);
+
+      if(scatterData.length > 100) scatterData.shift();
+    }
+
+
+
+  });
+});
 
 //____________________CONFIGURATION FILES___________________________________
 
@@ -156,18 +168,19 @@ let scatterConfig = {
   setWidth: 700,
   setHeight: 500,
   shiftXAxis: true,
-  xDomainUpper: 40.85,
-  xDomainLower: 40.60,
-  yDomainUpper: 74.0,
-  yDomainLower: 73.5,
+  xDomainUpper: 1500,
+  xDomainLower: 0,
+  yDomainUpper: 20000,
+  yDomainLower: 0,
+  // circle_r_domain: 1500, 
   xTicks: 10,
   yTicks: 10,
-  xScale: 'Lat',
-  yScale: 'Long',
-  volume: 'Speed',
+  xScale: 'followers_count',
+  yScale: 'statuses_count',
+  volume: 'favourites_count',
   xLabel_text: '',
   yLabel_text: '',
-  circle_text: 'Borough',
+  circle_text: '',
 };
 
 let wordCloudConfig = {

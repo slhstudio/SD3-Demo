@@ -2,9 +2,9 @@
 
   let socket = io.connect();
 
-  let margin = { top: 25, right: 20, bottom: 25, left: 20 };
-  let width = 400 - margin.left - margin.right;
-  let height = 400 - margin.top - margin.bottom;
+  let margin = { top: 25, right: 20, bottom: 25, left: 50 };
+  let width = 700 - margin.left - margin.right;
+  let height = 500 - margin.top - margin.bottom;
 
   //array to compare incoming data >> if data is the same, do not rerender
 
@@ -12,7 +12,6 @@
   let settings;
 
   socket.on('sendScatterData', (data) => {
-
     if (data.length > 0) {
       // console.log('DATA FROM CLIENT: ', data)
       if (!settings) settings = drawGrid(data);
@@ -53,7 +52,7 @@
       .domain([data[0].xDomainLower, data[0].xDomainUpper])
       .range([0, width])
       .nice();
-    let xAxis = d3.axisBottom(xScale).ticks(5);
+    let xAxis = d3.axisBottom(xScale).ticks(10);
 
     svg
       .append('g')
@@ -73,6 +72,8 @@
 
   function drawContent(settings, data) {
 
+    
+
     let svg = settings.svg;
     let yScale = settings.yScale;
     let yAxis = settings.yAxis;
@@ -83,14 +84,23 @@
     height = data[0].setHeight - margin.top - margin.bottom;
 
     let rScale = d3.scaleSqrt()
-      .domain([0, d3.max(data, d => d.yScale)])
-      .range([0, 40])
+      .domain([0, d3.max(data, d => d.volume)])
+      .range([10, 50]);
 
     //create circles but group them in svg container so work better with text when animating 
     let circles = svg
       .selectAll('.ball')
-      .data(data)
+      .data(data);
 
+console.log('drawing content...', circles.exit());
+    //EXIT.
+    // var exitTransition = d3.transition().duration(750).each(function () {
+    //   circles.exit()
+    //     .style("background", "red")
+    //     .transition()
+    //     .style("opacity", 0)
+    //     .remove();
+    // });
     //ENTER.
     let newCircles = circles
       .enter()
@@ -110,31 +120,31 @@
       .attr('cx', 0)
       .attr('cy', 0)
       //how big circle should be 
-      .attr('r', d => rScale(d.yScale))
+      .attr('r', d => rScale(d.volume))
       .style('fill', 'steelblue')
       .style('fill-opacity', 0.5)
 
     //UPDATE.
 
     circles
-      .transition()
-      .duration(300)
-      .attr("opacity", 1)
+      // .transition()
+      // .duration(300)
+      // .attr("opacity", 1)
       .attr('transform', d => {
         return `translate(${xScale(d.xScale)}, ${yScale(d.yScale)})`
       })
 
     circles.select('.circle')
-      .transition()
-      .duration(300)
+      // .transition()
+      // .duration(300)
       .attr("opacity", 1)
       //where to place circles on graph
       .attr('cx', 0)
       .attr('cy', 0)
       //how big circle should be 
-      .attr('r', d => rScale(d.yScale))
+      .attr('r', d => rScale(d.volume))
 
-    circles.exit().remove();
+
     //IF WANT TEXT INSIDE CIRCLES UNCOMMENT THIS SECTION BELOW 
     // circles
     //   .append('text')
