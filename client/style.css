@@ -9,9 +9,9 @@ body {
 }
 
 .header {
-  background-color: rgb(41.2%, 41.2%, 41.2%); 
-  height: 325px; 
-  line-height: 325px;
+  background-color: #383838; 
+  height: 600px; 
+  line-height: 425px;
   box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
 }
 
@@ -23,7 +23,8 @@ body {
 }
 
 .header img {
-  max-height: 250px;
+  padding-top: 30px;
+  max-height: 550px;
   vertical-align: middle;
 }
 
@@ -36,7 +37,7 @@ body {
 }
 
 .info-box h3 {
-  color: grey;
+  color: #383838;
   vertical-align: middle;
   font-weight: 200;
 }
@@ -137,8 +138,8 @@ body {
 
 .third img {
   text-align: center;
-  height: 70px;
-  width: 70px;
+  height: 80px;
+  width: 80px;
   margin: 10px auto;
 }
 

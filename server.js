@@ -46,7 +46,6 @@ subscriptionBike.on('rtm/subscription/data', function (pdu) {
     //line chart data
     if (msg.station_id < 300) {
       msg.counter = counterLine++;
-      console.log(msg.counter);
       lineData.push(msg);
 
       if (lineData.length > 20) {
@@ -144,15 +143,10 @@ subscriptionNASA.on('rtm/subscription/data', function (pdu) {
       mapData.shift();
       mapData.push(msg);
     }
-
   })
-
 });
 
 rtm.start();
-
-
-
 
 //SCATTER DATA -- TWITTER
 var subscriptionTwitter = rtm.subscribe(channelTwitter, RTM.SubscriptionMode.SIMPLE);
@@ -265,7 +259,7 @@ let bubbleConfig = {
 let pieConfig = {
   setWidth: 400,                   
   setHeight: 400,                  
-  category: 'genre',//category to be show in pie slices
+  category: 'genre',//category to be shown in pie slices
   count: 'count'
 };
 
