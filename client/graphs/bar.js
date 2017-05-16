@@ -80,11 +80,11 @@
       .tickSize(10)
       .tickPadding(5);
 
-    d3.select('#xAxis').remove();
+    d3.select('#xAxis-bar').remove();
 
     settings.svg
       .append('g')
-      .attr('id', 'xAxis')
+      .attr('id', 'xAxis-bar')
       .attr('transform', `translate(0, ${height})`)
       .call(xAxis)
       .selectAll('text')
@@ -114,9 +114,9 @@
     let updateNodes = column.select('.column');
 
     //Filter out data that has not changed
-    if (Object.keys(dataCache).length === data.length) {
-      updateNodes._groups[0] = column.select('.column')._groups[0].filter(d => d.__data__.volume !== dataCache[d.__data__.id]);
-    }
+    // if (Object.keys(dataCache).length === data.length) {
+      // updateNodes._groups[0] = column.select('.column')._groups[0].filter(d => d.__data__.volume !== dataCache[d.__data__.id]);
+    // }
 
     updateNodes.transition()
       .duration(data[0].transition_speed)
