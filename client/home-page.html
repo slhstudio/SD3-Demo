@@ -37,19 +37,19 @@
 
   <div class="pitch-container">
     <h3>Streaming Data Visualized</h3>
-    <p>Let's face it, setting up D3 graphs is hard. Setting up real-time visualizations is even harder. <br /> StreamLine D3 takes the hassle out of creating real-time visualizations while still giving you compelete creative control. No more setting up sockets, no more manipulating streams, no more long hours of learning advanced D3.  StreamLine D3 is here to help.</p>
+    <p>The face of data is changing. In the coming years, data will exist less in static form and more in streams. We will need ways to analyze and visualize this data more than ever before. StreamLine D3 is javascript library that facilitates setting up real-time data streams with d3. It sets up  your socket connection and lets you choose your graph. After you enter your parameters, your graph is done!  </p>
   </div>
   
   <div class="benefits-container">
     <div class="third">
       <img src="images/gear-icon.png" alt="customizable icon">
       <h1>CUSTOMIZABLE </h1>
-      <h3>Make each visualiztion your own with custom colors, fonts, heights, widths, and more.</h3>
+      <h3>Make each visualization your own with custom colors, fonts, heights, widths, and more.</h3>
     </div>
     <div class="third">
       <img src="images/fast-icon.png" alt="customizable icon">
       <h1>PERFORMANT</h1>
-      <h3>Our diffing algorithm renders only the data that changes for blazing fast performance.</h3>
+      <h3>Our diffing algorithm renders only the data that changes allowing for fast performance and smooth transitions.</h3>
     </div>
     <div class="third">
       <img src="images/scale-icon.png" alt="customizable icon">
@@ -59,7 +59,40 @@
   </div>
 
 
-<!--WORDCLOUD //////////////////////////////////////////////////////-->
+
+
+  <div id="charts-container">
+    <div class="chart">
+      <!-- Line Chart-->
+      <div id="line-chart"></div>
+    </div>
+    <div class="chart">
+      <!-- Pie Graph -->
+      <div id="pie-chart"></div>
+    </div>
+    <div class="chart">
+      <div id="scatter-plot"></div>
+    </div>
+    <div class="chart">
+      <div id="bubbleForce"></div>
+    </div>
+  </div>
+
+
+  <div class="instructions-container">
+    <h3>For detailed instructions visit our <a href="https://github.com/StreamlineD3/StreamlineD3#getting-started">Github</a> page.</h3>
+  </div>
+
+
+<!-- Map Graph -->
+  <div class="map-container">
+    <div id="map"></div>
+    <h2>Satellite locations, streaming from NASA and Norad</h2>
+  </div>
+
+  <!--<div class="short-strip"></div>-->
+
+  <!--WORDCLOUD //////////////////////////////////////////////////////-->
   <h1 class="big-header">Watch StreamlineD3 Visualize <br> Local Streams by Pressing Record</h1>
 
   <hr class="line" />
@@ -88,37 +121,6 @@
   <div id="word-cloud"></div>
 
 <!--/////////////////////////////////////////////////////////////////////-->
-
-  <div id="charts-container">
-    <div class="chart">
-      <!-- Line Chart-->
-      <div id="line-chart"></div>
-    </div>
-    <div class="chart">
-      <!-- Pie Graph -->
-      <div id="pie-chart"></div>
-    </div>
-    <div class="chart">
-      <div id="scatter-plot"></div>
-    </div>
-    <div class="chart">
-      <div id="bubbleForce"></div>
-    </div>
-  </div>
-
-
-  <div class="instructions-container">
-    <h3>For detailed instructions visit our <a href="https://github.com/StreamlineD3/StreamlineD3#getting-started">Github</a> page.</h3>
-  </div>
-
-
-<!-- Map Graph -->
-  <div class="map-container">
-    <div id="map"></div>
-    <h1>map will go here</h1>
-  </div>
-
-  <!--<div class="short-strip"></div>-->
 
 
   <footer id="footer">

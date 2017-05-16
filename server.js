@@ -30,6 +30,7 @@ let pieData = [];
 let cacheTV = {};
 let counterLine = 0;
 let counterBubble = 0;
+let cacheMap = {};
 let mapData = [];
 
 //-------------------------------------
@@ -137,13 +138,22 @@ subscriptionNASA.on('rtm/subscription/data', function (pdu) {
 
     msg.latitude = lat;
     msg.longitude = lon;
-    if (mapData.length < 200) {
-      mapData.push(msg);
-    } else {
-      mapData.shift();
-      mapData.push(msg);
-    }
-  })
+
+      if (!cacheMap[msg.satellite]) {
+        cacheMap[msg.satellite] = true;
+        mapData.push(msg);
+      }
+      //else if already in cache, put new msg in in place of old
+      else {
+        for (let i = 0; i < mapData.length; i++) {
+          if (mapData[i].satellite === msg.satellite) {
+            mapData[i] = msg;
+          }
+        }
+      }
+   });
+  // console.log('mapData', mapData)
+   console.log('length', mapData.length)
 });
 
 rtm.start();
@@ -203,9 +213,9 @@ let scatterConfig = {
   yDomainLower: 0,
   xTicks: 10,
   yTicks: 10,
-  xLabel_text: 'Number of Followers',
-  yLabel_text: 'Number of Tweets',
-  label_font_size: 20,
+  xLabel_text: 'number of followers',
+  yLabel_text: 'number of tweets',
+  label_font_size: 13,
   xScale: 'followers_count',
   yScale: 'statuses_count',
   volume: 'favourites_count',
@@ -237,7 +247,7 @@ let barConfig = {
   xScale: 'Borough',
   volume: 'Speed',
   yLabel_text: 'Miles Per Hour',
-  label_text_size: 20,
+  label_text_size: 13,
   transition_speed: 1000,
   color: ['#DAF7A6', '#FFC300', '#FF5733', '#C70039', '#900C3F', '#581845'],
 };
