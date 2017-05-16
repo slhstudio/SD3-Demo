@@ -19,14 +19,9 @@ var appKey = "9BABD0370e2030dd5AFA3b1E35A9acBf";
 var channelBike = "US-Bike-Sharing-Channel";
 var channelTraffic = "nyc-traffic-speed";
 var channelTV = "tv-commercial-airings";
+var channelTwitter = "Twitter-statuses-sample";
 
-let scatterData = [
-  { Borough: 'Bronx', Lat: 40.8464305, Long: 73.93213, Speed: 20},
-  { Borough: 'Staten Island', Lat: 40.6077805, Long: 74.14091, Speed: 20 },
-  { Borough: 'Queens', Lat: 40.78795, Long: 73.790191, Speed: 20 },
-  { Borough: 'Manhattan', Lat: 40.71141, Long: 73.97866, Speed: 20 },
-  { Borough: 'Brooklyn', Lat: 40.61632, Long: 74.0263, Speed: 20 },
-];
+let scatterData = [];
 let lineData = [];
 let barData = [];
 let bubbleData = [];
@@ -60,7 +55,7 @@ subscriptionBike.on('rtm/subscription/data', function (pdu) {
     if (msg.station_id < 300) {
       msg.counter = counterBubble++;
       let idExists = false;
-      
+
       for (let i = 0; i < bubbleData.length; i += 1) {
         if (bubbleData[i].station_id === msg.station_id) {
           bubbleData[i] = msg;
@@ -88,22 +83,14 @@ subscriptionTraffic.on('rtm/subscription/data', function (pdu) {
     }
 
     msg.Speed = Number(msg.Speed);
-    if(!found) barData.push(msg);
-
-    //scatter data 
-    for (let i = 0; i < scatterData.length; i += 1) {
-      if (scatterData[i].Borough === msg.Borough) {
-        scatterData[i].Speed = (Number(scatterData[i].Speed) + Number(msg.Speed)) / 2;
-        scatterData[i].Speed = msg.Speed;
-      }
-    }
-
+    if (!found) barData.push(msg);
   });
 });
 
 var subscriptionTV = rtm.subscribe(channelTV, RTM.SubscriptionMode.SIMPLE);
 subscriptionTV.on('rtm/subscription/data', function (pdu) {
   pdu.body.messages.forEach(function (msg) {
+
       
       //pie chart 
       if (!cacheTV[msg.genre]) {
@@ -127,12 +114,37 @@ subscriptionTV.on('rtm/subscription/data', function (pdu) {
       if (!found)  pieData.push(msg);
     
   })
-  
+
 });
 
 rtm.start();
 
 
+//SCATTER DATA -- TWITTER
+var subscriptionTwitter = rtm.subscribe(channelTwitter, RTM.SubscriptionMode.SIMPLE);
+subscriptionTwitter.on('rtm/subscription/data', function (pdu) {
+  pdu.body.messages.forEach(function (msg) {
+
+    if (msg.created_at && msg.user.time_zone === 'Pacific Time (US & Canada)' && msg.lang === 'en') {
+      let obj = {
+        followers_count: msg.user.followers_count,
+        favourites_count: msg.user.favourites_count,
+        statuses_count: msg.user.statuses_count,
+        time_zone: msg.user.time_zone,
+        text: msg.text,
+        created_at: msg.created_at,
+        id: msg.id,
+        screen_name: msg.user.screen_name
+      }
+      scatterData.push(obj);
+
+      if (scatterData.length > 100) {
+        scatterData.shift()
+          ;
+      }
+    }
+  });
+});
 
 //____________________CONFIGURATION FILES___________________________________
 
@@ -155,19 +167,21 @@ let lineConfig = {
 let scatterConfig = {
   setWidth: 700,
   setHeight: 500,
-  shiftXAxis: true,
-  xDomainUpper: 40.85,
-  xDomainLower: 40.60,
-  yDomainUpper: 74.0,
-  yDomainLower: 73.5,
+  //axis
+  xDomainUpper: 1500,
+  xDomainLower: 0,
+  yDomainUpper: 20000,
+  yDomainLower: 0,
   xTicks: 10,
   yTicks: 10,
-  xScale: 'Lat',
-  yScale: 'Long',
-  volume: 'Speed',
-  xLabel_text: '',
-  yLabel_text: '',
-  circle_text: 'Borough',
+  xLabel_text: 'Number of Followers',
+  yLabel_text: 'Number of Tweets',
+  label_font_size: 20,
+  xScale: 'followers_count',
+  yScale: 'statuses_count',
+  volume: 'favourites_count',
+  circle_text: '',
+  transition_speed: 5000,
 };
 
 let wordCloudConfig = {
@@ -187,14 +201,15 @@ let barConfig = {
   shiftYAxis: true,
   xDomainUpper: 20,
   xDomainLower: 0,
-  yDomainUpper: 40,
+  yDomainUpper: 50,
   yDomainLower: 0,
   xTicks: 10,
   yTicks: 50,
   xScale: 'Borough',
   volume: 'Speed',
-  xLabel_text: 'x axis label',
-  yLabel_text: 'y axis label',
+  yLabel_text: 'Miles Per Hour',
+  label_text_size: 20,
+  transition_speed: 1000,
   color: ['#DAF7A6', '#FFC300', '#FF5733', '#C70039', '#900C3F', '#581845'],
 };
 
@@ -215,6 +230,7 @@ let bubbleConfig = {
 let pieConfig = {
   setWidth: 400,                   
   setHeight: 400,                  
+
   category: 'genre',//category to be show in pie slices
   count: 'count'
 };
@@ -222,14 +238,14 @@ let pieConfig = {
 //---------------SEND CLIENT FILES-----------------------
 
 
-  function sendFiles(app) {
-    app.use(express.static(path.join(__dirname, 'client')));
+function sendFiles(app) {
+  app.use(express.static(path.join(__dirname, 'client')));
 
-    app.get('/', (req, res) => {
-      res.sendFile(path.join(__dirname, 'client/home-page.html'));
-    });
-    console.log('inside function')
-  }
+  app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client/home-page.html'));
+  });
+  console.log('inside function')
+}
 
 
 //---------------------------------CALL STREAMLINE FUNCTION------------------------------------
@@ -237,7 +253,6 @@ let pieConfig = {
 let myStream = new streamline(sendFiles, 3000);
 
 myStream.connect((socket) => {
-  
   myStream.line(socket, lineData, lineConfig);
   myStream.scatter(socket, scatterData, scatterConfig);
   myStream.wordCloud(socket, wordCloudConfig);
