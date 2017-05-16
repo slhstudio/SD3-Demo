@@ -183,8 +183,8 @@ subscriptionTwitter.on('rtm/subscription/data', function (pdu) {
 //____________________CONFIGURATION FILES___________________________________
 
 let lineConfig = {
-  setWidth: 700,
-  setHeight: 500,
+  setWidth: 600,
+  setHeight: 400,
   shiftXAxis: true,
   xDomainUpper: 50,
   xDomainLower: 0,
@@ -199,8 +199,8 @@ let lineConfig = {
 };
 
 let scatterConfig = {
-  setWidth: 700,
-  setHeight: 500,
+  setWidth: 600,
+  setHeight: 400,
   //axis
   xDomainUpper: 1500,
   xDomainLower: 0,
@@ -248,15 +248,15 @@ let barConfig = {
 };
 
 let bubbleConfig2 = {
-  setWidth: 700,
-  setHeight: 500,
+  setWidth: 600,
+  setHeight: 400,
   text: 'id',
   volume: 'randNum',
 };
 
 let bubbleConfig = {
-  setWidth: 700,
-  setHeight: 500,
+  setWidth: 600,
+  setHeight: 400,
   text: 'station_id',
   volume: 'num_bikes_available',
 };

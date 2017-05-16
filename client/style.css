@@ -168,7 +168,7 @@ body {
 
 .big-header {
   margin-top: 80px;
-  font-size: 3.5em;
+  font-size: 3em;
   /*text-transform: uppercase;*/
 }
 
@@ -179,6 +179,7 @@ body {
 
 .vis-header {
   color: rgb(41.2%, 41.2%, 41.2%);
+  font-weight: 400;
 }
 
 #word-cloud {
