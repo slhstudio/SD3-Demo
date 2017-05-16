@@ -2,7 +2,7 @@
 let socket = io.connect();
 
 //set initial SVG params
-let margin = { top: 25, right: 20, bottom: 25, left: 20 };
+let margin = { top: 25, right: 20, bottom: 45, left: 50 };
 let width = 700 - margin.left - margin.right;
 let height = 500 - margin.top - margin.bottom;
 
@@ -26,7 +26,7 @@ drawAxis(
 
 socket.on('sendLineData', (allData) => {
   
-  //console.log('ALL DATA: ', allData);
+  console.log('ALL DATA: ', allData);
 
   //if data is not empty or data is new...
   if (allData.length > 0 || (currData.length > 0 && allData[allData.length - 1].xScale !== currData[currData.length - 1].xScale)) {
@@ -84,7 +84,7 @@ function drawAxis(xScale, yScale, allData) {
     .call(d3.axisBottom(xScale).ticks(allData[0].xTicks));
 
   svg.append("text")
-    .attr('transform', 'translate(' + (width) + ' ,' + (height + margin.bottom) + ')')
+    .attr('transform', 'translate(' + (width) + ' ,' + (height + margin.bottom - 5) + ')')
     .style('text-anchor', 'end')
     .style('font-family', 'sans-serif')
     .style('font-size', '13px')

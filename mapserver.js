@@ -66,7 +66,7 @@ subscription.on('rtm/subscription/data', function (pdu) {
     msg.longitude = usLon;
     myData.push(msg);
 //      }
-    
+     
   console.log(myData);
     
   })
@@ -78,7 +78,7 @@ rtm.start();
 
 //____________________connect to lib / sockets___________________________________
 
-let config = {
+let configMap = {
   setWidth: 1200,                   
   setHeight: 800,                  
   latitude: 'latitude',

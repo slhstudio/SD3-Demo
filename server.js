@@ -19,6 +19,7 @@ var appKey = "9BABD0370e2030dd5AFA3b1E35A9acBf";
 var channelBike = "US-Bike-Sharing-Channel";
 var channelTraffic = "nyc-traffic-speed";
 var channelTV = "tv-commercial-airings";
+var channelNASA = 'satellites';
 var channelTwitter = "Twitter-statuses-sample";
 
 let scatterData = [];
@@ -29,6 +30,7 @@ let pieData = [];
 let cacheTV = {};
 let counterLine = 0;
 let counterBubble = 0;
+let mapData = [];
 
 //-------------------------------------
 
@@ -44,6 +46,7 @@ subscriptionBike.on('rtm/subscription/data', function (pdu) {
     //line chart data
     if (msg.station_id < 300) {
       msg.counter = counterLine++;
+      console.log(msg.counter);
       lineData.push(msg);
 
       if (lineData.length > 20) {
@@ -84,6 +87,7 @@ subscriptionTraffic.on('rtm/subscription/data', function (pdu) {
 
     msg.Speed = Number(msg.Speed);
     if (!found) barData.push(msg);
+
   });
 });
 
@@ -91,8 +95,6 @@ var subscriptionTV = rtm.subscribe(channelTV, RTM.SubscriptionMode.SIMPLE);
 subscriptionTV.on('rtm/subscription/data', function (pdu) {
   pdu.body.messages.forEach(function (msg) {
 
-      
-      //pie chart 
       if (!cacheTV[msg.genre]) {
         cacheTV[msg.genre] = 1;
         msg.count = cacheTV[msg.genre];
@@ -112,12 +114,44 @@ subscriptionTV.on('rtm/subscription/data', function (pdu) {
         }
       }
       if (!found)  pieData.push(msg);
+  })
+});
+
+var subscriptionNASA = rtm.subscribe(channelNASA, RTM.SubscriptionMode.SIMPLE);
+subscriptionNASA.on('rtm/subscription/data', function (pdu) {
+  pdu.body.messages.forEach(function (msg) {
+
+    function decDegrees (string) {
+      let result = string.split(':');
+      let degrees = Number(result[0]);
+      let minutes = Number(result[1]);
+      let seconds = Number(result[2]);
+ 
+      let minSec =  minutes + seconds/60;
+      let decimalDegrees = (degrees + minSec/60).toFixed(3);
     
+      return decimalDegrees;
+    }
+  
+    let lat = decDegrees(msg.latitude);
+    let lon = decDegrees(msg.longitude);
+
+    msg.latitude = lat;
+    msg.longitude = lon;
+    if (mapData.length < 200) {
+      mapData.push(msg);
+    } else {
+      mapData.shift();
+      mapData.push(msg);
+    }
+
   })
 
 });
 
 rtm.start();
+
+
 
 
 //SCATTER DATA -- TWITTER
@@ -146,13 +180,14 @@ subscriptionTwitter.on('rtm/subscription/data', function (pdu) {
   });
 });
 
+
 //____________________CONFIGURATION FILES___________________________________
 
 let lineConfig = {
   setWidth: 700,
   setHeight: 500,
   shiftXAxis: true,
-  xDomainUpper: 20,
+  xDomainUpper: 50,
   xDomainLower: 0,
   yDomainUpper: 40,
   yDomainLower: 0,
@@ -160,8 +195,8 @@ let lineConfig = {
   yTicks: 10,
   xScale: 'counter',
   yScale: 'num_bikes_available',
-  xLabel_text: '',
-  yLabel_text: ''
+  xLabel_text: 'at the currently reporting station',
+  yLabel_text: 'number of available bikes'
 };
 
 let scatterConfig = {
@@ -230,9 +265,17 @@ let bubbleConfig = {
 let pieConfig = {
   setWidth: 400,                   
   setHeight: 400,                  
-
   category: 'genre',//category to be show in pie slices
   count: 'count'
+};
+
+let mapConfig = {
+  setWidth: 1300,                   
+  setHeight: 800,                  
+  latitude: 'latitude',
+  longitude: 'longitude',
+  propOne: 'satellite',
+  propTwo: ''
 };
 
 //---------------SEND CLIENT FILES-----------------------
@@ -259,6 +302,7 @@ myStream.connect((socket) => {
   myStream.bar(socket, barData, barConfig);
   myStream.bubbleGraph(socket, bubbleData, bubbleConfig);
   myStream.pie(socket, pieData, pieConfig);
+  myStream.map(socket, mapData, mapConfig);
 });
 
 
