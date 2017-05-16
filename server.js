@@ -182,15 +182,15 @@ let wordCloudConfig = {
 }
 
 let barConfig = {
-  setWidth: 500,
-  setHeight: 300,
+  setWidth: 800,
+  setHeight: 400,
   shiftYAxis: true,
   xDomainUpper: 20,
   xDomainLower: 0,
   yDomainUpper: 40,
   yDomainLower: 0,
   xTicks: 10,
-  yTicks: 10,
+  yTicks: 50,
   xScale: 'Borough',
   volume: 'Speed',
   xLabel_text: 'x axis label',

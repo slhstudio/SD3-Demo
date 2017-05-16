@@ -28,36 +28,58 @@
     <div id="bubble-chart"></div>
   </div>
 
-<!-- Line Chart-->
-  <div class="line-container">
-    <div id="line-chart"></div>
-  </div>
-
-
-<div class="map-container">
-    <div id="map"></div>
-</div>
-
-
 <!-- Bar Graph -->
   <div class="bar-container">
     <div id="bar-graph"></div>
   </div>
 
-  <div id="pie-chart"></div>
+  <div id="json-viewer"></div>
 
   <div class="pitch-container">
     <h3>Streaming Data Visualized</h3>
     <p>Let's face it, setting up D3 graphs is hard. Setting up real-time visualizations is even harder. <br /> StreamLine D3 takes the hassle out of creating real-time visualizations while still giving you compelete creative control. No more setting up sockets, no more manipulating streams, no more long hours of learning advanced D3.  StreamLine D3 is here to help.</p>
   </div>
   
+  <div class="benefits-container">
+    <div class="third">
+      <h1>CUSTOMIZABLE </h1>
+
+      <h3>Every graph is fully customizable.</h3>
+    </div>
+    <div class="third">
+      <h1>PERFORMANT</h1>
+      <h3>Our diffing algorithm only renders the data that changes for blazing fast performance.</h3>
+    </div>
+    <div class="third">
+      <h1>SCALABLE</h1>
+      <h3>Load balancing through Node clusters will ensure your stream never gets bottlenecked.</h3>
+    </div>
+  </div>
+
+
+
+  <!-- Line Chart-->
+  <div class="line-container">
+    <div id="line-chart"></div>
+  </div>
+
+
+<!-- Map Graph -->
+  <div class="map-container">
+    <div id="map"></div>
+  </div>
+
+<!-- Pie Graph -->
+  <div id="pie-chart"></div>
+
+
   <div class="instructions-container">
     <h3>For detailed instructions visit our <a href="https://github.com/StreamlineD3/StreamlineD3#getting-started">Github</a> page.</h3>
   </div>
 
   <!--<hr class="line" />-->
   
-<!--WORDCLOUD++++++++++++++++++++++++++++++++-->
+<!--WORDCLOUD //////////////////////////////////////////////////////-->
   <div id="record">
     <h1 id="speech-header">Speech to Text Visualization</h1>
 
@@ -81,13 +103,10 @@
 
   <div id="word-cloud"></div>
 
+<!--/////////////////////////////////////////////////////////////////////-->
   <div class="short-strip"></div>
   <div id="scatter-container">
     <div id="scatter-plot"></div>
-  </div>
-
-  <div id="barchart-container">
-    <div id="barchart"></div>
   </div>
 
   <div id="bubbleForce"></div>
@@ -96,6 +115,7 @@
     <h4>Created by Sarah Hodges, Jordan Bautista, and Kyle Davelaar</h4>
   </footer>
 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.8.0/d3.min.js"></script>
   <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
@@ -107,7 +127,6 @@
   <script src="audio.js"></script>
   <script src="graphs/d3.layout.cloud.js"></script>
   <script src="graphs/word-cloud.js"></script>
-  
   
   <script type="text/javascript" src="graphs/scatter-plot.js"></script>
   <script type="text/javascript" src="graphs/line.js"></script> 

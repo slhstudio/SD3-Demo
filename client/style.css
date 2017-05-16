@@ -104,9 +104,54 @@ body {
   display: inline;
 }
 
+#json-viewer {
+  border: 1px solid black;
+  width: 800px;
+  height: 50px;
+  text-align: center;
+  overflow: scroll;
+  font-size: .9em;
+  font-weight: 200;
+  margin: 10px auto;
+  line-height: 50px;
+}
+
+.json-stats {
+  margin-right: 15px;
+  display: inline;
+  vertical-align: middle;
+}
+
+.benefits-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  background-color: lightgray;
+  height: 350px;
+  color: white;
+  margin: 40px 0;
+}
+
+.third {
+  display: flex;
+  width: 25%;
+  height: 300px;
+  /*border: 1px solid black;*/
+  margin: 25px 2%;
+  flex-direction: column;
+}
+
+.third h1 {
+  margin: 40px 0 20px 0;
+}
+
+.third h3 {
+  font-weight: 200;
+}
+
 .pitch-container {
   text-align: center;
-  margin-bottom: 50px; 
+  margin: 75px 0; 
 }
 
 .pitch-container h3 {

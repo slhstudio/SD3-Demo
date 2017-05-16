@@ -12,11 +12,10 @@
   //on socket, function that draws elements
 
   function drawGrid(data) {
+    console.log(data); 
     margin = { top: 20, right: 20, bottom: 25, left: 20 };
-    width = 500 - margin.left - margin.right;
-    height = 300 - margin.top - margin.bottom;
-
-
+    width = data[0].setWidth - margin.left - margin.right;
+    height = data[0].setHeight - margin.top - margin.bottom;
 
     // d3.select('#bar-graph').selectAll('svg').remove();
     let svg = d3.select('#bar-graph')
@@ -28,7 +27,7 @@
       .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
 
     let yScale = d3.scaleLinear()
-      .domain([0, 70])
+      .domain([0, data[0].yTicks])
       .range([height, 0]);
 
     let yAxis = d3.axisLeft(yScale);
@@ -106,15 +105,21 @@
   let settings;
 
   socket.on('sendBarData', (data) => {
+
+    $("#json-viewer").replaceWith("<div id='json-viewer'></div>")
+
     if (data.length > 0) {
       if (!settings) {
-        console.log('filling settings');
         settings = drawGrid(data)
       };
       drawChart(settings, data);
 
       for (let i = 0; i < data.length; i += 1) {
         dataCache[data[i].id] = data[i].volume;
+
+
+
+        $("#json-viewer").prepend( "<span class='json-stats'>" + data[i].xScale + ": " + Math.round(data[i].volume) + "<span>")
       }
     }
   })
