@@ -12,7 +12,7 @@ dotenv.load()
 //______________GET DATA____________________________________
 
 // var endpoint1 = "wss://open-data.api.satori.com";
-// var appKey1 = "A1FAF4aAb5637a603E53466cD2876778";
+// var appKey = "A1FAF4aAb5637a603E53466cD2876778";
 // var channel1 = "nyc-traffic-speed";
 var endpoint = "wss://open-data.api.satori.com";
 var appKey = "9BABD0370e2030dd5AFA3b1E35A9acBf";
@@ -104,27 +104,27 @@ subscriptionTraffic.on('rtm/subscription/data', function (pdu) {
 var subscriptionTV = rtm.subscribe(channelTV, RTM.SubscriptionMode.SIMPLE);
 subscriptionTV.on('rtm/subscription/data', function (pdu) {
   pdu.body.messages.forEach(function (msg) {
-     let newMsg = JSON.parse(msg);
       
-      if (!cacheTV[newMsg.genre]) {
-        cacheTV[newMsg.genre] = 1;
-        newMsg.count = cacheTV[newMsg.genre];
+      //pie chart 
+      if (!cacheTV[msg.genre]) {
+        cacheTV[msg.genre] = 1;
+        msg.count = cacheTV[msg.genre];
       } else  {
-          cacheTV[newMsg.genre] = cacheTV[newMsg.genre] + 1;
-          newMsg.count = cacheTV[newMsg.genre];
+          cacheTV[msg.genre] = cacheTV[msg.genre] + 1;
+          msg.count = cacheTV[msg.genre];
        }
 
-      if (pieData.length === 0) pieData.push(newMsg);
+      if (pieData.length === 0) pieData.push(msg);
 
       let found = false;
       for (let i = 0; i < pieData.length; i++) {
-        if (pieData[i].genre === newMsg.genre) {
-          pieData[i] = newMsg;
+        if (pieData[i].genre === msg.genre) {
+          pieData[i] = msg;
           found = true;
           break;
         }
       }
-      if (!found)  pieData.push(newMsg);
+      if (!found)  pieData.push(msg);
     
   })
   
