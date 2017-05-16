@@ -82,6 +82,7 @@
       .tickPadding(5);
 
     d3.select('#xAxis').remove();
+
     settings.svg
       .append('g')
       .attr('id', 'xAxis')

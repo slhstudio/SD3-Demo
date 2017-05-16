@@ -123,7 +123,6 @@ rtm.start();
 var subscriptionTwitter = rtm.subscribe(channelTwitter, RTM.SubscriptionMode.SIMPLE);
 subscriptionTwitter.on('rtm/subscription/data', function (pdu) {
   pdu.body.messages.forEach(function (msg) {
-    // console.log(msg);
 
     if (msg.created_at && msg.user.time_zone === 'Pacific Time (US & Canada)' && msg.lang === 'en') {
       let obj = {
