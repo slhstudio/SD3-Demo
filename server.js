@@ -94,25 +94,25 @@ var subscriptionTV = rtm.subscribe(channelTV, RTM.SubscriptionMode.SIMPLE);
 subscriptionTV.on('rtm/subscription/data', function (pdu) {
   pdu.body.messages.forEach(function (msg) {
 
-      if (!cacheTV[msg.genre]) {
-        cacheTV[msg.genre] = 1;
-        msg.count = cacheTV[msg.genre];
-      } else  {
-          cacheTV[msg.genre] = cacheTV[msg.genre] + 1;
-          msg.count = cacheTV[msg.genre];
-       }
+    if (!cacheTV[msg.genre]) {
+      cacheTV[msg.genre] = 1;
+      msg.count = cacheTV[msg.genre];
+    } else {
+      cacheTV[msg.genre] = cacheTV[msg.genre] + 1;
+      msg.count = cacheTV[msg.genre];
+    }
 
-      if (pieData.length === 0) pieData.push(msg);
+    if (pieData.length === 0) pieData.push(msg);
 
-      let found = false;
-      for (let i = 0; i < pieData.length; i++) {
-        if (pieData[i].genre === msg.genre) {
-          pieData[i] = msg;
-          found = true;
-          break;
-        }
+    let found = false;
+    for (let i = 0; i < pieData.length; i++) {
+      if (pieData[i].genre === msg.genre) {
+        pieData[i] = msg;
+        found = true;
+        break;
       }
-      if (!found)  pieData.push(msg);
+    }
+    if (!found) pieData.push(msg);
   })
 });
 
@@ -120,18 +120,18 @@ var subscriptionNASA = rtm.subscribe(channelNASA, RTM.SubscriptionMode.SIMPLE);
 subscriptionNASA.on('rtm/subscription/data', function (pdu) {
   pdu.body.messages.forEach(function (msg) {
 
-    function decDegrees (string) {
+    function decDegrees(string) {
       let result = string.split(':');
       let degrees = Number(result[0]);
       let minutes = Number(result[1]);
       let seconds = Number(result[2]);
- 
-      let minSec =  minutes + seconds/60;
-      let decimalDegrees = (degrees + minSec/60).toFixed(3);
-    
+
+      let minSec = minutes + seconds / 60;
+      let decimalDegrees = (degrees + minSec / 60).toFixed(3);
+
       return decimalDegrees;
     }
-  
+
     let lat = decDegrees(msg.latitude);
     let lon = decDegrees(msg.longitude);
 
@@ -257,15 +257,15 @@ let bubbleConfig = {
 };
 
 let pieConfig = {
-  setWidth: 400,                   
-  setHeight: 400,                  
-  category: 'genre',//category to be shown in pie slices
+  setWidth: 400,
+  setHeight: 400,
+  category: 'genre',//category to be show in pie slices
   count: 'count'
 };
 
 let mapConfig = {
-  setWidth: 1300,                   
-  setHeight: 800,                  
+  setWidth: 1300,
+  setHeight: 800,
   latitude: 'latitude',
   longitude: 'longitude',
   propOne: 'satellite',
@@ -281,7 +281,7 @@ function sendFiles(app) {
   app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'client/home-page.html'));
   });
-  console.log('inside function')
+  // console.log('inside function')
 }
 
 
