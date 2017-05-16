@@ -46,7 +46,6 @@ subscriptionBike.on('rtm/subscription/data', function (pdu) {
     //line chart data
     if (msg.station_id < 300) {
       msg.counter = counterLine++;
-      console.log(msg.counter);
       lineData.push(msg);
 
       if (lineData.length > 20) {
@@ -287,7 +286,6 @@ function sendFiles(app) {
   app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'client/home-page.html'));
   });
-  console.log('inside function')
 }
 
 
