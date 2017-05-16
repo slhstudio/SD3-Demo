@@ -119,7 +119,7 @@
 
 
 
-        $("#json-viewer").prepend( "<span class='json-stats'>" + data[i].xScale + ": " + Math.round(data[i].volume) + "<span>")
+        $("#json-viewer").prepend( "<span class='json-stats'>" + data[i].xScale + ": " + (Math.round(data[i].volume * 100) / 100) + "<span>")
       }
     }
   })

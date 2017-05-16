@@ -172,7 +172,7 @@ let scatterConfig = {
 
 let wordCloudConfig = {
   colors: ['#FB3640', '#605F5E', '#1D3461', '#1F487E', '#247BA0'],
-  colorDomain: [5, 10, 15, 20, 100],
+  colorDomain: [5, 20, 40, 60, 100],
   font: 'Source Sans Pro',
   fontSize: 40,
   padding: 10,
