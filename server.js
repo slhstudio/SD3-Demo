@@ -247,13 +247,6 @@ let barConfig = {
   color: ['#DAF7A6', '#FFC300', '#FF5733', '#C70039', '#900C3F', '#581845'],
 };
 
-let bubbleConfig2 = {
-  setWidth: 600,
-  setHeight: 400,
-  text: 'id',
-  volume: 'randNum',
-};
-
 let bubbleConfig = {
   setWidth: 600,
   setHeight: 400,

@@ -29,7 +29,7 @@
 		d3.select('#bubbleSVG').remove();
 
 
-		svg = d3.select('#bubbleForce')
+		svg = d3.select('#bubble-graph')
 
 			.append('svg')
 			.attr('id', 'bubbleSVG')
