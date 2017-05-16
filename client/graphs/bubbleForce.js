@@ -106,7 +106,6 @@
 })();
 
 function reRenderNode(element) {
-	console.log('rerender!');
 
 	var simulation = d3.forceSimulation()
 		.force('x', d3.forceX(0).strength(.1))

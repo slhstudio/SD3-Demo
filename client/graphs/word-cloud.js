@@ -3,7 +3,6 @@
   let customData = {};
 
   socket.on('send custom', (emitData) => {
-    console.log('CLOUD DATA', emitData)
     for (let key in emitData) {
       customData[key] = emitData[key]
     }
@@ -119,7 +118,6 @@
   }
 
   function drawGrid(data) {
-    console.log('drawing grid...', data);
 
     let color = d3.scaleLinear()
       .domain(customData.colorDomain)
@@ -150,7 +148,6 @@
     
 
   function drawCloud(settings, words) {
-    console.log('drawing cloud...', words);
     //remove so doesn't make multiple word clouds
     let svg = settings.svg;
     let color = settings.color;
@@ -158,8 +155,6 @@
 
     let Existingwords = svg.selectAll('.text')
       .data(words);
-
-    console.log('EXISTING WORDS: ', Existingwords);
 
     let newWords = Existingwords
       .enter()
