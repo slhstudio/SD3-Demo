@@ -111,8 +111,6 @@
       .selectAll('.ball')
       .data(data);
 
-    console.log('drawing content...', circles.exit());
-
     circles.exit().remove();
     //ENTER.
     let newCircles = circles

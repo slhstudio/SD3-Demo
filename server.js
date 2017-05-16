@@ -194,19 +194,19 @@ let wordCloudConfig = {
 }
 
 let barConfig = {
-  setWidth: 500,
-  setHeight: 300,
-  shiftYAxis: true,
+  setWidth: 700,
+  setHeight: 500,
   xDomainUpper: 20,
   xDomainLower: 0,
-  yDomainUpper: 40,
+  yDomainUpper: 50,
   yDomainLower: 0,
   xTicks: 10,
   yTicks: 10,
   xScale: 'Borough',
   volume: 'Speed',
-  xLabel_text: 'x axis label',
-  yLabel_text: 'y axis label',
+  yLabel_text: 'Miles Per Hour',
+  label_text_size: 20,
+  transition_speed: 1000,
   color: ['#DAF7A6', '#FFC300', '#FF5733', '#C70039', '#900C3F', '#581845'],
 };
 
