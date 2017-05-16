@@ -3,22 +3,34 @@
 
   //set initial SVG params
   let margin, width, height;
-
-
-  //array to compare incoming data >> if data is the same, do not rerender
   let dataCache = {};
+  let settings;
 
-  //function that draws setup
-  //on socket, function that draws elements
+  //listen for new data
+  //drawGrid function only needs to be invoked once to set up static components
+  //drawChart function needs to be invoked each time new data is present
+  socket.on('sendBarData', (data) => {
+    if (data.length > 0) {
+      if (!settings) {
+        console.log('filling settings');
+        settings = drawGrid(data);
+      }
+      let needsRender = false;
+      for (let i = 0; i < data.length; i += 1) {
+        if (dataCache[data[i].id] !== data[i].volume) {
+          dataCache[data[i].id] = data[i].volume;
+          needsRender = true;
+        }
+      }
+      if (needsRender) drawChart(settings, data);
+    }
+  });
 
   function drawGrid(data) {
-    margin = { top: 20, right: 20, bottom: 25, left: 20 };
-    width = 500 - margin.left - margin.right;
-    height = 300 - margin.top - margin.bottom;
+    margin = { top: 20, right: 40, bottom: 25, left: 50 };
+    width = data[0].setWidth - margin.left - margin.right;
+    height = data[0].setHeight - margin.top - margin.bottom;
 
-
-
-    // d3.select('#bar-graph').selectAll('svg').remove();
     let svg = d3.select('#bar-graph')
       .append('svg')
       .attr('id', 'barSVG')
@@ -28,12 +40,23 @@
       .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
 
     let yScale = d3.scaleLinear()
-      .domain([0, 70])
+      .domain([data[0].yDomainLower, data[0].yDomainUpper])
       .range([height, 0]);
 
     let yAxis = d3.axisLeft(yScale);
 
-    svg.call(yAxis);
+    svg.append('g')
+      .attr('id', 'yAxis')
+      .call(d3.axisLeft(yScale));
+
+    svg.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.left)
+      .attr("x", 0 - (height / 2))
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text(data[0].yLabel_text)
+      .style('font-size', `${data[0].label_text_size}px`);
 
     let settings = {
       data,
@@ -41,7 +64,6 @@
       yScale,
       yAxis,
     }
-
     return settings;
   }
 
@@ -59,6 +81,7 @@
       .tickPadding(5);
 
     d3.select('#xAxis').remove();
+
     settings.svg
       .append('g')
       .attr('id', 'xAxis')
@@ -77,7 +100,7 @@
 
 
     newColumn.append('rect').transition()
-      .duration(300)
+      .duration(data[0].transition_speed)
       .attr("opacity", 1)
       .attr('class', 'column')
       .attr('x', d => xScale(d.xScale))
@@ -90,33 +113,17 @@
     //UPDATE.
     let updateNodes = column.select('.column');
 
+    //Filter out data that has not changed
     if (Object.keys(dataCache).length === data.length) {
-      updateNodes._groups[0] = column.select('.column')._groups[0].filter(d => d.__data__.volume === dataCache[d.__data__.id]);
+      updateNodes._groups[0] = column.select('.column')._groups[0].filter(d => d.__data__.volume !== dataCache[d.__data__.id]);
     }
 
     updateNodes.transition()
-      .duration(1000)
+      .duration(data[0].transition_speed)
       .attr("opacity", 1)
       .attr('width', d => xScale.bandwidth())
       .attr('height', d => height - settings.yScale(d.volume))
       .attr('x', d => xScale(d.xScale))
       .attr('y', d => settings.yScale(d.volume))
   }
-
-  let settings;
-
-  socket.on('sendBarData', (data) => {
-    if (data.length > 0) {
-      if (!settings) {
-        console.log('filling settings');
-        settings = drawGrid(data)
-      };
-      drawChart(settings, data);
-
-      for (let i = 0; i < data.length; i += 1) {
-        dataCache[data[i].id] = data[i].volume;
-      }
-    }
-  })
-
 })();
