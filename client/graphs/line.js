@@ -109,7 +109,7 @@
     svg.select('#xAxis-label').remove();
 
     svg.append("text")
-      .attr('transform', 'translate(' + (width) + ' ,' + (height + margin.bottom) + ')')
+      .attr('transform', 'translate(' + (width) + ' ,' + (height + margin.bottom - 5) + ')')
       .attr('id', 'xAxis-label')
       .style('text-anchor', 'end')
       .style('font-family', 'sans-serif')
