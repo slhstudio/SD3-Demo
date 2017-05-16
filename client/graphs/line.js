@@ -120,6 +120,11 @@ function drawContent(line, allData) {
     .style('fill', 'none')
     .style('stroke-linejoin', 'round');
 
+
+var div = d3.select("#lineSVG").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+
   svg.selectAll('.dot')
     .data(allData)
     .enter()
@@ -130,6 +135,20 @@ function drawContent(line, allData) {
     .attr('r', 3)
     .style('fill', 'white')
     .style('stroke-width', 1.5)
-    .style('stroke', 'DodgerBlue');
+    .style('stroke', 'DodgerBlue')
+    //add tool tips
+    .on("mouseover", function(d) {
+       div.transition()
+         .duration(200)
+         .style("opacity", .9);
+       div.html("<h1>hello</h1>" /*allData[0].yScale*/)
+         .style("left", (d3.event.pageX) + "px")
+         .style("top", (d3.event.pageY) + "px");
+       })
+     .on("mouseout", function(d) {
+       div.transition()
+         .duration(500)
+         .style("opacity", 0);
+       });
 }
 })();

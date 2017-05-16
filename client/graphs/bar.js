@@ -27,9 +27,12 @@
   });
 
   function drawGrid(data) {
-    margin = { top: 20, right: 40, bottom: 25, left: 50 };
+
+    margin = { top: 20, right: 20, bottom: 25, left: 20 };
     width = data[0].setWidth - margin.left - margin.right;
     height = data[0].setHeight - margin.top - margin.bottom;
+
+    // d3.select('#bar-graph').selectAll('svg').remove();
 
     let svg = d3.select('#bar-graph')
       .append('svg')
@@ -40,7 +43,9 @@
       .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
 
     let yScale = d3.scaleLinear()
+
       .domain([data[0].yDomainLower, data[0].yDomainUpper])
+
       .range([height, 0]);
 
     let yAxis = d3.axisLeft(yScale);
@@ -126,4 +131,26 @@
       .attr('x', d => xScale(d.xScale))
       .attr('y', d => settings.yScale(d.volume))
   }
+
+  let settings;
+
+  socket.on('sendBarData', (data) => {
+
+    $("#json-viewer").replaceWith("<div id='json-viewer'></div>")
+
+    if (data.length > 0) {
+      if (!settings) {
+        settings = drawGrid(data)
+      };
+      drawChart(settings, data);
+
+      for (let i = 0; i < data.length; i += 1) {
+        dataCache[data[i].id] = data[i].volume;
+
+        $("#json-viewer").prepend( "<span class='json-stats'>" + data[i].xScale + ": " + (Math.round(data[i].volume * 100) / 100) + "<span>")
+      }
+    }
+  })
+
+
 })();

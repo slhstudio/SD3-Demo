@@ -28,36 +28,42 @@
     <div id="bubble-chart"></div>
   </div>
 
-<!-- Line Chart-->
-  <div class="line-container">
-    <div id="line-chart"></div>
-  </div>
-
-
-<div class="map-container">
-    <div id="map"></div>
-</div>
-
-
 <!-- Bar Graph -->
   <div class="bar-container">
     <div id="bar-graph"></div>
   </div>
 
-  <div id="pie-chart"></div>
+  <div id="json-viewer"></div>
 
   <div class="pitch-container">
     <h3>Streaming Data Visualized</h3>
     <p>Let's face it, setting up D3 graphs is hard. Setting up real-time visualizations is even harder. <br /> StreamLine D3 takes the hassle out of creating real-time visualizations while still giving you compelete creative control. No more setting up sockets, no more manipulating streams, no more long hours of learning advanced D3.  StreamLine D3 is here to help.</p>
   </div>
   
-  <div class="instructions-container">
-    <h3>For detailed instructions visit our <a href="https://github.com/StreamlineD3/StreamlineD3#getting-started">Github</a> page.</h3>
+  <div class="benefits-container">
+    <div class="third">
+      <img src="images/gear-icon.png" alt="customizable icon">
+      <h1>CUSTOMIZABLE </h1>
+      <h3>Make each visualiztion your own with custom colors, fonts, heights, widths, and more.</h3>
+    </div>
+    <div class="third">
+      <img src="images/fast-icon.png" alt="customizable icon">
+      <h1>PERFORMANT</h1>
+      <h3>Our diffing algorithm renders only the data that changes for blazing fast performance.</h3>
+    </div>
+    <div class="third">
+      <img src="images/scale-icon.png" alt="customizable icon">
+      <h1>SCALABLE</h1>
+      <h3>Load balancing through Node clusters lets your app scale to multiple streams and visualizations.</h3>
+    </div>
   </div>
 
-  <!--<hr class="line" />-->
-  
-<!--WORDCLOUD++++++++++++++++++++++++++++++++-->
+
+<!--WORDCLOUD //////////////////////////////////////////////////////-->
+  <h1 class="big-header">Watch StreamlineD3 Visualize <br> Local Streams by Pressing Record</h1>
+
+  <hr class="line" />
+
   <div id="record">
     <h1 id="speech-header">Speech to Text Visualization</h1>
 
@@ -81,47 +87,64 @@
 
   <div id="word-cloud"></div>
 
-  <div class="short-strip"></div>
-  <div id="scatter-container">
-    <div id="scatter-plot"></div>
+<!--/////////////////////////////////////////////////////////////////////-->
+
+  <div id="charts-container">
+    <div class="chart">
+      <!-- Line Chart-->
+      <div id="line-chart"></div>
+    </div>
+    <div class="chart">
+      <!-- Pie Graph -->
+      <div id="pie-chart"></div>
+    </div>
+    <div class="chart">
+      <div id="scatter-plot"></div>
+    </div>
+    <div class="chart">
+      <div id="bubbleForce"></div>
+    </div>
   </div>
 
-  <div id="barchart-container">
-    <div id="barchart"></div>
+
+  <div class="instructions-container">
+    <h3>For detailed instructions visit our <a href="https://github.com/StreamlineD3/StreamlineD3#getting-started">Github</a> page.</h3>
   </div>
 
-  <div id="bubbleForce"></div>
+
+<!-- Map Graph -->
+  <div class="map-container">
+    <div id="map"></div>
+    <h1>map will go here</h1>
+  </div>
+
+  <!--<div class="short-strip"></div>-->
+
 
   <footer id="footer">
     <h4>Created by Sarah Hodges, Jordan Bautista, and Kyle Davelaar</h4>
   </footer>
 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.8.0/d3.min.js"></script>
   <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
   <script src="https://unpkg.com/topojson-client@3"></script>
   
   <script type="text/javascript" src="graphs/bubbleForce.js"></script>
-
-<!---->  <script type="text/javascript" src="graphs/map2.js"></script>
-
-  <!--<script src="graphs/word-cloud-master.js"></script> -->
-
-
+  <script type="text/javascript" src="graphs/map2.js"></script>
   <script type="text/javascript" src="graphs/pie.js"></script>
 
   <script src="audio.js"></script>
   <script src="graphs/d3.layout.cloud.js"></script>
   <script src="graphs/word-cloud.js"></script>
-  
-  
 
   <script type="text/javascript" src="graphs/scatter-plot.js"></script>
   <script type="text/javascript" src="graphs/line.js"></script> 
   <script type="text/javascript" src="graphs/bar.js"></script>
 
-
   <!--/*<script src="http://cdn.jsdelivr.net/gh/StreamlineD3/SD3-Demo@1.2/client/graphs/bundle.min.js"></script>*/-->
+
 
 
 </body>

@@ -3,8 +3,8 @@
 
   //set initial SVG params
   let margin = { top: 10, right: 10, bottom: 10, left: 10 };
-  let width = 600 - margin.left - margin.right;
-  let height = 600 - margin.top - margin.bottom;
+  let width = 400 - margin.left - margin.right;
+  let height = 400 - margin.top - margin.bottom;
   let radius = width / 2;
 
   let dataCache = {};

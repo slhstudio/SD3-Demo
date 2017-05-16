@@ -12,7 +12,7 @@ dotenv.load()
 //______________GET DATA____________________________________
 
 // var endpoint1 = "wss://open-data.api.satori.com";
-// var appKey1 = "A1FAF4aAb5637a603E53466cD2876778";
+// var appKey = "A1FAF4aAb5637a603E53466cD2876778";
 // var channel1 = "nyc-traffic-speed";
 var endpoint = "wss://open-data.api.satori.com";
 var appKey = "9BABD0370e2030dd5AFA3b1E35A9acBf";
@@ -94,7 +94,7 @@ subscriptionTraffic.on('rtm/subscription/data', function (pdu) {
 var subscriptionTV = rtm.subscribe(channelTV, RTM.SubscriptionMode.SIMPLE);
 subscriptionTV.on('rtm/subscription/data', function (pdu) {
   pdu.body.messages.forEach(function (msg) {
-     
+
       if (!cacheTV[msg.genre]) {
         cacheTV[msg.genre] = 1;
         msg.count = cacheTV[msg.genre];
@@ -144,6 +144,7 @@ subscriptionNASA.on('rtm/subscription/data', function (pdu) {
       mapData.shift();
       mapData.push(msg);
     }
+
   })
 
 });
@@ -220,22 +221,25 @@ let scatterConfig = {
 
 let wordCloudConfig = {
   colors: ['#FB3640', '#605F5E', '#1D3461', '#1F487E', '#247BA0'],
-  colorDomain: [5, 10, 15, 20, 100],
+  colorDomain: [5, 20, 40, 60, 100],
   font: 'Source Sans Pro',
   fontSize: 40,
   padding: 10,
   rotate: 0,
+  height: 600,
+  width: 2000,
 }
 
 let barConfig = {
-  setWidth: 700,
-  setHeight: 500,
+  setWidth: 800,
+  setHeight: 400,
+  shiftYAxis: true,
   xDomainUpper: 20,
   xDomainLower: 0,
   yDomainUpper: 50,
   yDomainLower: 0,
   xTicks: 10,
-  yTicks: 10,
+  yTicks: 50,
   xScale: 'Borough',
   volume: 'Speed',
   yLabel_text: 'Miles Per Hour',
@@ -259,11 +263,9 @@ let bubbleConfig = {
 };
 
 let pieConfig = {
-
-  setWidth: 700,                   
-  setHeight: 700,                  
-  category: 'genre',
-
+  setWidth: 400,                   
+  setHeight: 400,                  
+  category: 'genre',//category to be show in pie slices
   count: 'count'
 };
 
@@ -294,7 +296,6 @@ function sendFiles(app) {
 let myStream = new streamline(sendFiles, 3000);
 
 myStream.connect((socket) => {
-
   myStream.line(socket, lineData, lineConfig);
   myStream.scatter(socket, scatterData, scatterConfig);
   myStream.wordCloud(socket, wordCloudConfig);
