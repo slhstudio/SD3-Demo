@@ -27,12 +27,9 @@
   });
 
   function drawGrid(data) {
-
-    margin = { top: 20, right: 20, bottom: 25, left: 20 };
+    margin = { top: 20, right: 40, bottom: 25, left: 50 };
     width = data[0].setWidth - margin.left - margin.right;
     height = data[0].setHeight - margin.top - margin.bottom;
-
-    // d3.select('#bar-graph').selectAll('svg').remove();
 
     let svg = d3.select('#bar-graph')
       .append('svg')
@@ -43,9 +40,7 @@
       .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
 
     let yScale = d3.scaleLinear()
-
       .domain([data[0].yDomainLower, data[0].yDomainUpper])
-
       .range([height, 0]);
 
     let yAxis = d3.axisLeft(yScale);
@@ -85,11 +80,11 @@
       .tickSize(10)
       .tickPadding(5);
 
-    d3.select('#xAxis').remove();
+    d3.select('#xAxis-bar').remove();
 
     settings.svg
       .append('g')
-      .attr('id', 'xAxis')
+      .attr('id', 'xAxis-bar')
       .attr('transform', `translate(0, ${height})`)
       .call(xAxis)
       .selectAll('text')
@@ -119,9 +114,9 @@
     let updateNodes = column.select('.column');
 
     //Filter out data that has not changed
-    if (Object.keys(dataCache).length === data.length) {
-      updateNodes._groups[0] = column.select('.column')._groups[0].filter(d => d.__data__.volume !== dataCache[d.__data__.id]);
-    }
+    // if (Object.keys(dataCache).length === data.length) {
+      // updateNodes._groups[0] = column.select('.column')._groups[0].filter(d => d.__data__.volume !== dataCache[d.__data__.id]);
+    // }
 
     updateNodes.transition()
       .duration(data[0].transition_speed)
@@ -131,26 +126,4 @@
       .attr('x', d => xScale(d.xScale))
       .attr('y', d => settings.yScale(d.volume))
   }
-
-  let settings;
-
-  socket.on('sendBarData', (data) => {
-
-    $("#json-viewer").replaceWith("<div id='json-viewer'></div>")
-
-    if (data.length > 0) {
-      if (!settings) {
-        settings = drawGrid(data)
-      };
-      drawChart(settings, data);
-
-      for (let i = 0; i < data.length; i += 1) {
-        dataCache[data[i].id] = data[i].volume;
-
-        $("#json-viewer").prepend( "<span class='json-stats'>" + data[i].xScale + ": " + (Math.round(data[i].volume * 100) / 100) + "<span>")
-      }
-    }
-  })
-
-
 })();
