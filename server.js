@@ -143,15 +143,10 @@ subscriptionNASA.on('rtm/subscription/data', function (pdu) {
       mapData.shift();
       mapData.push(msg);
     }
-
   })
-
 });
 
 rtm.start();
-
-
-
 
 //SCATTER DATA -- TWITTER
 var subscriptionTwitter = rtm.subscribe(channelTwitter, RTM.SubscriptionMode.SIMPLE);
