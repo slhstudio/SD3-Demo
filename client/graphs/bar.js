@@ -95,7 +95,7 @@
     }
 
     updateNodes.transition()
-      .duration(1000)
+      .duration(100)
       .attr("opacity", 1)
       .attr('width', d => xScale.bandwidth())
       .attr('height', d => height - settings.yScale(d.volume))
