@@ -31,7 +31,6 @@
     width = data[0].setWidth - margin.left - margin.right;
     height = data[0].setHeight - margin.top - margin.bottom;
 
-    // d3.select('#bar-graph').selectAll('svg').remove();
     let svg = d3.select('#bar-graph')
       .append('svg')
       .attr('id', 'barSVG')
