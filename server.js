@@ -213,8 +213,8 @@ let bubbleConfig = {
 };
 
 let pieConfig = {
-  setWidth: 700,                   
-  setHeight: 700,                  
+  setWidth: 400,                   
+  setHeight: 400,                  
   category: 'genre',//category to be show in pie slices
   count: 'count'
 };

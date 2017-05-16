@@ -67,12 +67,6 @@ body {
   background: #54892f;
 }
 
-.line-container {
-  /*margin-top: -50px;
-  margin-bottom: 50px;*/
-  display: inline;
-  max-width: 400px;
-}
 
 #line-chart {
   max-width: 800px;
@@ -141,8 +135,15 @@ body {
   flex-direction: column;
 }
 
+.third img {
+  text-align: center;
+  height: 70px;
+  width: 70px;
+  margin: 10px auto;
+}
+
 .third h1 {
-  margin: 40px 0 20px 0;
+  margin: 20px 0 20px 0;
 }
 
 .third h3 {
@@ -171,6 +172,22 @@ body {
   width: 40%;
   margin: 40px auto;
 }
+
+#charts-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.chart {
+  border: 6px solid rgb(41.2%, 41.2%, 41.2%); ;
+  height: 500px;
+  margin: 40px auto;
+  flex-basis: 40%; 
+  box-shadow: 1px 2px 4px 4px rgba(192, 192, 192, 0.4);
+
+}
+
 
 .instructions-container {
   text-align: center;
@@ -212,6 +229,7 @@ body {
   background-color: rgb(41.2%, 41.2%, 41.2%); 
   height: 125px; 
   line-height: 125px;
+  box-shadow: 0 -2px 2px 1px rgba(0, 0, 0, 0.2);
 }
 
 #footer h4 {
