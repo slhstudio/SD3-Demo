@@ -248,7 +248,7 @@ let barConfig = {
 let bubbleConfig = {
   setWidth: 600,
   setHeight: 400,
-  text: 'station_id',
+  text: 'num_bikes_available',
   volume: 'num_bikes_available',
   color:'#63d198'
 };
