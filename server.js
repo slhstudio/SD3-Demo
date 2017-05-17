@@ -12,7 +12,7 @@ dotenv.load()
 //______________GET DATA____________________________________
 
 const endpoint = "wss://open-data.api.satori.com";
-const appKey = "9BABD0370e2030dd5AFA3b1E35A9acBf";
+const appKey = "34DF1ecf6B793beA053a60aa1cdDdC2C";
 const channelBike = "US-Bike-Sharing-Channel";
 const channelTraffic = "nyc-traffic-speed";
 const channelTV = "tv-commercial-airings";

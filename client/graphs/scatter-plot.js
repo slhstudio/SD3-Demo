@@ -124,7 +124,7 @@
     newCircles.append('circle')
       .transition()
       .duration(data[0].transition_speed)
-      .attr("opacity", 1)
+      .style("opacity", 1)
       .attr('class', 'circle')
       .attr('cx', 0)
       .attr('cy', 0)

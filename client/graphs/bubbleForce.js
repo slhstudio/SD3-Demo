@@ -58,9 +58,9 @@
 
 		circles.append('circle')
 			.attr('r', d => radiusScale(d.volume))
-			.attr('fill', d => d.color)
+			.style('fill', d => d.color)
 			.attr('class', 'word')
-			.attr('fill-opacity', .8)
+			.style('fill-opacity', .8)
 			.attr('id', d => 'c' + d.text)
 			.attr('cx', width / 2)
 			.attr('cy', height / 2)

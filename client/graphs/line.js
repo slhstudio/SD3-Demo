@@ -6,19 +6,6 @@
   let width, height;
   let currData = [];
   let settings;
-  //draw initial blank graph placeholder
-  // drawAxis(
-  //   d3.scaleLinear().domain([0, 20]).range([0, width]),
-  //   d3.scaleLinear().domain([0, 40]).range([height, 0]),
-  //   [{
-  //     setWidth: 700,
-  //     setHeight: 500,
-  //     xTicks: 10,
-  //     yTicks: 10,
-  //     xLabel_text: '',
-  //     yLabel_text: '',
-  //   }]
-  // );
 
   socket.on('sendLineData', (allData) => {
     if(allData.length === 0) currData = [];
@@ -120,14 +107,12 @@
       .selectAll('.line')
       .data(allData)
 
-    renderedLine.exit().remove().transition(300).attr('opacity', 1);
-
     let newLine = renderedLine
       .enter()
       .append('path')
       .transition()
       .duration(1000)
-      .attr("opacity", 1)
+      .style("opacity", 1)
       .attr('class', 'line')
       .attr('d', d => line(allData))
       .style('stroke', '#5176B6')
@@ -147,9 +132,7 @@
     let newDots = dots
       .enter()
       .append('circle')
-      .transition()
-      .duration(1000)
-      .attr("opacity", 1)
+      .style("opacity", 1)
       .attr('class', 'dot')
       .attr('cx', line.x())
       .attr('cy', line.y())
