@@ -133,17 +133,6 @@ subscriptionNASA.on('rtm/subscription/data', function (pdu) {
 
     msg.latitude = lat;
     msg.longitude = lon;
-    // <<<<<<< HEAD
-    //     if (mapData.length < 200) {
-    //       mapData.push(msg);
-    //     } else {
-    //       mapData.shift();
-    //       mapData.push(msg);
-    //     }
-    //   })
-    // });
-
-    // =======
 
     if (!cacheMap[msg.satellite]) {
       cacheMap[msg.satellite] = true;
@@ -161,7 +150,6 @@ subscriptionNASA.on('rtm/subscription/data', function (pdu) {
 
 });
 
-// >>>>>>> 0db51d1113044b2bc190a8eb3b91947a22f29a41
 
 //SCATTER DATA -- TWITTER
 let subscriptionTwitter = rtm.subscribe(channelTwitter, RTM.SubscriptionMode.SIMPLE);
@@ -262,6 +250,7 @@ let bubbleConfig = {
   setHeight: 400,
   text: 'station_id',
   volume: 'num_bikes_available',
+  color:'#63d198'
 };
 
 let pieConfig = {
@@ -276,8 +265,9 @@ let mapConfig = {
   setHeight: 800,
   latitude: 'latitude',
   longitude: 'longitude',
-  propOne: 'satellite',
-  propTwo: ''
+  mapItem: 'satellite', //the thing being mapped
+  propTwo: '',
+  color:'#B0C4DE'
 };
 
 //---------------SEND CLIENT FILES-----------------------

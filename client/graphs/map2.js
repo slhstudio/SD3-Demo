@@ -6,14 +6,23 @@
   let width = 700 - margin.left - margin.right;
   let height = 500 - margin.top - margin.bottom;
 
-
+  let dataCache = {};
   let settings;
 
   socket.on('sendMapData', (data) => {
 
     if (data.length > 0) {
       if (!settings) settings = drawMap(data);
-      drawContent(settings, data);
+  
+      let needsChange = false;
+
+      for (let i = 0; i < data.length; i += 1) {
+        if ([data[i].latitude, data[i].longitude]  !== dataCache[data[i].mapItem]) {
+            needsChange = true;
+            dataCache[data[i].mapItem] = [data[i].latitude, data[i].longitude];
+        }
+      }
+      if (needsChange) drawContent(settings, data);
     }
   });
 
@@ -49,7 +58,7 @@
         .datum(topojson.merge(world, world.objects.countries.geometries)) 
         .attr('class', 'land')
         .attr('d', path)
-        .style('fill', '	#B0C4DE');
+        .style('fill', data[0].color);
 
       //append the World Map Country Borders
       g.append('path')
@@ -69,34 +78,34 @@
   }
 
   function drawContent(settings, data) {
-    // d3.select('#all-satellites').remove();
+    // d3.select('#all-points').remove();
     var color = d3.scaleSequential(d3.interpolateRdYlBu)
       .domain([0, 500]);
 
-    let satellites = settings.svg.selectAll('.sat-circle')
+    let points = settings.svg.selectAll('.point-circle')
       .data(data)
     
-    satellites.exit().remove();
+    points.exit().remove();
 
-    //differentiate new satellites
-    let newSatellites = satellites
+    //differentiate new points
+    let newPoints = points
       .enter()
       .append('g')
-      .attr('class', 'sat-circle');
+      .attr('class', 'point-circle');
 
-    // Create the satellite circle 
-    newSatellites
+    // Create the circle 
+    newPoints
       .append('circle')
       .attr('cx', d => settings.projection([d.longitude, d.latitude])[0])
       .attr('cy', d => settings.projection([d.longitude, d.latitude])[1])
       .attr('r', '4px')
-      .attr('class', 'circle sat-dot')
+      .attr('class', 'circle point-dot')
       .style('fill', d => color(d.latitude))
       .style('opacity', 0.75)
       
 
   //UPDATE
-  satellites.select('circle')
+  points.select('circle')
     .transition()
     .attr('r', '5px')
     .transition()
@@ -104,7 +113,6 @@
     .duration(300)
     .attr('cx', d => settings.projection([d.longitude, d.latitude])[0])        
     .attr('cy', d => settings.projection([d.longitude, d.latitude])[1])
-    //.style('fill', d => color(d.latitude))
     .style('stroke', 'orange')
    
   };
