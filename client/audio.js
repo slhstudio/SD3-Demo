@@ -29,7 +29,6 @@ if (window.SpeechRecognition === null) {
 
         //send to socket
         socket.emit('send audioText', transcription.textContent)
-        console.log('AUDIO DATA SENT', Date.now())
 
       } else {
         transcription.textContent += event.results[i][0].transcript;

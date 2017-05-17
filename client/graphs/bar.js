@@ -10,9 +10,12 @@
   //drawGrid function only needs to be invoked once to set up static components
   //drawChart function needs to be invoked each time new data is present
   socket.on('sendBarData', (data) => {
+
+    //removes old div so don't keep adding indefinitely
+    $("#json-viewer").replaceWith("<div id='json-viewer'></div>")
+
     if (data.length > 0) {
       if (!settings) {
-        console.log('filling settings');
         settings = drawGrid(data);
       }
       let needsRender = false;
@@ -21,6 +24,9 @@
           dataCache[data[i].id] = data[i].volume;
           needsRender = true;
         }
+        //adds json data to rectangle below graph
+        $("#json-viewer").prepend( "<span class='json-stats'>" + data[i].xScale + ": " + (Math.round(data[i].volume * 100) / 100) + "<span>");
+
       }
       if (needsRender) drawChart(settings, data);
     }
@@ -52,9 +58,9 @@
     svg.append("text")
       .attr("transform", "rotate(-90)")
       .attr("y", 0 - margin.left)
-      .attr("x", 0 - (height / 2))
+      .attr("x", 0)
       .attr("dy", "1em")
-      .style("text-anchor", "middle")
+      .style("text-anchor", "end")
       .text(data[0].yLabel_text)
       .style('font-size', `${data[0].label_text_size}px`);
 
@@ -126,4 +132,5 @@
       .attr('x', d => xScale(d.xScale))
       .attr('y', d => settings.yScale(d.volume))
   }
+
 })();

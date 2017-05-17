@@ -52,10 +52,10 @@
 
     svg.append("text")
       .attr("transform", "rotate(-90)")
-      .attr("y", 0 - margin.left)
-      .attr("x", 0 - (height / 2))
+      .attr("y", 0 - margin.left + 5)
+      .attr("x", 0)
       .attr("dy", "1em")
-      .style("text-anchor", "middle")
+      .style("text-anchor", "end")
       .text(data[0].yLabel_text)
       .style('font-size', `${data[0].label_font_size}px`);
 
@@ -74,10 +74,10 @@
       .call(xAxis);
 
     svg.append('text')
-      .attr("y", height + margin.bottom)
-      .attr("x", width / 2)
+      .attr("y", height + margin.bottom + 7)
+      .attr("x", width)
       .attr("dy", "1em")
-      .style("text-anchor", "middle")
+      .style("text-anchor", "end")
       .text(data[0].xLabel_text)
       .style('font-size', `${data[0].label_font_size}px`);
 

@@ -9,9 +9,9 @@ body {
 }
 
 .header {
-  background-color: rgb(41.2%, 41.2%, 41.2%); 
-  height: 325px; 
-  line-height: 325px;
+  background-color: #383838; 
+  height: 600px; 
+  line-height: 425px;
   box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
 }
 
@@ -20,10 +20,12 @@ body {
   text-align: center;
   vertical-align: middle;
   font-size: 40px; 
+  font-weight: 700;
 }
 
 .header img {
-  max-height: 250px;
+  padding-top: 30px;
+  max-height: 550px;
   vertical-align: middle;
 }
 
@@ -31,14 +33,22 @@ body {
   text-decoration: none;
 }
 
+h2 {
+  padding: 25px;
+  font-family: 'Rubik', sans-serif;
+  font-size: 18px;
+}
+
 .info-box {
   margin-top: 60px;
 }
 
 .info-box h3 {
+  font-family: 'Rubik', sans-serif;
   color: grey;
   vertical-align: middle;
-  font-weight: 200;
+  font-weight: 400;
+  font-size: 20px;
 }
 
 .download-button-container {
@@ -87,8 +97,6 @@ body {
 }
 
 .bar-container {
-  /*margin-top: -50px;
-  margin-bottom: 50px;*/
   display: inline;
   max-width: 400px;
 }
@@ -120,10 +128,11 @@ body {
   display: flex;
   justify-content: center;
   flex-direction: row;
-  background-color: lightgray;
-  height: 350px;
+  background-color:#383838;
+  height: 450px;
   color: white;
   margin: 40px 0;
+  padding-top: 125px;
 }
 
 .third {
@@ -131,23 +140,32 @@ body {
   width: 25%;
   height: 300px;
   /*border: 1px solid black;*/
-  margin: 25px 2%;
+  margin: 25px 3%;
   flex-direction: column;
+  
 }
 
 .third img {
   text-align: center;
-  height: 70px;
-  width: 70px;
+  height: 80px;
+  width: 80px;
   margin: 10px auto;
 }
 
 .third h1 {
   margin: 20px 0 20px 0;
+  font-family: 'Rubik', sans-serif;
+  font-size: 1.5em;
+  font-weight: 300;
+  letter-spacing: 0.03em;
 }
 
 .third h3 {
-  font-weight: 200;
+  font-family: 'Rubik', sans-serif;
+  font-weight: 300;
+  color: lightgrey;
+  line-height: 28px;
+  
 }
 
 .pitch-container {
@@ -156,22 +174,25 @@ body {
 }
 
 .pitch-container h3 {
+  
   text-align: center;
   margin: 30px 0 20px 0;
-  font-size: 35px;
+  font-size: 40px;
+  line-height: 30px;
 }
 
 .pitch-container p {
   text-align: center;
-  font-weight: 200;
+  font-family: 'Rubik', sans-serif;
+  font-weight: 300;
+  font-size: 20px;
   margin: 0 24%;
   line-height: 40px;
 }
 
 .big-header {
   margin-top: 80px;
-  font-size: 3.5em;
-  /*text-transform: uppercase;*/
+  font-size: 2.2em;
 }
 
 .line {
@@ -181,6 +202,9 @@ body {
 
 #speech-header {
   color: rgb(41.2%, 41.2%, 41.2%);
+  font-size: 1.8em;
+  font-weight: bold;
+
 }
 
 #word-cloud {
@@ -195,29 +219,30 @@ body {
 }
 
 .chart {
-  border: 15px solid lightgrey;
+  /* border: 15px solid lightgrey;*/
   /*border: 15px solid rgb(41.2%, 41.2%, 41.2%);*/
   height: 500px;
   margin: 40px auto 100px auto;
   flex-basis: 40%; 
-  box-shadow: 4px 4px 2px 2px rgba(192, 192, 192, 0.4);
+  /*box-shadow: 4px 4px 2px 2px rgba(192, 192, 192, 0.4);*/
 }
-
 
 .instructions-container {
   text-align: center;
-  letter-spacing: 5px;
-  background-color: rgb(137, 211, 225);
-  height: 200px;
-  line-height: 200px;
+  /*letter-spacing: 5px;*/
+  background-color:#383838;
+  height: 300px;
   color: white;
-  margin: 75px 0;
+
 }
 
 .instructions-container h3 {
   text-align: center;
-  font-size: 31px;
-  font-weight: 400;
+  font-family: 'Rubik', sans-serif;
+  font-weight: 300;
+  font-size: 24px;
+  letter-spacing: .03px;
+  padding-top: 130px;
 }
 
 .instructions-container a {
@@ -240,14 +265,33 @@ body {
   padding: 50px;
 }
 
+#bubbleForce {
+  padding-bottom: 20px;
+}
+
+/*.vis-header-map {
+  font-size: 2.5em;
+  margin-bottom: 30px;
+}*/
+
+#map {
+  margin-bottom: 75px;
+}
+
+.map-container {
+  padding: 0px 50px 100px 50px;
+}
+
 #footer {
   background-color: rgb(41.2%, 41.2%, 41.2%); 
-  height: 125px; 
+  height: 200px; 
   line-height: 125px;
   box-shadow: 0 -2px 2px 1px rgba(0, 0, 0, 0.2);
+  margin-top: 200px;
 }
 
 #footer h4 {
+  padding-top: 40px;
   vertical-align: middle;
   color: white;
   font-weight: 200;

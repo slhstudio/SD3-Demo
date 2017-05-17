@@ -5,7 +5,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Rubik" rel="stylesheet">
+<!--  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,700" rel="stylesheet">
+-->  
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="audio-style.css">
   <title>StreamLine D3</title>
@@ -13,19 +15,14 @@
 
 <body>
   <header class="header">
-    <a href="https://github.com/StreamlineD3"><img src="streamlined3-logo.svg" alt="StreamLine D3 Logo"></a>
+    <a href="https://github.com/StreamlineD3"><img src="images/streamlined3-final.png" alt="StreamLine D3 Logo"></a>
   </header>
 
   <div class="info-box">
-    <h3>A Real-Time D3 Visualization Library</h3>
+    <h3>A Real-Time Visualization Library</h3>
     <div class="download-button-container">
       <button><a href="https://github.com/StreamlineD3">Download on Github</a></button>
     </div>
-  </div>
-
-<!-- Bubble Chart-->
-  <div class="bubble-container">
-    <div id="bubble-chart"></div>
   </div>
 
 <!-- Bar Graph -->
@@ -37,19 +34,19 @@
 
   <div class="pitch-container">
     <h3>Streaming Data Visualized</h3>
-    <p>Let's face it, setting up D3 graphs is hard. Setting up real-time visualizations is even harder. <br /> StreamLine D3 takes the hassle out of creating real-time visualizations while still giving you compelete creative control. No more setting up sockets, no more manipulating streams, no more long hours of learning advanced D3.  StreamLine D3 is here to help.</p>
+    <p>The face of data is changing. In the coming years, the amount of streaming data will increase dramatically. We will need ways to analyze and visualize this data more than ever before. StreamLineD3 is javascript library that connects real-time data streams with d3. You choose your api and it sets up your socket connection. Choose from six different template graphs optimized for streaming data. After you enter your parameters, your graph is done! And try out using local streams, too. Go play with the speech to text visualization tool below!</p>
   </div>
   
   <div class="benefits-container">
     <div class="third">
       <img src="images/gear-icon.png" alt="customizable icon">
       <h1>CUSTOMIZABLE </h1>
-      <h3>Make each visualiztion your own with custom colors, fonts, heights, widths, and more.</h3>
+      <h3>Make each visualization your own with custom colors, fonts, heights, widths, and more.</h3>
     </div>
     <div class="third">
       <img src="images/fast-icon.png" alt="customizable icon">
       <h1>PERFORMANT</h1>
-      <h3>Our diffing algorithm renders only the data that changes for blazing fast performance.</h3>
+      <h3>Our diffing algorithm renders only the data that changes allowing for fast performance and smooth transitions.</h3>
     </div>
     <div class="third">
       <img src="images/scale-icon.png" alt="customizable icon">
@@ -58,9 +55,43 @@
     </div>
   </div>
 
+  <div id="charts-container">
+    <div class="chart">
+      <!-- Line Chart-->
+      <div id="line-chart"></div>
+      <h2>Bikes rented, streaming from bike stations around the US</h2>
+    </div>
+    <div class="chart">
+      <!-- Pie Graph -->
+      <div id="pie-chart"></div>
+      <h2>Commercials airing per television genre, streaming from channels in Bay Area</h2>
+    </div>
+    <div class="chart">
+      <!-- Scatter Graph -->
+      <div id="scatter-plot"></div>
+       <h2>Likes per tweet, streaming from Twitter</h2>
+    </div>
+    <div class="chart">
+      <div id="bubbleForce"></div>
+      <!-- Bubble Graph -->
+      <div id="bubble-graph"></div>
+      <h2>Bikes rented, streaming from bike stations around the US</h2>
+    </div>
+  </div>
 
-<!--WORDCLOUD //////////////////////////////////////////////////////-->
-  <h1 class="big-header">Watch StreamlineD3 Visualize <br> Local Streams by Pressing Record</h1>
+  <div class="instructions-container">
+    <h3>For detailed instructions, visit our <a href="https://github.com/StreamlineD3/StreamlineD3#getting-started">Github</a> page.</h3>
+  </div>
+
+<!-- Map Graph -->
+  <div class="map-container">
+    <div id="map"></div>
+    <h2>Satellite locations, streaming from NASA and Norad</h2>
+  </div>
+
+
+  <!--WORDCLOUD //////////////////////////////////////////////////////-->
+  <h1 class="big-header">Watch StreamlineD3 visualize local streams by pressing record:</h1>
 
   <hr class="line" />
 
@@ -89,37 +120,6 @@
 
 <!--/////////////////////////////////////////////////////////////////////-->
 
-  <div id="charts-container">
-    <div class="chart">
-      <!-- Line Chart-->
-      <div id="line-chart"></div>
-    </div>
-    <div class="chart">
-      <!-- Pie Graph -->
-      <div id="pie-chart"></div>
-    </div>
-    <div class="chart">
-      <div id="scatter-plot"></div>
-    </div>
-    <div class="chart">
-      <div id="bubbleForce"></div>
-    </div>
-  </div>
-
-
-  <div class="instructions-container">
-    <h3>For detailed instructions visit our <a href="https://github.com/StreamlineD3/StreamlineD3#getting-started">Github</a> page.</h3>
-  </div>
-
-
-<!-- Map Graph -->
-  <div class="map-container">
-    <div id="map"></div>
-    <h1>map will go here</h1>
-  </div>
-
-  <!--<div class="short-strip"></div>-->
-
 
   <footer id="footer">
     <h4>Created by Sarah Hodges, Jordan Bautista, and Kyle Davelaar</h4>
@@ -136,7 +136,6 @@
   <script type="text/javascript" src="graphs/pie.js"></script>
 
   <script src="audio.js"></script>
-  <script src="graphs/d3.layout.cloud.js"></script>
   <script src="graphs/word-cloud.js"></script>
 
   <script type="text/javascript" src="graphs/scatter-plot.js"></script>
@@ -144,8 +143,6 @@
   <script type="text/javascript" src="graphs/bar.js"></script>
 
   <!--/*<script src="http://cdn.jsdelivr.net/gh/StreamlineD3/SD3-Demo@1.2/client/graphs/bundle.min.js"></script>*/-->
-
-
 
 </body>
 </html>

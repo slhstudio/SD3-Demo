@@ -27,6 +27,7 @@ let pieData = [];
 let cacheTV = {};
 let counterLine = 0;
 let counterBubble = 0;
+let cacheMap = {};
 let mapData = [];
 
 let scatterQueue = [];
@@ -79,17 +80,8 @@ subscriptionTraffic.on('rtm/subscription/data', function (pdu) {
   pdu.body.messages.forEach(function (msg) {
 
     //bar data 
-    let found = false;
-    for (let i = 0; i < barData.length; i += 1) {
-      if (barData[i].Borough === msg.Borough) {
-        barData[i].Speed = (Number(barData[i].Speed) + Number(msg.Speed)) / 2;
-        found = true;
-      }
-    }
-
-    msg.Speed = Number(msg.Speed);
-    if (!found) barData.push(msg);
-
+      if (msg.Borough === 'Staten island') msg.Borough = 'Staten Island';
+      if (barQueue.length < 1000) barQueue.push(msg);
   });
 });
 
@@ -141,15 +133,35 @@ subscriptionNASA.on('rtm/subscription/data', function (pdu) {
 
     msg.latitude = lat;
     msg.longitude = lon;
-    if (mapData.length < 200) {
-      mapData.push(msg);
-    } else {
-      mapData.shift();
+    // <<<<<<< HEAD
+    //     if (mapData.length < 200) {
+    //       mapData.push(msg);
+    //     } else {
+    //       mapData.shift();
+    //       mapData.push(msg);
+    //     }
+    //   })
+    // });
+
+    // =======
+
+    if (!cacheMap[msg.satellite]) {
+      cacheMap[msg.satellite] = true;
       mapData.push(msg);
     }
-  })
+    //else if already in cache, put new msg in in place of old
+    else {
+      for (let i = 0; i < mapData.length; i++) {
+        if (mapData[i].satellite === msg.satellite) {
+          mapData[i] = msg;
+        }
+      }
+    }
+  });
+
 });
 
+// >>>>>>> 0db51d1113044b2bc190a8eb3b91947a22f29a41
 
 //SCATTER DATA -- TWITTER
 let subscriptionTwitter = rtm.subscribe(channelTwitter, RTM.SubscriptionMode.SIMPLE);
@@ -197,18 +209,18 @@ let lineConfig = {
 };
 
 let scatterConfig = {
-  setWidth: 700,
-  setHeight: 500,
+  setWidth: 600,
+  setHeight: 400,
   xDomainUpper: 1500,
   xDomainLower: 0,
   yDomainUpper: 20000,
   yDomainLower: 0,
   xTicks: 10,
   yTicks: 10,
-  xLabel_text: 'Number of Followers',
-  yLabel_text: 'Number of Tweets',
-  label_font_size: 20,
   id: 'screen_name',
+  xLabel_text: 'number of followers',
+  yLabel_text: 'number of tweets',
+  label_font_size: 13,
   xScale: 'followers_count',
   yScale: 'statuses_count',
   volume: 'favourites_count',
@@ -240,28 +252,21 @@ let barConfig = {
   xScale: 'Borough',
   volume: 'Speed',
   yLabel_text: 'Miles Per Hour',
-  label_text_size: 20,
+  label_text_size: 13,
   transition_speed: 1000,
   color: ['#DAF7A6', '#FFC300', '#FF5733', '#C70039', '#900C3F', '#581845'],
 };
 
-let bubbleConfig2 = {
-  setWidth: 700,
-  setHeight: 500,
-  text: 'id',
-  volume: 'randNum',
-};
-
 let bubbleConfig = {
-  setWidth: 700,
-  setHeight: 500,
+  setWidth: 600,
+  setHeight: 400,
   text: 'station_id',
   volume: 'num_bikes_available',
 };
 
 let pieConfig = {
-  setWidth: 400,
-  setHeight: 400,
+  setWidth: 600,
+  setHeight: 525,
   category: 'genre',//category to be show in pie slices
   count: 'count'
 };
@@ -284,7 +289,6 @@ function sendFiles(app) {
   app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'client/home-page.html'));
   });
-  // console.log('inside function')
 }
 
 //_________________________QUEUE________________________________
@@ -298,6 +302,21 @@ setInterval(() => {
   if (scatterQueue.length > 0) {
     scatterData.push(scatterQueue.shift());
     if (scatterData.length > 100) scatterData.shift();
+  }
+
+  if (barQueue.length > 0) {
+    let freshData = barQueue.shift();
+
+    let found = false;
+    for (let i = 0; i < barData.length; i += 1) {
+      if (barData[i].Borough === freshData.Borough) {
+        barData[i].Speed = (Number(barData[i].Speed) + Number(freshData.Speed)) / 2;
+        found = true;
+      }
+    }
+
+    freshData.Speed = Number(freshData.Speed);
+    if (!found) barData.push(freshData);
   }
 }, 800);
 
