@@ -1,5 +1,5 @@
 (function () {
-  let socket = io.connect();
+  const socket = io.connect();
 
   //set initial SVG params
   let margin = { top: 25, right: 20, bottom: 25, left: 20 };
@@ -31,22 +31,22 @@
     height = data[0].setHeight - margin.top - margin.bottom;
 
     //Define map projection
-    var projection = d3.geoMercator()
+    let projection = d3.geoMercator()
       .translate([width / 2, height / 1.5])
       .scale((width - 1) / 2 / Math.PI);
 
     //Define path generator
-    var path = d3.geoPath()
+    let path = d3.geoPath()
       .projection(projection);
 
     //the main svg element
-    var svg = d3.select('#map')
+    let svg = d3.select('#map')
       .append('svg')
       .attr("width", width)
       .attr("height", height);
 
     //group to hold the maps and borders
-    var g = svg.append('g')
+    let g = svg.append('g')
       .attr('id', 'world-map');
 
     //Load in GeoJSON data
@@ -54,7 +54,7 @@
       if (error) throw error;
       
       //append the World Map
-      var worldMap = g.append('path')
+      let worldMap = g.append('path')
         .datum(topojson.merge(world, world.objects.countries.geometries)) 
         .attr('class', 'land')
         .attr('d', path)
@@ -79,7 +79,7 @@
 
   function drawContent(settings, data) {
     // d3.select('#all-points').remove();
-    var color = d3.scaleSequential(d3.interpolateRdYlBu)
+    let color = d3.scaleSequential(d3.interpolateRdYlBu)
       .domain([0, 500]);
 
     let points = settings.svg.selectAll('.point-circle')

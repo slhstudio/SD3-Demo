@@ -1,6 +1,6 @@
 (() => {
+  const socket = io.connect();
 
-  let socket = io.connect();
   let margin = { top: 25, right: 20, bottom: 20, left: 80 };
   let width, height;
 
@@ -124,7 +124,7 @@
     newCircles.append('circle')
       .transition()
       .duration(data[0].transition_speed)
-      .attr("opacity", 1)
+      .style("opacity", 1)
       .attr('class', 'circle')
       .attr('cx', 0)
       .attr('cy', 0)
