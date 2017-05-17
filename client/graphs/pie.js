@@ -108,7 +108,6 @@
       .duration(1000)
       .attr("opacity", 1)
       .attr('d', arc)
-     // .style('fill', (d, i) => color(d.index))
       .style('stroke', '#fff')
 
     circles.select('.text')
