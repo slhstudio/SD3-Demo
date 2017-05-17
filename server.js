@@ -11,13 +11,13 @@ dotenv.load()
 
 //______________GET DATA____________________________________
 
-var endpoint = "wss://open-data.api.satori.com";
-var appKey = "9BABD0370e2030dd5AFA3b1E35A9acBf";
-var channelBike = "US-Bike-Sharing-Channel";
-var channelTraffic = "nyc-traffic-speed";
-var channelTV = "tv-commercial-airings";
-var channelNASA = 'satellites';
-var channelTwitter = "Twitter-statuses-sample";
+const endpoint = "wss://open-data.api.satori.com";
+const appKey = "9BABD0370e2030dd5AFA3b1E35A9acBf";
+const channelBike = "US-Bike-Sharing-Channel";
+const channelTraffic = "nyc-traffic-speed";
+const channelTV = "tv-commercial-airings";
+const channelNASA = 'satellites';
+const channelTwitter = "Twitter-statuses-sample";
 
 let scatterData = [];
 let lineData = [];
@@ -30,24 +30,30 @@ let counterBubble = 0;
 let cacheMap = {};
 let mapData = [];
 
+let scatterQueue = [];
+let lineQueue = [];
+let barQueue = [];
+let bubbleQueue = [];
+let pieQueue = [];
+let mapQueue = [];
 //-------------------------------------
 
-var rtm = new RTM(endpoint, appKey);
+let rtm = new RTM(endpoint, appKey);
 rtm.on("enter-connected", function () {
   console.log("Connected to RTM!");
 });
 
-var subscriptionBike = rtm.subscribe(channelBike, RTM.SubscriptionMode.SIMPLE);
+let subscriptionBike = rtm.subscribe(channelBike, RTM.SubscriptionMode.SIMPLE);
 subscriptionBike.on('rtm/subscription/data', function (pdu) {
   pdu.body.messages.forEach(function (msg) {
 
     //line chart data
     if (msg.station_id < 300) {
       msg.counter = counterLine++;
-      lineData.push(msg);
+      lineQueue.push(msg);
 
-      if (lineData.length > 20) {
-        lineData.shift();
+      if (lineQueue.length > 200) {
+        lineQueue.shift();
       }
     }
 
@@ -69,26 +75,17 @@ subscriptionBike.on('rtm/subscription/data', function (pdu) {
   });
 });
 
-var subscriptionTraffic = rtm.subscribe(channelTraffic, RTM.SubscriptionMode.SIMPLE);
+let subscriptionTraffic = rtm.subscribe(channelTraffic, RTM.SubscriptionMode.SIMPLE);
 subscriptionTraffic.on('rtm/subscription/data', function (pdu) {
   pdu.body.messages.forEach(function (msg) {
 
     //bar data 
-    let found = false;
-    for (let i = 0; i < barData.length; i += 1) {
-      if (barData[i].Borough === msg.Borough) {
-        barData[i].Speed = (Number(barData[i].Speed) + Number(msg.Speed)) / 2;
-        found = true;
-      }
-    }
-
-    msg.Speed = Number(msg.Speed);
-    if (!found) barData.push(msg);
-
+      if (msg.Borough === 'Staten island') msg.Borough = 'Staten Island';
+      if (barQueue.length < 1000) barQueue.push(msg);
   });
 });
 
-var subscriptionTV = rtm.subscribe(channelTV, RTM.SubscriptionMode.SIMPLE);
+let subscriptionTV = rtm.subscribe(channelTV, RTM.SubscriptionMode.SIMPLE);
 subscriptionTV.on('rtm/subscription/data', function (pdu) {
   pdu.body.messages.forEach(function (msg) {
 
@@ -100,8 +97,6 @@ subscriptionTV.on('rtm/subscription/data', function (pdu) {
       msg.count = cacheTV[msg.genre];
     }
 
-    if (pieData.length === 0) pieData.push(msg);
-
     let found = false;
     for (let i = 0; i < pieData.length; i++) {
       if (pieData[i].genre === msg.genre) {
@@ -110,11 +105,14 @@ subscriptionTV.on('rtm/subscription/data', function (pdu) {
         break;
       }
     }
-    if (!found) pieData.push(msg);
+    if (!found) {
+      pieData.push(msg);
+      if (pieData.length > 15) pieData.shift();
+    };
   })
 });
 
-var subscriptionNASA = rtm.subscribe(channelNASA, RTM.SubscriptionMode.SIMPLE);
+let subscriptionNASA = rtm.subscribe(channelNASA, RTM.SubscriptionMode.SIMPLE);
 subscriptionNASA.on('rtm/subscription/data', function (pdu) {
   pdu.body.messages.forEach(function (msg) {
 
@@ -135,27 +133,38 @@ subscriptionNASA.on('rtm/subscription/data', function (pdu) {
 
     msg.latitude = lat;
     msg.longitude = lon;
+    // <<<<<<< HEAD
+    //     if (mapData.length < 200) {
+    //       mapData.push(msg);
+    //     } else {
+    //       mapData.shift();
+    //       mapData.push(msg);
+    //     }
+    //   })
+    // });
 
-      if (!cacheMap[msg.satellite]) {
-        cacheMap[msg.satellite] = true;
-        mapData.push(msg);
-      }
-      //else if already in cache, put new msg in in place of old
-      else {
-        for (let i = 0; i < mapData.length; i++) {
-          if (mapData[i].satellite === msg.satellite) {
-            mapData[i] = msg;
-          }
+    // =======
+
+    if (!cacheMap[msg.satellite]) {
+      cacheMap[msg.satellite] = true;
+      mapData.push(msg);
+    }
+    //else if already in cache, put new msg in in place of old
+    else {
+      for (let i = 0; i < mapData.length; i++) {
+        if (mapData[i].satellite === msg.satellite) {
+          mapData[i] = msg;
         }
       }
-   });
+    }
+  });
 
 });
 
-rtm.start();
+// >>>>>>> 0db51d1113044b2bc190a8eb3b91947a22f29a41
 
 //SCATTER DATA -- TWITTER
-var subscriptionTwitter = rtm.subscribe(channelTwitter, RTM.SubscriptionMode.SIMPLE);
+let subscriptionTwitter = rtm.subscribe(channelTwitter, RTM.SubscriptionMode.SIMPLE);
 subscriptionTwitter.on('rtm/subscription/data', function (pdu) {
   pdu.body.messages.forEach(function (msg) {
 
@@ -170,22 +179,22 @@ subscriptionTwitter.on('rtm/subscription/data', function (pdu) {
         id: msg.id,
         screen_name: msg.user.screen_name
       }
-      scatterData.push(obj);
+      scatterQueue.push(obj);
 
-      if (scatterData.length > 100) {
-        scatterData.shift()
-          ;
+      if (scatterQueue.length > 20) {
+        scatterQueue.shift();
       }
     }
   });
 });
 
+rtm.start();
 
 //____________________CONFIGURATION FILES___________________________________
 
 let lineConfig = {
-  setWidth: 600,
-  setHeight: 400,
+  setWidth: 700,
+  setHeight: 500,
   shiftXAxis: true,
   xDomainUpper: 50,
   xDomainLower: 0,
@@ -202,13 +211,13 @@ let lineConfig = {
 let scatterConfig = {
   setWidth: 600,
   setHeight: 400,
-  //axis
   xDomainUpper: 1500,
   xDomainLower: 0,
   yDomainUpper: 20000,
   yDomainLower: 0,
   xTicks: 10,
   yTicks: 10,
+  id: 'screen_name',
   xLabel_text: 'number of followers',
   yLabel_text: 'number of tweets',
   label_font_size: 13,
@@ -282,6 +291,34 @@ function sendFiles(app) {
   });
 }
 
+//_________________________QUEUE________________________________
+
+setInterval(() => {
+  if (lineQueue.length > 0) {
+    lineData.push(lineQueue.shift());
+    if (lineData.length > 50) lineData.shift();
+  }
+
+  if (scatterQueue.length > 0) {
+    scatterData.push(scatterQueue.shift());
+    if (scatterData.length > 100) scatterData.shift();
+  }
+
+  if (barQueue.length > 0) {
+    let freshData = barQueue.shift();
+
+    let found = false;
+    for (let i = 0; i < barData.length; i += 1) {
+      if (barData[i].Borough === freshData.Borough) {
+        barData[i].Speed = (Number(barData[i].Speed) + Number(freshData.Speed)) / 2;
+        found = true;
+      }
+    }
+
+    freshData.Speed = Number(freshData.Speed);
+    if (!found) barData.push(freshData);
+  }
+}, 800);
 
 //---------------------------------CALL STREAMLINE FUNCTION------------------------------------
 
@@ -296,6 +333,3 @@ myStream.connect((socket) => {
   myStream.pie(socket, pieData, pieConfig);
   myStream.map(socket, mapData, mapConfig);
 });
-
-
-// server.listen(process.env.PORT || 3000, () => console.log('SERVER RUNNING ON 3000'));
