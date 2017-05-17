@@ -8,6 +8,7 @@ let height = 500 - margin.top - margin.bottom;
 
 
 socket.on('sendMapData', (allData) => {
+
 	 width = allData[0].setWidth - margin.left - margin.right;
    height = allData[0].setHeight - margin.top - margin.bottom;
   
@@ -52,6 +53,7 @@ socket.on('sendMapData', (allData) => {
 					.enter()
 					.append("circle")
 					.attr("cx", (d) => {
+
 						return projection([d.longitude, d.latitude])[0];
 					})
 					.attr("cy", d => projection([d.longitude, d.latitude])[1])

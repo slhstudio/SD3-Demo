@@ -11,9 +11,6 @@ dotenv.load()
 
 //______________GET DATA____________________________________
 
-// var endpoint1 = "wss://open-data.api.satori.com";
-// var appKey = "A1FAF4aAb5637a603E53466cD2876778";
-// var channel1 = "nyc-traffic-speed";
 var endpoint = "wss://open-data.api.satori.com";
 var appKey = "9BABD0370e2030dd5AFA3b1E35A9acBf";
 var channelBike = "US-Bike-Sharing-Channel";
@@ -152,7 +149,6 @@ subscriptionNASA.on('rtm/subscription/data', function (pdu) {
         }
       }
    });
- 
 });
 
 rtm.start();

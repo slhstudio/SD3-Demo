@@ -184,7 +184,6 @@ h2 {
 .big-header {
   margin-top: 80px;
   font-size: 2.5em;
-
 }
 
 .line {
@@ -224,12 +223,8 @@ h2 {
   height: 300px;
   line-height: 200px;
   color: white;
-<<<<<<< HEAD
-  margin: 0 0 100px 0;
-||||||| merged common ancestors
   margin: 75px 0;
-=======
->>>>>>> 3a3191124d819f976e89abba90a5b7c802bb274a
+
 }
 
 .instructions-container h3 {
@@ -268,7 +263,6 @@ h2 {
 #map {
   margin-bottom: 75px;
 }
-
 .map-container {
   padding: 0px 50px 100px 50px;
 }
