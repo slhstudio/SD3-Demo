@@ -58,7 +58,7 @@
 
 		circles.append('circle')
 			.attr('r', d => radiusScale(d.volume))
-			.attr('fill', '#' + (Math.random() * 0xFFFFFF << 0).toString(16))
+			.attr('fill', '#63d198')
 			.attr('class', 'word')
 			.attr('fill-opacity', .8)
 			.attr('id', d => 'c' + d.text)
@@ -93,7 +93,7 @@
 
 		for (let i = 0; i < a.length; i += 1) {
 			if (a[i].text === b[i].text && a[i].volume !== b[i].volume) {
-				reRenderNode(b[i]);
+				return true;
 
 			} else if (a[i].text !== b[i].text) {
 				return true;
@@ -102,17 +102,3 @@
 		return false;
 	}
 })();
-
-function reRenderNode(element) {
-	console.log('rerender!');
-
-	var simulation = d3.forceSimulation()
-		.force('x', d3.forceX(0).strength(.1))
-		.force('Y', d3.forceY(0).strength(.1))
-		.force('collide', d3.forceCollide(d => radiusScale(d.volume)))
-
-	d3.select('#' + 'c' + element.text)
-		.attr('fill', 'red')
-		.attr('r', element.volume)
-
-}
