@@ -193,7 +193,9 @@ let lineConfig = {
   xScale: 'counter',
   yScale: 'num_bikes_available',
   xLabel_text: 'at the currently reporting station',
-  yLabel_text: 'number of available bikes'
+  yLabel_text: 'number of available bikes',
+  lineColor:'#5176B6',
+  dotColor: 'DodgerBlue'
 };
 
 let scatterConfig = {

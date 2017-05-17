@@ -115,48 +115,47 @@
       .style("opacity", 1)
       .attr('class', 'line')
       .attr('d', d => line(allData))
-      .style('stroke', '#5176B6')
+      .attr("transform", null)
+      .style('stroke', d => d.lineColor)
       .style('stroke-width', 1)
       .style('fill', 'none')
       .style('stroke-linejoin', 'round');
 
-    renderedLine.transition()
+
+   if (allData.length < allData[0].xDomainUpper) {
+      renderedLine.transition()
       .duration(1000)
-      .attr('d', d => line(allData));
+      .attr('d', d => line(allData))
+   } else {
+      renderedLine
+        .attr('d', d => line(allData))
+        .attr("transform", null)
+        .transition()
+        .duration(1000)
+          .attr("transform", "translate(" + -1 + ")");
+   }
 
     let dots = svg.selectAll('.dot')
       .data(allData);
-    
-    dots.exit().remove();
 
     let newDots = dots
       .enter()
       .append('circle')
-      .style("opacity", 1)
       .attr('class', 'dot')
       .attr('cx', line.x())
       .attr('cy', line.y())
       .attr('r', 3)
       .style('fill', 'white')
       .style('stroke-width', 1.5)
-      .style('stroke', 'DodgerBlue');
-      //TOOL TIP OPTION
-//     .on("mouseover", function(d) {
-//        div.transition()
-//          .duration(200)
-//          .style("opacity", .9);
-//        div.html("<h1>hello</h1>" /*allData[0].yScale*/)
-//          .style("left", (d3.event.pageX) + "px")
-//          .style("top", (d3.event.pageY) + "px");
-//        })
-//      .on("mouseout", function(d) {
-//        div.transition()
-//          .duration(500)
-//          .style("opacity", 0);
-//        });
-    dots.transition()
-      .duration(1000)
+      .style('stroke', d => d.dotColor);
+     
+    dots
       .attr('cx', line.x())
       .attr('cy', line.y())
+      .style('fill', 'white')
+      .attr("transform", null)
+      .transition()
+      .duration(1000)
+        .attr("transform", "translate(" + -1 + ")");
   }
 })();
