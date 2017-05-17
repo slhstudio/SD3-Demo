@@ -30,6 +30,7 @@ let pieData = [];
 let cacheTV = {};
 let counterLine = 0;
 let counterBubble = 0;
+let cacheMap = {};
 let mapData = [];
 
 //-------------------------------------
@@ -94,25 +95,25 @@ var subscriptionTV = rtm.subscribe(channelTV, RTM.SubscriptionMode.SIMPLE);
 subscriptionTV.on('rtm/subscription/data', function (pdu) {
   pdu.body.messages.forEach(function (msg) {
 
-      if (!cacheTV[msg.genre]) {
-        cacheTV[msg.genre] = 1;
-        msg.count = cacheTV[msg.genre];
-      } else  {
-          cacheTV[msg.genre] = cacheTV[msg.genre] + 1;
-          msg.count = cacheTV[msg.genre];
-       }
+    if (!cacheTV[msg.genre]) {
+      cacheTV[msg.genre] = 1;
+      msg.count = cacheTV[msg.genre];
+    } else {
+      cacheTV[msg.genre] = cacheTV[msg.genre] + 1;
+      msg.count = cacheTV[msg.genre];
+    }
 
-      if (pieData.length === 0) pieData.push(msg);
+    if (pieData.length === 0) pieData.push(msg);
 
-      let found = false;
-      for (let i = 0; i < pieData.length; i++) {
-        if (pieData[i].genre === msg.genre) {
-          pieData[i] = msg;
-          found = true;
-          break;
-        }
+    let found = false;
+    for (let i = 0; i < pieData.length; i++) {
+      if (pieData[i].genre === msg.genre) {
+        pieData[i] = msg;
+        found = true;
+        break;
       }
-      if (!found)  pieData.push(msg);
+    }
+    if (!found) pieData.push(msg);
   })
 });
 
@@ -120,38 +121,42 @@ var subscriptionNASA = rtm.subscribe(channelNASA, RTM.SubscriptionMode.SIMPLE);
 subscriptionNASA.on('rtm/subscription/data', function (pdu) {
   pdu.body.messages.forEach(function (msg) {
 
-    function decDegrees (string) {
+    function decDegrees(string) {
       let result = string.split(':');
       let degrees = Number(result[0]);
       let minutes = Number(result[1]);
       let seconds = Number(result[2]);
- 
-      let minSec =  minutes + seconds/60;
-      let decimalDegrees = (degrees + minSec/60).toFixed(3);
-    
+
+      let minSec = minutes + seconds / 60;
+      let decimalDegrees = (degrees + minSec / 60).toFixed(3);
+
       return decimalDegrees;
     }
-  
+
     let lat = decDegrees(msg.latitude);
     let lon = decDegrees(msg.longitude);
 
     msg.latitude = lat;
     msg.longitude = lon;
-    if (mapData.length < 200) {
-      mapData.push(msg);
-    } else {
-      mapData.shift();
-      mapData.push(msg);
-    }
 
-  })
-
+      if (!cacheMap[msg.satellite]) {
+        cacheMap[msg.satellite] = true;
+        mapData.push(msg);
+      }
+      //else if already in cache, put new msg in in place of old
+      else {
+        for (let i = 0; i < mapData.length; i++) {
+          if (mapData[i].satellite === msg.satellite) {
+            mapData[i] = msg;
+          }
+        }
+      }
+   });
+  // console.log('mapData', mapData)
+   console.log('length', mapData.length)
 });
 
 rtm.start();
-
-
-
 
 //SCATTER DATA -- TWITTER
 var subscriptionTwitter = rtm.subscribe(channelTwitter, RTM.SubscriptionMode.SIMPLE);
@@ -208,9 +213,9 @@ let scatterConfig = {
   yDomainLower: 0,
   xTicks: 10,
   yTicks: 10,
-  xLabel_text: 'Number of Followers',
-  yLabel_text: 'Number of Tweets',
-  label_font_size: 20,
+  xLabel_text: 'number of followers',
+  yLabel_text: 'number of tweets',
+  label_font_size: 13,
   xScale: 'followers_count',
   yScale: 'statuses_count',
   volume: 'favourites_count',
@@ -242,7 +247,7 @@ let barConfig = {
   xScale: 'Borough',
   volume: 'Speed',
   yLabel_text: 'Miles Per Hour',
-  label_text_size: 20,
+  label_text_size: 13,
   transition_speed: 1000,
   color: ['#DAF7A6', '#FFC300', '#FF5733', '#C70039', '#900C3F', '#581845'],
 };
@@ -255,15 +260,15 @@ let bubbleConfig = {
 };
 
 let pieConfig = {
-  setWidth: 400,                   
-  setHeight: 400,                  
+  setWidth: 400,
+  setHeight: 400,
   category: 'genre',//category to be show in pie slices
   count: 'count'
 };
 
 let mapConfig = {
-  setWidth: 1300,                   
-  setHeight: 800,                  
+  setWidth: 1300,
+  setHeight: 800,
   latitude: 'latitude',
   longitude: 'longitude',
   propOne: 'satellite',

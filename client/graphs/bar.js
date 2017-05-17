@@ -58,9 +58,9 @@
     svg.append("text")
       .attr("transform", "rotate(-90)")
       .attr("y", 0 - margin.left)
-      .attr("x", 0 - (height / 2))
+      .attr("x", 0)
       .attr("dy", "1em")
-      .style("text-anchor", "middle")
+      .style("text-anchor", "end")
       .text(data[0].yLabel_text)
       .style('font-size', `${data[0].label_text_size}px`);
 
@@ -132,4 +132,5 @@
       .attr('x', d => xScale(d.xScale))
       .attr('y', d => settings.yScale(d.volume))
   }
+
 })();
