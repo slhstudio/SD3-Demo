@@ -32,6 +32,12 @@ let counterLine = 0;
 let counterBubble = 0;
 let mapData = [];
 
+let scatterQueue = [];
+let lineQueue = [];
+let barQueue = [];
+let bubbleQueue = [];
+let pieQueue = [];
+let mapQueue = [];
 //-------------------------------------
 
 var rtm = new RTM(endpoint, appKey);
@@ -46,10 +52,10 @@ subscriptionBike.on('rtm/subscription/data', function (pdu) {
     //line chart data
     if (msg.station_id < 300) {
       msg.counter = counterLine++;
-      lineData.push(msg);
+      lineQueue.push(msg);
 
-      if (lineData.length > 20) {
-        lineData.shift();
+      if (lineQueue.length > 200) {
+        lineQueue.shift();
       }
     }
 
@@ -102,8 +108,6 @@ subscriptionTV.on('rtm/subscription/data', function (pdu) {
       msg.count = cacheTV[msg.genre];
     }
 
-    if (pieData.length === 0) pieData.push(msg);
-
     let found = false;
     for (let i = 0; i < pieData.length; i++) {
       if (pieData[i].genre === msg.genre) {
@@ -112,7 +116,10 @@ subscriptionTV.on('rtm/subscription/data', function (pdu) {
         break;
       }
     }
-    if (!found) pieData.push(msg);
+    if (!found) {
+      pieData.push(msg);
+      if (pieData.length > 15) pieData.shift();
+    };
   })
 });
 
@@ -151,8 +158,6 @@ subscriptionNASA.on('rtm/subscription/data', function (pdu) {
 rtm.start();
 
 
-
-
 //SCATTER DATA -- TWITTER
 var subscriptionTwitter = rtm.subscribe(channelTwitter, RTM.SubscriptionMode.SIMPLE);
 subscriptionTwitter.on('rtm/subscription/data', function (pdu) {
@@ -169,11 +174,10 @@ subscriptionTwitter.on('rtm/subscription/data', function (pdu) {
         id: msg.id,
         screen_name: msg.user.screen_name
       }
-      scatterData.push(obj);
+      scatterQueue.push(obj);
 
-      if (scatterData.length > 100) {
-        scatterData.shift()
-          ;
+      if (scatterQueue.length > 20) {
+        scatterQueue.shift();
       }
     }
   });
@@ -211,6 +215,7 @@ let scatterConfig = {
   xLabel_text: 'Number of Followers',
   yLabel_text: 'Number of Tweets',
   label_font_size: 20,
+  id: 'screen_name',
   xScale: 'followers_count',
   yScale: 'statuses_count',
   volume: 'favourites_count',
@@ -289,6 +294,19 @@ function sendFiles(app) {
   // console.log('inside function')
 }
 
+//_________________________QUEUE________________________________
+
+setInterval(() => {
+  if (lineQueue.length > 0) {
+    lineData.push(lineQueue.shift());
+    if (lineData.length > 50) lineData.shift();
+  }
+
+  if (scatterQueue.length > 0) {
+    scatterData.push(scatterQueue.shift());
+    if (scatterData.length > 100) scatterData.shift();
+  }
+}, 800);
 
 //---------------------------------CALL STREAMLINE FUNCTION------------------------------------
 

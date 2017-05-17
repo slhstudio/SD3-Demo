@@ -21,7 +21,7 @@
   // );
 
   socket.on('sendLineData', (allData) => {
-
+    if(allData.length === 0) currData = [];
     //if data is not empty or data is new...
     if (allData.length > 0 || (currData.length > 0 && allData[allData.length - 1].xScale !== currData[currData.length - 1].xScale)) {
 
@@ -141,6 +141,8 @@
 
     let dots = svg.selectAll('.dot')
       .data(allData);
+    
+    dots.exit().remove();
 
     let newDots = dots
       .enter()

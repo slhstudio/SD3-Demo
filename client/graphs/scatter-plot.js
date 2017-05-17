@@ -8,6 +8,7 @@
   let settings;
 
   socket.on('sendScatterData', (data) => {
+    // console.log('data: ', data);
     if (data.length > 0) {
       if (!settings) settings = drawGrid(data);
 
@@ -109,9 +110,10 @@
     //create circles but group them in svg container so work better with text when animating 
     let circles = svg
       .selectAll('.ball')
-      .data(data);
+      .data(data, d => d.id);
 
     circles.exit().remove();
+
     //ENTER.
     let newCircles = circles
       .enter()
@@ -127,9 +129,9 @@
       .attr('cx', 0)
       .attr('cy', 0)
       .attr('r', d => rScale(d.volume))
-      .style('fill', 'blue')
+      .style('fill', '#' + (Math.random() * 0xFFFFFF << 0).toString(16))
       .style('fill-opacity', 0.5)
-    
+
     newCircles
       .append('text')
       .style('text-anchor', 'middle')
@@ -151,12 +153,10 @@
       .attr('cx', 0)
       .attr('cy', 0)
       .attr('r', d => rScale(d.volume))
-      .attr('fill', 'black');
 
     updateCircles
       .append('text')
       .style('text-anchor', 'middle')
-      .style('fill', 'black')
       .attr('y', 4)
       .text(d => d.circle_text);
   }
