@@ -73,8 +73,6 @@
 			.text(d => d.text)
 			.append('text');
 
-		circles
-			.on('click', d => console.log(d))
 
 		simulation.nodes(data)
 			.on('tick', ticked)
