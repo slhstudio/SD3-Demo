@@ -1,5 +1,5 @@
 (function () {
-  let socket = io.connect();
+  const socket = io.connect();
 
   //set initial SVG params
   let margin = { top: 10, right: 10, bottom: 10, left: 10 };

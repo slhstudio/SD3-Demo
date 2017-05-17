@@ -1,6 +1,6 @@
 (function () {
 	let currData = [];
-	let socket = io.connect();
+	const socket = io.connect();
 
 	//set initial SVG params
 	let margin = { top: 20, right: 20, bottom: 25, left: 20 };

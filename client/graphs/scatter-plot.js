@@ -1,6 +1,6 @@
 (() => {
+  const socket = io.connect();
 
-  let socket = io.connect();
   let margin = { top: 25, right: 20, bottom: 20, left: 80 };
   let width, height;
 
