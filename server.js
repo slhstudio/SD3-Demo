@@ -152,8 +152,7 @@ subscriptionNASA.on('rtm/subscription/data', function (pdu) {
         }
       }
    });
-  // console.log('mapData', mapData)
-   console.log('length', mapData.length)
+ 
 });
 
 rtm.start();
