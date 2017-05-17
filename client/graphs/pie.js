@@ -1,5 +1,5 @@
 (function () {
-  let socket = io.connect();
+  const socket = io.connect();
 
   //set initial SVG params
   let margin = { top: 10, right: 10, bottom: 10, left: 10 };
@@ -100,13 +100,13 @@
         return "translate(" + labelArc.centroid(d)[0] + "," + labelArc.centroid(d)[1] + ") rotate(-90) rotate(" + (midAngle * 180 / Math.PI) + ")";
       })
       .attr("dy", ".35em")
-      .attr('font-size', '14px')
+      .style('font-size', '14px')
       .attr('text-anchor', 'middle')
       .text(d => d.data.category);
 
     circles.select('.path').transition()
       .duration(1000)
-      .attr("opacity", 1)
+      .style("opacity", 1)
       .attr('d', arc)
       .style('stroke', '#fff')
 

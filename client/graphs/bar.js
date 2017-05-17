@@ -1,5 +1,5 @@
 (function () {
-  let socket = io.connect();
+  const socket = io.connect();
 
   //set initial SVG params
   let margin, width, height;
@@ -107,14 +107,14 @@
 
     newColumn.append('rect').transition()
       .duration(data[0].transition_speed)
-      .attr("opacity", 1)
+      .style("opacity", 1)
       .attr('class', 'column')
       .attr('x', d => xScale(d.xScale))
       .attr('y', d => settings.yScale(d.volume))
       .attr('width', d => xScale.bandwidth())
       .attr('height', d => height - settings.yScale(d.volume))
       .attr('id', d => d.id)
-      .attr('fill', (d, i) => d.color[i]);
+      .style('fill', (d, i) => d.color[i]);
 
     //UPDATE.
     let updateNodes = column.select('.column');

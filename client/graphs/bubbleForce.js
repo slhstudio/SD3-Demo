@@ -1,6 +1,6 @@
 (function () {
 	let currData = [];
-	let socket = io.connect();
+	const socket = io.connect();
 
 	//set initial SVG params
 	let margin = { top: 20, right: 20, bottom: 25, left: 20 };
@@ -58,9 +58,9 @@
 
 		circles.append('circle')
 			.attr('r', d => radiusScale(d.volume))
-			.attr('fill', d => d.color)
+			.style('fill', d => d.color)
 			.attr('class', 'word')
-			.attr('fill-opacity', .8)
+			.style('fill-opacity', .8)
 			.attr('id', d => 'c' + d.text)
 			.attr('cx', width / 2)
 			.attr('cy', height / 2)

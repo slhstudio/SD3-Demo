@@ -112,7 +112,7 @@
       .append('path')
       .transition()
       .duration(1000)
-      .attr("opacity", 1)
+      .style("opacity", 1)
       .attr('class', 'line')
       .attr('d', d => line(allData))
       .attr("transform", null)

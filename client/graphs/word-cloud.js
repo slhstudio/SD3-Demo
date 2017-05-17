@@ -46,7 +46,6 @@
   
   });
 
-
   let settings;
 
   function hasGrid(words) {
