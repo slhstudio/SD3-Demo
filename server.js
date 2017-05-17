@@ -11,9 +11,6 @@ dotenv.load()
 
 //______________GET DATA____________________________________
 
-// var endpoint1 = "wss://open-data.api.satori.com";
-// var appKey = "A1FAF4aAb5637a603E53466cD2876778";
-// var channel1 = "nyc-traffic-speed";
 var endpoint = "wss://open-data.api.satori.com";
 var appKey = "9BABD0370e2030dd5AFA3b1E35A9acBf";
 var channelBike = "US-Bike-Sharing-Channel";
@@ -152,7 +149,7 @@ subscriptionNASA.on('rtm/subscription/data', function (pdu) {
         }
       }
    });
-  
+
 });
 
 rtm.start();
@@ -187,8 +184,8 @@ subscriptionTwitter.on('rtm/subscription/data', function (pdu) {
 //____________________CONFIGURATION FILES___________________________________
 
 let lineConfig = {
-  setWidth: 700,
-  setHeight: 500,
+  setWidth: 600,
+  setHeight: 400,
   shiftXAxis: true,
   xDomainUpper: 50,
   xDomainLower: 0,
@@ -203,8 +200,8 @@ let lineConfig = {
 };
 
 let scatterConfig = {
-  setWidth: 700,
-  setHeight: 500,
+  setWidth: 600,
+  setHeight: 400,
   //axis
   xDomainUpper: 1500,
   xDomainLower: 0,
@@ -251,16 +248,9 @@ let barConfig = {
   color: ['#DAF7A6', '#FFC300', '#FF5733', '#C70039', '#900C3F', '#581845'],
 };
 
-let bubbleConfig2 = {
-  setWidth: 700,
-  setHeight: 500,
-  text: 'id',
-  volume: 'randNum',
-};
-
 let bubbleConfig = {
-  setWidth: 700,
-  setHeight: 500,
+  setWidth: 600,
+  setHeight: 400,
   text: 'station_id',
   volume: 'num_bikes_available',
 };
@@ -290,7 +280,6 @@ function sendFiles(app) {
   app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'client/home-page.html'));
   });
-  // console.log('inside function')
 }
 
 

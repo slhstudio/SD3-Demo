@@ -29,7 +29,7 @@
 		d3.select('#bubbleSVG').remove();
 
 
-		svg = d3.select('#bubbleForce')
+		svg = d3.select('#bubble-graph')
 
 			.append('svg')
 			.attr('id', 'bubbleSVG')
@@ -106,7 +106,6 @@
 })();
 
 function reRenderNode(element) {
-	console.log('rerender!');
 
 	var simulation = d3.forceSimulation()
 		.force('x', d3.forceX(0).strength(.1))
