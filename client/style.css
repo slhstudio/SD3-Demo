@@ -20,6 +20,7 @@ body {
   text-align: center;
   vertical-align: middle;
   font-size: 40px; 
+  font-weight: 700;
 }
 
 .header img {
@@ -34,6 +35,7 @@ body {
 
 h2 {
   padding: 25px;
+  font-family: 'Rubik', sans-serif;
   font-size: 18px;
 }
 
@@ -42,11 +44,11 @@ h2 {
 }
 
 .info-box h3 {
+  font-family: 'Rubik', sans-serif;
   color: grey;
   vertical-align: middle;
   font-weight: 400;
-  font-size: 24px;
-
+  font-size: 20px;
 }
 
 .download-button-container {
@@ -154,14 +156,18 @@ h2 {
 
 .third h1 {
   margin: 20px 0 20px 0;
+  font-family: 'Rubik', sans-serif;
   font-size: 1.5em;
-  font-weight: 400;
+  font-weight: 300;
   letter-spacing: 0.03em;
 }
 
 .third h3 {
+  font-family: 'Rubik', sans-serif;
   font-weight: 300;
-  letter-spacing: 0.05em;
+  color: lightgrey;
+  line-height: 28px;
+  
 }
 
 .pitch-container {
@@ -170,13 +176,16 @@ h2 {
 }
 
 .pitch-container h3 {
+  
   text-align: center;
   margin: 30px 0 20px 0;
   font-size: 40px;
+  line-height: 30px;
 }
 
 .pitch-container p {
   text-align: center;
+  font-family: 'Rubik', sans-serif;
   font-weight: 300;
   font-size: 20px;
   margin: 0 24%;
@@ -185,7 +194,7 @@ h2 {
 
 .big-header {
   margin-top: 80px;
-  font-size: 2.5em;
+  font-size: 2.2em;
   /*text-transform: uppercase;*/
 }
 
@@ -196,6 +205,7 @@ h2 {
 
 #speech-header {
   color: rgb(41.2%, 41.2%, 41.2%);
+  font-size: 1.8em;
 }
 
 #word-cloud {
@@ -224,16 +234,16 @@ h2 {
   /*letter-spacing: 5px;*/
   background-color:#383838;
   height: 300px;
-  line-height: 200px;
   color: white;
 }
 
 .instructions-container h3 {
   text-align: center;
+  font-family: 'Rubik', sans-serif;
+  font-weight: 300;
   font-size: 24px;
   letter-spacing: .03px;
-  font-weight: 300;
-  padding-top: 50px;
+  padding-top: 130px;
 }
 
 .instructions-container a {
@@ -254,6 +264,10 @@ h2 {
 #scatter-container {
   background-color: #EBEBEB;
   padding: 50px;
+}
+
+#bubbleForce {
+  padding-bottom: 20px;
 }
 
 .map-container {

@@ -152,8 +152,7 @@ subscriptionNASA.on('rtm/subscription/data', function (pdu) {
         }
       }
    });
-  // console.log('mapData', mapData)
-   console.log('length', mapData.length)
+  
 });
 
 rtm.start();
@@ -267,8 +266,8 @@ let bubbleConfig = {
 };
 
 let pieConfig = {
-  setWidth: 400,
-  setHeight: 400,
+  setWidth: 600,
+  setHeight: 525,
   category: 'genre',//category to be show in pie slices
   count: 'count'
 };
