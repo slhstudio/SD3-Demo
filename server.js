@@ -131,7 +131,6 @@ subscriptionNASA.on('rtm/subscription/data', function (pdu) {
     nasaCounter += 1;
 
     if(mapData.length < 60 || nasaCounter % 200 === 0) {
-      console.log('MSG: ', msg);
       let lat = decDegrees(msg.latitude);
       let lon = decDegrees(msg.longitude);
 
