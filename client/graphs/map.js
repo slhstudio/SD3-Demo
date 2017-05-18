@@ -80,7 +80,7 @@
   function drawContent(settings, data) {
     // d3.select('#all-points').remove();
     let color = d3.scaleSequential(d3.interpolateRdYlBu)
-      .domain([0, 500]);
+      .domain([0, 200]);
 
     let points = settings.svg.selectAll('.point-circle')
       .data(data)

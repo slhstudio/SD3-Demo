@@ -80,7 +80,10 @@
 
     let circles = svg.selectAll('.arc')
       .data(pie(data))
-
+    
+    //EXIT
+    circles.exit().remove();
+    
     let newCircles = circles
       .enter()
       .append('g')
