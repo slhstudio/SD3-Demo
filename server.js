@@ -64,7 +64,7 @@ subscriptionBike.on('rtm/subscription/data', function (pdu) {
 
       for (let i = 0; i < bubbleData.length; i += 1) {
         if (bubbleData[i].station_id === msg.station_id) {
-          bubbleData[i] = msg;
+          bubbleData[i] = Object.assign({},msg);
           idExists = true;
         }
       }
@@ -81,7 +81,7 @@ subscriptionTraffic.on('rtm/subscription/data', function (pdu) {
 
     //bar data 
       if (msg.Borough === 'Staten island') msg.Borough = 'Staten Island';
-      if (barQueue.length < 1000) barQueue.push(msg);
+      if (barQueue.length < 100) barQueue.push(msg);
   });
 });
 
@@ -100,7 +100,7 @@ subscriptionTV.on('rtm/subscription/data', function (pdu) {
     let found = false;
     for (let i = 0; i < pieData.length; i++) {
       if (pieData[i].genre === msg.genre) {
-        pieData[i] = msg;
+        pieData[i] = Object.assign({}, msg);
         found = true;
         break;
       }
@@ -112,42 +112,47 @@ subscriptionTV.on('rtm/subscription/data', function (pdu) {
   })
 });
 
+function decDegrees(string) {
+  let result = string.split(':');
+  let degrees = Number(result[0]);
+  let minutes = Number(result[1]);
+  let seconds = Number(result[2]);
+
+  let minSec = minutes + seconds / 60;
+  let decimalDegrees = (degrees + minSec / 60).toFixed(3);
+
+  return decimalDegrees;
+}
+let nasaCounter = 0;
+
 let subscriptionNASA = rtm.subscribe(channelNASA, RTM.SubscriptionMode.SIMPLE);
 subscriptionNASA.on('rtm/subscription/data', function (pdu) {
   pdu.body.messages.forEach(function (msg) {
+    nasaCounter += 1;
 
-    function decDegrees(string) {
-      let result = string.split(':');
-      let degrees = Number(result[0]);
-      let minutes = Number(result[1]);
-      let seconds = Number(result[2]);
+    if(mapData.length < 60 || nasaCounter % 200 === 0) {
+      let lat = decDegrees(msg.latitude);
+      let lon = decDegrees(msg.longitude);
 
-      let minSec = minutes + seconds / 60;
-      let decimalDegrees = (degrees + minSec / 60).toFixed(3);
+      msg.latitude = lat;
+      msg.longitude = lon;
 
-      return decimalDegrees;
-    }
-
-    let lat = decDegrees(msg.latitude);
-    let lon = decDegrees(msg.longitude);
-
-    msg.latitude = lat;
-    msg.longitude = lon;
-
-    if (!cacheMap[msg.satellite]) {
-      cacheMap[msg.satellite] = true;
-      mapData.push(msg);
-    }
-    //else if already in cache, put new msg in in place of old
-    else {
-      for (let i = 0; i < mapData.length; i++) {
-        if (mapData[i].satellite === msg.satellite) {
-          mapData[i] = msg;
+      if (!cacheMap[msg.satellite]) {
+        cacheMap[msg.satellite] = true;
+        mapData.push(msg);
+      }
+      //else if already in cache, put new msg in in place of old
+      else {
+        for (let i = 0; i < mapData.length; i++) {
+          if (mapData[i].satellite === msg.satellite) {
+            mapData[i] = Object.assign({},msg);
+          }
         }
       }
     }
+    if(nasaCounter > 1500) nasaCounter = 0;
   });
-
+  // console.log('MAP DATA LEN: ', mapData.length);
 });
 
 
