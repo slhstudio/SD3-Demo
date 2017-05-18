@@ -1,4 +1,6 @@
 (function () {
+
+  
   const socket = io.connect();
 
   //set initial SVG params
@@ -50,8 +52,7 @@
       .attr('id', 'world-map');
 
     //Load in GeoJSON data
-    //https://s3-us-west-2.amazonaws.com/s.cdpn.io/25240/world-110m.json
-    d3.json('topography.json', function (error, world) {
+    d3.json('https://s3-us-west-2.amazonaws.com/s.cdpn.io/25240/world-110m.json', function (error, world) {
       if (error) throw error;
       
       //append the World Map
