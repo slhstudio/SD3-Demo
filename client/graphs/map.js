@@ -1,4 +1,6 @@
 (function () {
+
+  
   const socket = io.connect();
 
   //set initial SVG params
