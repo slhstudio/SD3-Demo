@@ -165,7 +165,7 @@ subscriptionNASA.on('rtm/subscription/data', function (pdu) {
 let subscriptionTwitter = rtm.subscribe(channelTwitter, RTM.SubscriptionMode.SIMPLE);
 subscriptionTwitter.on('rtm/subscription/data', function (pdu) {
   pdu.body.messages.forEach(function (msg) {
-    console.log('MSG: ', msg);
+
     if (msg.created_at && msg.user.time_zone === 'Pacific Time (US & Canada)' && msg.lang === 'en') {
       let obj = {
         followers_count: msg.user.followers_count,
@@ -340,11 +340,16 @@ myStream.connect((socket) => {
   if (myStream.connections.length === 1) rtm.start();
 
   socket.on('SEND_CLOSE', (data) => {
-    if (myStream.connections.length === 0) {
+    console.log('DATA: ', data);
+    console.log('connect len: ', myStream.connections.length);
 
-      rtm.stop()
-      console.log('stopped RTM');
+    setTimeout(() => {
+      if (myStream.connections.length === 0) {
+        rtm.stop()
 
+        console.log('stopped RTM');
     };
+    },50)
+
   })
 });
