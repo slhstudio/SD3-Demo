@@ -86,8 +86,8 @@ subscriptionTraffic.on('rtm/subscription/data', function (pdu) {
   pdu.body.messages.forEach(function (msg) {
 
     //bar data 
-      if (msg.Borough === 'Staten island') msg.Borough = 'Staten Island';
-      if (barQueue.length < 1000) barQueue.push(msg);
+    if (msg.Borough === 'Staten island') msg.Borough = 'Staten Island';
+    if (barQueue.length < 1000) barQueue.push(msg);
   });
 });
 
@@ -117,43 +117,47 @@ subscriptionTV.on('rtm/subscription/data', function (pdu) {
     };
   })
 });
+function decDegrees(string) {
+  let result = string.split(':');
+  let degrees = Number(result[0]);
+  let minutes = Number(result[1]);
+  let seconds = Number(result[2]);
+
+  let minSec = minutes + seconds / 60;
+  let decimalDegrees = (degrees + minSec / 60).toFixed(3);
+
+  return decimalDegrees;
+}
+let nasaCounter = 0;
 
 let subscriptionNASA = rtm.subscribe(channelNASA, RTM.SubscriptionMode.SIMPLE);
 subscriptionNASA.on('rtm/subscription/data', function (pdu) {
   pdu.body.messages.forEach(function (msg) {
+    nasaCounter += 1;
 
-    function decDegrees(string) {
-      let result = string.split(':');
-      let degrees = Number(result[0]);
-      let minutes = Number(result[1]);
-      let seconds = Number(result[2]);
+    if (mapData.length < 60 || nasaCounter % 200 === 0) {
+      let lat = decDegrees(msg.latitude);
+      let lon = decDegrees(msg.longitude);
 
-      let minSec = minutes + seconds / 60;
-      let decimalDegrees = (degrees + minSec / 60).toFixed(3);
+      msg.latitude = lat;
+      msg.longitude = lon;
 
-      return decimalDegrees;
-    }
-
-    let lat = decDegrees(msg.latitude);
-    let lon = decDegrees(msg.longitude);
-
-    msg.latitude = lat;
-    msg.longitude = lon;
-
-    if (!cacheMap[msg.satellite]) {
-      cacheMap[msg.satellite] = true;
-      mapData.push(msg);
-    }
-    //else if already in cache, put new msg in in place of old
-    else {
-      for (let i = 0; i < mapData.length; i++) {
-        if (mapData[i].satellite === msg.satellite) {
-          mapData[i] = msg;
+      if (!cacheMap[msg.satellite]) {
+        cacheMap[msg.satellite] = true;
+        mapData.push(msg);
+      }
+      //else if already in cache, put new msg in in place of old
+      else {
+        for (let i = 0; i < mapData.length; i++) {
+          if (mapData[i].satellite === msg.satellite) {
+            mapData[i] = Object.assign({}, msg);
+          }
         }
       }
     }
+    if (nasaCounter > 1500) nasaCounter = 0;
   });
-
+  // console.log('MAP DATA LEN: ', mapData.length);
 });
 
 
@@ -182,7 +186,6 @@ subscriptionTwitter.on('rtm/subscription/data', function (pdu) {
   });
 });
 
-rtm.start();
 
 //____________________CONFIGURATION FILES___________________________________
 
@@ -200,7 +203,7 @@ let lineConfig = {
   yScale: 'num_bikes_available',
   xLabel_text: 'at the currently reporting station',
   yLabel_text: 'number of available bikes',
-  lineColor:'#5176B6',
+  lineColor: '#5176B6',
   dotColor: 'DodgerBlue'
 };
 
@@ -258,7 +261,7 @@ let bubbleConfig = {
   setHeight: 400,
   text: 'num_bikes_available',
   volume: 'num_bikes_available',
-  color:'#63d198'
+  color: '#63d198'
 };
 
 let pieConfig = {
@@ -275,7 +278,7 @@ let mapConfig = {
   longitude: 'longitude',
   mapItem: 'satellite', //the thing being mapped
   propTwo: '',
-  color:'#B0C4DE'
+  color: '#B0C4DE'
 };
 
 //---------------SEND CLIENT FILES-----------------------
@@ -330,4 +333,25 @@ myStream.connect((socket) => {
   myStream.bubbleGraph(socket, bubbleData, bubbleConfig);
   myStream.pie(socket, pieData, pieConfig);
   myStream.map(socket, mapData, mapConfig);
+  // // console.log('CONNECT LENGTH: ',myStream.connections.length);
+  //   console.log('START: ', rtm.start);
+  let streamOn = false; 
+  if (myStream.connections.length === 1) {
+    rtm.start();
+    streamOn = true; 
+  };
+
+  setInterval(() => {
+    if(myStream.connections.length === 0 && streamOn) {
+      console.log('stopped');
+      rtm.stop();
+      streamOn = false;
+    }
+  }, 1000)
+  
+// this.window.onunload = () => {
+//       rtm.stop();
+//       console.log('RTM STOPPED');
+//   }
+
 });
