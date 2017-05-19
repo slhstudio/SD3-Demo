@@ -340,16 +340,14 @@ myStream.connect((socket) => {
   if (myStream.connections.length === 1) rtm.start();
 
   socket.on('SEND_CLOSE', (data) => {
-    console.log('DATA: ', data);
-    console.log('connect len: ', myStream.connections.length);
-
+    
     setTimeout(() => {
       if (myStream.connections.length === 0) {
         rtm.stop()
 
         console.log('stopped RTM');
-    };
-    },50)
+      };
+    }, 50)
 
   })
 });
