@@ -165,7 +165,7 @@ subscriptionNASA.on('rtm/subscription/data', function (pdu) {
 let subscriptionTwitter = rtm.subscribe(channelTwitter, RTM.SubscriptionMode.SIMPLE);
 subscriptionTwitter.on('rtm/subscription/data', function (pdu) {
   pdu.body.messages.forEach(function (msg) {
-
+    console.log('MSG: ', msg);
     if (msg.created_at && msg.user.time_zone === 'Pacific Time (US & Canada)' && msg.lang === 'en') {
       let obj = {
         followers_count: msg.user.followers_count,
@@ -185,6 +185,8 @@ subscriptionTwitter.on('rtm/subscription/data', function (pdu) {
     }
   });
 });
+
+
 
 
 //____________________CONFIGURATION FILES___________________________________
@@ -335,23 +337,14 @@ myStream.connect((socket) => {
   myStream.map(socket, mapData, mapConfig);
   // // console.log('CONNECT LENGTH: ',myStream.connections.length);
   //   console.log('START: ', rtm.start);
-  let streamOn = false; 
-  if (myStream.connections.length === 1) {
-    rtm.start();
-    streamOn = true; 
-  };
+  if (myStream.connections.length === 1) rtm.start();
 
-  setInterval(() => {
-    if(myStream.connections.length === 0 && streamOn) {
-      console.log('stopped');
-      rtm.stop();
-      streamOn = false;
-    }
-  }, 1000)
-  
-// this.window.onunload = () => {
-//       rtm.stop();
-//       console.log('RTM STOPPED');
-//   }
+  socket.on('SEND_CLOSE', (data) => {
+    if (myStream.connections.length === 0) {
 
+      rtm.stop()
+      console.log('stopped RTM');
+
+    };
+  })
 });
