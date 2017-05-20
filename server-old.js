@@ -3,7 +3,7 @@ const app = express();
 const server = require('http').createServer(app);
 const path = require('path');
 const RTM = require("satori-sdk-js");
-const streamline = require('./lib/index-old.js');
+const streamline = require('./lib/index.js');
 const dotenv = require('dotenv');
 
 dotenv.load()
@@ -14,6 +14,7 @@ app.use(express.static(path.join(__dirname, 'client')));
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'client/home-page.html'));
 });
+
 
 //______________GET DATA____________________________________
 
@@ -70,7 +71,7 @@ subscriptionBike.on('rtm/subscription/data', function (pdu) {
 
       for (let i = 0; i < bubbleData.length; i += 1) {
         if (bubbleData[i].station_id === msg.station_id) {
-          bubbleData[i] = msg;
+          bubbleData[i] = Object.assign({},msg);
           idExists = true;
         }
       }
@@ -86,8 +87,10 @@ subscriptionTraffic.on('rtm/subscription/data', function (pdu) {
   pdu.body.messages.forEach(function (msg) {
 
     //bar data 
-    if (msg.Borough === 'Staten island') msg.Borough = 'Staten Island';
-    if (barQueue.length < 1000) barQueue.push(msg);
+
+      if (msg.Borough === 'Staten island') msg.Borough = 'Staten Island';
+      if (barQueue.length < 100) barQueue.push(msg);
+
   });
 });
 
@@ -106,7 +109,7 @@ subscriptionTV.on('rtm/subscription/data', function (pdu) {
     let found = false;
     for (let i = 0; i < pieData.length; i++) {
       if (pieData[i].genre === msg.genre) {
-        pieData[i] = msg;
+        pieData[i] = Object.assign({}, msg);
         found = true;
         break;
       }
@@ -130,6 +133,7 @@ function decDegrees(string) {
 }
 let nasaCounter = 0;
 
+
 let subscriptionNASA = rtm.subscribe(channelNASA, RTM.SubscriptionMode.SIMPLE);
 subscriptionNASA.on('rtm/subscription/data', function (pdu) {
   pdu.body.messages.forEach(function (msg) {
@@ -150,12 +154,15 @@ subscriptionNASA.on('rtm/subscription/data', function (pdu) {
       else {
         for (let i = 0; i < mapData.length; i++) {
           if (mapData[i].satellite === msg.satellite) {
-            mapData[i] = Object.assign({}, msg);
+
+            mapData[i] = Object.assign({},msg);
           }
         }
       }
     }
-    if (nasaCounter > 1500) nasaCounter = 0;
+
+    if(nasaCounter > 1500) nasaCounter = 0;
+
   });
   // console.log('MAP DATA LEN: ', mapData.length);
 });
@@ -282,17 +289,6 @@ let mapConfig = {
   propTwo: '',
   color: '#B0C4DE'
 };
-
-//---------------SEND CLIENT FILES-----------------------
-
-
-function sendFiles(app) {
-  app.use(express.static(path.join(__dirname, 'client')));
-
-  app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client/home-page.html'));
-  });
-}
 
 //_________________________QUEUE________________________________
 
