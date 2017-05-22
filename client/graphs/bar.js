@@ -99,6 +99,9 @@
     let column = settings.svg.selectAll('g.column-container')
       .data(data);
 
+    //EXIT
+    column.exit().remove();
+    
     let newColumn = column
       .enter()
       .append('g')

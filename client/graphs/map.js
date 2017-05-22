@@ -1,4 +1,6 @@
 (function () {
+
+  
   const socket = io.connect();
 
   //set initial SVG params
@@ -80,7 +82,7 @@
   function drawContent(settings, data) {
     // d3.select('#all-points').remove();
     let color = d3.scaleSequential(d3.interpolateRdYlBu)
-      .domain([0, 500]);
+      .domain([0, 200]);
 
     let points = settings.svg.selectAll('.point-circle')
       .data(data)
@@ -102,6 +104,7 @@
       .attr('class', 'circle point-dot')
       .style('fill', d => color(d.latitude))
       .style('opacity', 0.75)
+      .style('stroke', 'orange')
       
 
   //UPDATE
@@ -113,8 +116,7 @@
     .duration(300)
     .attr('cx', d => settings.projection([d.longitude, d.latitude])[0])        
     .attr('cy', d => settings.projection([d.longitude, d.latitude])[1])
-    .style('stroke', 'orange')
-   
+    .style('fill', d => color(d.latitude))
   };
 })();
 

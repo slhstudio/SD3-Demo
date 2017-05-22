@@ -107,6 +107,11 @@
       .selectAll('.line')
       .data(allData)
 
+    //EXIT
+    renderedLine.exit().remove();
+
+
+    //ENTER
     let newLine = renderedLine
       .enter()
       .append('path')
@@ -137,7 +142,9 @@
 
     let dots = svg.selectAll('.dot')
       .data(allData);
-
+    
+    dots.exit().remove();
+    
     let newDots = dots
       .enter()
       .append('circle')
